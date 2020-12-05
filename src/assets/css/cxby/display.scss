@@ -1,0 +1,33 @@
+$display-map: (
+	b: block,
+	ih: inherit,
+	il: inline,
+	ilb: inline-block,
+	f: flex,
+	if: inline-flex
+);
+
+@each $key, $propety in $display-map {
+	.ds-#{$key} {
+		display: $propety;
+	}
+};
+
+@for $i from 1 through 5 {
+	.flex-#{$i} {
+		-webkit-flex: 1;
+		flex: $i;
+	}
+};
+
+$position-map: (
+	a: absolute,
+	r: relative,
+	f: fixed
+);
+
+@each $key, $value in $position-map {
+	.ps-#{$key} {
+		position: $value;
+	}
+};

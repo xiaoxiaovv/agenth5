@@ -1,0 +1,608 @@
+@import "../cxby/mixins.scss";
+
+// 进件页
+.client-info {
+  @include match-width();
+
+  &__padding {
+    @include match-width();
+    @include height(50);
+    background-color: #FFF;
+  }
+
+  &__nav {
+    @include match-width();
+    @include height(78);
+    background-color: #FFF;
+
+    .pass {
+      @include size(20, 20);
+    }
+
+    .title {
+      @include font-size(36);
+      font-weight: bold;
+      color: #333;
+    }
+
+    .search {
+      @include size(31, 31);
+    }
+  }
+
+  &__tabs {
+    @include match-width();
+    @include height(80);
+    @include font-size(28);
+    @include font-weight(500);
+    background-color: #FFF;
+    color: #666;
+
+    .item {
+
+      .bar {
+        @include size(44, 6);
+        @include radius(3);
+        background-color: transparent;
+      }
+
+      &.active {
+        // font-weight: bold;
+        color: #4BA8FF;
+
+        .bar {
+          background-color: #4BA8FF;
+        }
+      }
+
+      &:active {
+        // background-color: #DDD;
+      }
+    }
+  }
+
+  &__content {
+    position: relative;
+    overflow: auto;
+
+    .mu-paper {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+
+      .mu-infinite-scroll-text {
+        @include font-size(24);
+        @include font-weight(400);
+        color: #999;
+      }
+    }
+
+    .loading {
+      @include match-width();
+      @include font-size(24);
+      @include font-weight(400);
+      color: #999;
+    }
+  }
+
+  &__item {
+    @include match-width();
+    @include font-size(32);
+    @include font-weight(500);
+    @include height(150);
+    border-bottom: px2rem(1) solid #DDD;
+    color: #999;
+
+    .title {
+      color: #333;
+    }
+
+    .subtile {
+      color: #666;
+    }
+
+    .btn {
+      color: #999;
+
+      &.active {
+        color: #4BA8FF;
+      }
+      &.wait-statue{
+        color: #FFAE3D;
+      }
+    }
+
+    .icon {
+      @include font-size(32);
+      color: #CCC;
+    }
+
+    &.active {
+      border-bottom: px2rem(1) solid transparent;
+    }
+
+    &:active {
+      // background-color: #DDD;
+    }
+  }
+
+  &__footer {
+    @include match-width();
+    @include height(98);
+  }
+}
+
+
+// 进件详情页
+.client-info-detail {
+  background-color: #f0f0f0;
+  @include match-width();
+  @include font-weight(500);
+
+  &__padding {
+    @include match-width();
+    @include height(50);
+    background-color: #FFF;
+  }
+
+  &__nav {
+    @include match-width();
+    @include height(88);
+    border-bottom: px2rem(2) solid #F0F0F0;
+    background-color: #FFF;
+
+    .icon {
+      @include font-size(36);
+      color: #999;
+    }
+
+    .title {
+      @include font-size(36);
+      font-weight: bold;
+      color: #333;
+    }
+
+    .text {
+      @include font-size(28);
+      color: #666;
+    }
+
+    .pass {
+      @include size(20);
+    }
+  }
+
+  &__content {
+    @include match-width();
+    @include font-size(32);
+    color: #999;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .title {
+      @include match-width();
+      @include font-size(30);
+      margin-top:px2rem(40);
+      color: #999;
+      background-color: #fff;
+      box-sizing: border-box;
+      padding: px2rem(22) px2rem(30);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #F0F0F0;
+      .mu-checkbox-label {
+        color:#999;
+      }
+    }
+
+    .item {
+      @include match-width();
+      background-color: #FFF;
+      box-sizing: border-box;
+      padding: px2rem(30) px2rem(30);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      border-bottom: px2rem(1) solid #F0F0F0;
+
+      .subtitle {
+        color: #333;
+      }
+
+      img {
+        @include size(121, 79);
+        width: auto;
+      }
+
+      .img {
+        @include size(121, 79);
+        background-color: #DDD;
+      }
+      .img_wp{
+        position: relative;
+        flex: 1;
+        border:2px dashed #ddd;
+        padding: 10px;
+        margin: 0 5px;
+        .file{
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+          opacity: 0;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          z-index: 2;
+
+        }
+        img{
+          @include size(242, 158);
+        }
+      }
+      .img_wp_width {
+        @include size(320, 180);
+        flex:inherit;
+        // overflow: hidden;
+        img {
+          @include size(310, 170);
+          position: absolute;
+          top:0;
+          left:0;
+          // z-index:1;
+          z-index:3;
+        }
+        .iconshanchu {
+          position: absolute;
+          top: -12px;
+          right:-12px;
+          font-size: 24px;
+          height: 24px;
+          line-height: 1;
+          z-index:4;
+        }
+      }
+      .star {
+        color: #FF7878;
+        margin-right: px2rem(10);
+      }
+    }
+
+    .next {
+      @include size(690, 88);
+      @include radius(12);
+      @include font-size(32);
+      background-color: #4BA8FF;
+      color: #FFF;
+      margin: px2rem(100) 0 px2rem(150) 0;
+
+      &:active {
+        opacity: 0.8;
+      }
+    }
+
+    .input, input {
+      @include width(450);
+      @include font-size(32);
+      text-align: right;
+      color: #666;
+
+      &.merchant {
+        @include width(480);
+      }
+
+      &.register {
+        @include width(520);
+      }
+
+      &.mini {
+        @include width(320);
+      }
+
+      .icon {
+        color: #CCC;
+      }
+    }
+
+    .input {
+
+      input {
+        text-align: right;
+      }
+
+      .mu-input-label {
+        right: 0;
+        top:-20px;
+      }
+
+      .no-empty-state {
+
+        .mu-input-label {
+          display: none;
+        }
+      }
+
+      .mu-input-line {
+        height: px2rem(2);
+        background-color: #F0F0F0;
+      }
+    }
+  }
+
+  &.short {
+
+    .input, input {
+      @include width(400);
+    }
+  }
+  .input-number {
+    input {
+      // @include width(250);
+      width: 80%;
+      padding-right: 4px;
+      text-align: right;
+    }
+  }
+  .client-info {
+    .vm-select-tip {
+      left:px2rem(30);
+    }
+    .vm-select-content {
+      padding:0 px2rem(30);
+    }
+    .vm-select {
+      border-bottom: none;
+      height: auto;
+    }
+  }
+  .fixed-height {
+    @include height(200);
+    overflow-y: auto;
+  }
+}
+.client-info-record {
+  .client-info-detail__content {
+    .time-range{
+      display: flex;
+      width: 100%;
+      justify-content: flex-end;
+      flex-direction:inherit;
+      .mu-input.full-width{
+        width: auto; 
+        margin-bottom: 0;
+        padding:0;
+        min-height: auto;
+      }
+      input {
+        width: px2rem(220);
+        text-align: center;
+      }
+    }
+    
+    .mu-input-line {
+      height:0;
+    }
+  }
+}
+
+// action-sheet
+.action-sheet {
+  @include match-width();
+  @include font-weight(500);
+
+  .title {
+    @include match-width();
+    @include font-size(36);
+    @include height(90);
+    @include height(120);
+    background-color: #FAFAFA;
+    color: #AAAAAA;
+
+    .confirm {
+      color: #4BA8FF;
+    }
+  }
+  .max-sheet-height {
+    min-height: px2rem(200);
+    max-height: px2rem(500);
+    overflow-y: auto;
+    width:100%;
+  }
+  .input-wrap {
+    position: relative;
+    width: 100%;
+    margin-top: px2rem(30);
+    // padding
+    .pre-icon {
+      position: absolute;
+      left:px2rem(80);
+      top:50%;
+      transform: translateY(-50%);
+    }
+    .input {
+      @include height(60);
+      @include radius(30);
+      padding-left: px2rem(60);
+      width: 100%;
+      border:1px solid #F0F0F0;
+    }
+  }
+
+
+  .item {
+    @include match-width();
+    @include font-size(32);
+    @include height(120);
+    background-color: #FFF;
+    color: #333;
+    border-bottom: px2rem(1) solid #F0F0F0;
+
+    .pass {
+      @include size(20, 20);
+    }
+
+    &.active {
+      color: #4BA8FF;
+
+      .icon {
+        color: #4BA8FF;
+      }
+    }
+
+    .icon {
+      @include font-size(32);
+
+      &.arrow {
+        color: #999;
+      }
+    }
+  }
+
+  &__padding {
+    @include match-width();
+    @include height(20);
+    background-color: #FFF;
+    margin-top: px2rem(-4);
+  }
+
+  &.menu {
+    @include font-size(32);
+    color: #333;
+
+    .cancel {
+      color: #FF7878;
+    }
+  }
+
+  &__header {
+    @include match-width();
+    @include height(100);
+    background-color: #F0F0F0;
+    color: #666;
+  }
+
+  &__content {
+    @include match-width();
+    @include height(400);
+    @include font-size(32);
+    background-color: #FFF;
+    overflow-x: hidden;
+    overflow-y: true;
+
+    .item {
+      border-bottom: px2rem(1) solid #F0F0F0;
+
+      &:active {
+        background-color: #F0F0F0;
+        // color: #FFF;
+
+        .icon {
+          // color: #FFF;
+        }
+      }
+    }
+
+    .active {
+      color: #4BA8FF;
+
+      .icon {
+        color: #4BA8FF;
+      }
+    }
+  }
+}
+.mu-tabs {
+  overflow-x: auto;
+  .mu-tab-link-highlight {
+    display: none;
+  }
+  .mu-tab-active {
+    border-bottom:2px solid #ff4081;
+  }
+}
+.mu-tab {
+  min-width: 84px;
+}
+
+// no-data
+.no-data {
+  @include font-size(28);
+  color: #CCC;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  img {
+    @include size(260, 168);
+    margin-bottom: px2rem(20);
+    margin-top: px2rem(100);
+  }
+}
+
+// 图片上传
+.file {
+  position: relative;
+
+  input {
+    opacity: 0;
+  }
+
+  .cover {
+    @include match-parent();
+    position: absolute;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+// 遮罩层
+.cover-x {
+  @include match-parent();
+  background-color: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  top: 0;
+  z-index:101;
+
+  // 图片预览
+  .image-preview {
+    width: 100%;
+    height: 80%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    //background-color: #FFF;
+    background-position: center;
+  }
+}
+
+.time-dialog {
+  .mu-radio-wrapper {
+    margin-bottom: 10px;
+  }
+  .mu-input.has-label .mu-input-label {
+    top: -20px;
+  }
+  .mu-input.has-label {
+    min-height: px2rem(50);
+  }
+  .mu-input-line {
+    height:0;
+  }
+  .mu-input-line.disabled {
+    display: none;
+  }
+  .mu-input.has-label {
+     padding:0;
+     width: 100px;
+     cursor: pointer;
+   }
+  .no-empty-state {
+   .mu-input-label {
+     display: none;
+   }
+ }
+}

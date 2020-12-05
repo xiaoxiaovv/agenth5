@@ -1,0 +1,48 @@
+.frame-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.31rem;
+  line-height: .64rem; //48
+  background: #ffffff;
+  // color: rebeccapurple;
+  font-size: 12px;
+  border-top: 1px solid #C1C1C1;
+  color: #ccc;
+
+  li {
+    width: 25%;
+    p {
+      span{
+        font-size: 22px;
+      }
+    }
+    .foot-icon{
+      margin-top: 0.16rem;
+      height: 0.48rem;
+    }
+    img {
+      width: .44rem;
+      height: .44rem;
+    }
+    .foot-font {
+      color: #999;
+    }
+  }
+}
+
+.frame-container {
+  background: #F8F9FD;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.frame-footer {
+  .fl.active {
+    color: #4BA8FF;
+  }
+}

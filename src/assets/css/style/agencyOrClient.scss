@@ -1,0 +1,114 @@
+@import "../cxby/mixins.scss";
+.agencyOrClient-header {
+  padding: 20px 20px 0 20px;
+  font-size: .43rem;
+
+  .header-search {
+    width: .41rem;
+    height: .41rem;
+  }
+
+
+
+
+  .mu-primary-text-color {
+    border: 1px solid;
+  }
+
+
+}
+
+.page-mask {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+// 详情
+.page-agent-detail {
+  .vm-white-bg {
+    position: relative;
+  }
+}
+.agent-detail-btn{
+  width: 92%;
+  margin: 0 auto;
+  margin-top:2.667rem;
+}
+.agentclient-header{
+  padding-bottom: 0.267rem;
+  padding-top: 0.267rem;
+}
+
+// 二级代理--商户
+.page-client-type{
+  .container{
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .page-client-header{
+    height: 48px;
+  }
+  .agencyOrClient-header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-top: 0.267rem;
+    padding-bottom: 10px;
+    background-color: #fff;
+  }
+  .va-loadmore-margin{
+    margin-top: 48px;
+  }
+}
+
+.demo-loadmore-content.container{
+  padding: 0;
+  margin-top: -1px;
+}
+
+.agencyOrClient-container{
+  ul {
+    background-color: #fff;
+  }
+  li {
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    padding-left: 0 !important;
+    padding-right:0 !important;
+  }
+}
+.vmalis-fontweight-400 {
+  .vma-list-li-right {
+    font-weight: normal !important;
+  }
+}
+
+.addMerchant {
+  padding: px2rem(30);
+  border-top: 1px solid #ddd;
+  .adImg {
+    width: 100%;
+    margin-bottom: px2rem(50);
+  }
+  .addMerchantBtn {
+    width:px2rem(690);
+    height:px2rem(88);
+    border-radius: px2rem(10);
+    background-color: #5594FF;
+    color:#fff;
+    font-size: px2rem(30);
+    margin-bottom: px2rem(20);
+    border:1px solid #5594FF;
+  }
+  .addMerchantBtnDefault {
+    background-color: #fff;
+    color:#5594FF;
+    border:1px solid #5594FF;
+  }
+}
+

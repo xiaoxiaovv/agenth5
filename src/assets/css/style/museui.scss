@@ -1,0 +1,68 @@
+// musui-form  == 需要添加  class = 'vm-form-mu'
+
+.vm-form-mu{
+  // mu-form-item
+  .mu-form-item{
+    margin-bottom: 0;
+    padding-bottom: 0;
+    height: 1.30666rem;
+    .mu-form-item-content{
+      height: 100%;
+      border: none;
+      // 输入框
+      .mu-input{
+        height: 100%;
+        .material-icons{
+          left: 8px;
+          top: 50%;
+          margin-top: -0.16rem;
+          color: red;
+          font-size: 0.42667rem;
+        }
+        .mu-input-action-icon {
+          color: #999;
+        }
+        .mu-input-content{
+          padding-left: 0.586666rem;
+          padding-right: 0.586666rem;
+          .mu-input-prefix-text{
+            font-size: 16px;
+            color: #333;
+            font-weight:500;
+          }
+          .mu-text-field-input{
+            text-align: right;
+          }
+        }
+      }
+      // 按钮
+      .mu-button {
+        width: 92%;
+        height: 1.17333rem;
+        margin: 0 auto;
+        margin-top: 1.6rem;
+        border-radius: 0.16rem;
+        .mu-button-wrapper{
+          font-size: 0.42667rem;
+        }
+      }
+    }
+  }
+}
+.vm-btn{
+  width: 100%;
+  height: 44px;
+  button {
+    width: 100%;
+    height: 100%;
+    .mu-button-wrapper{
+      font-size: 0.427rem;
+    }
+  }
+}
+.vm-tab-mu {
+  .mu-tab-wrapper{
+    height: 1.28rem !important;
+  }
+}
+

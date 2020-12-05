@@ -1,0 +1,20 @@
+@import "../cxby/mixins.scss";
+.page-nodata{
+  margin-top: 2.667rem;
+  color: #aaa;
+  .page-nodata-icon{
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    text-align: center;
+    span {
+      position: relative;
+      font-size: 1.333rem;
+    }
+  }
+  .page-nodata-title {
+    margin-top: 0.533rem;
+    font-size: 0.427rem;
+  }
+}
+

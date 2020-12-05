@@ -1,0 +1,78 @@
+.login-body{
+  width: 88%;
+  margin: 0 auto;
+  margin-top: 2.213rem;
+  .login-pic {
+    width: 100%;
+    margin-bottom: 1.147rem;
+    img {
+      width: 65.4545%;
+    }
+  }
+  .mu-form-item-label{
+    text-align: left;
+    font-size: 0.42667rem;
+    color: #333;
+    font-weight: 500;
+  }
+  .mu-input{
+    width: 100%;
+    padding-bottom: 0;
+    .mu-input-icon{
+      z-index: 9;
+    }
+    .mu-input-content{
+      border: 1px solid #ccc;
+      border-radius: 0.13333rem;
+      overflow: hidden;
+    }
+    input {
+      height: 1.06667rem;
+      padding-left: 1.26667rem;
+      padding-right: 0.26667rem;
+    }
+    .mu-input-line{
+      display: none;
+    }
+  }
+  .mu-input__focus{
+    .mu-input-content{
+      border: 1px solid #4BA8FF;
+    }
+    .mu-input-focus-line{
+      display: none;
+    }
+  }
+  .mu-form-item .mu-button{
+    margin: 0;
+    margin-top: 12px;
+  }
+  .mu-button{
+    width: 100%;
+    height: 1.17333rem;
+    border-radius:1.17333rem;
+  }
+  input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+    background-color: rgba(250, 255, 189, 0) !important;
+    background-image: none !important;
+    color: #000 !important;
+  }
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset;
+  }
+  input:-webkit-autofill {
+    background: transparent;
+    -webkit-text-fill-color: #606266 !important;
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  }
+}
+
+.login-icons{
+  position: absolute;
+  left: 0.48rem;
+  color: #ccc;
+  font-size: 16px;
+  font-weight: 500;
+}

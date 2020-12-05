@@ -1,0 +1,124 @@
+@function px2rem($px) {
+  @return ($px / 75) + rem;
+}
+
+// 组件大小
+@mixin size($width: 0, $height: 0) {
+  width: px2rem($width);
+  height: px2rem($height);
+}
+
+// 宽度占比
+@mixin match-width($percent: 100) {
+  width: percentage($percent / 100);
+}
+
+// 高度占比
+@mixin match-height($percent: 100) {
+  height: percentage($percent / 100);
+}
+
+// 占满父容器
+@mixin match-parent($percent: 100) {
+  width: percentage($percent / 100);
+  height: percentage($percent / 100);
+}
+
+// 宽度
+@mixin width($width) {
+  width: px2rem($width);
+}
+
+// 高度
+@mixin height($height) {
+  height: px2rem($height);
+}
+
+// 背景颜色
+@mixin bgc($bgc: #000000) {
+  background-color: $bgc !important;
+}
+
+// 字体颜色
+@mixin color($color: #FFFFFF) {
+  color: $color !important;
+}
+
+// 字体大小
+@mixin font-size($font-size: 12) {
+  font-size: px2rem($font-size) !important;
+}
+
+// 字体粗细
+@mixin font-weight($font-weight: 400) {
+  font-weight: $font-weight !important;
+}
+
+// 加粗
+@mixin bold() {
+  font-weight: bold !important;
+}
+
+// 圆角
+@mixin radius($radius: 10) {
+  border-radius: px2rem($radius) !important;
+}
+
+// 边框
+@mixin border($border-color: #DDDDDD, $border-width: 1, $border-style: solid) {
+  border: px2rem($border-width) $border-style $border-color !important;
+}
+
+// 箭头
+@mixin arrow($arrow-type: 'down', $arrow-width: 8, $arrow-color: $theme-text-color) {
+  $borders: (
+    top: (dashed, transparent),
+    right: (dashed, transparent),
+    bottom: (dashed, transparent),
+    left: (dashed, transparent)
+  );
+  @if $arrow-type == 'down' {
+    $borders: (
+      top: (solid, $arrow-color),
+      right: (dashed, transparent),
+      bottom: (dashed, transparent),
+      left: (dashed, transparent)
+    );
+  }
+  @else if $arrow-type == 'up' {
+    $borders: (
+      top: (dashed, transparent),
+      right: (dashed, transparent),
+      bottom: (solid, $arrow-color),
+      left: (dashed, transparent)
+    );
+  }
+  @else if $arrow-type == 'left' {
+    $borders: (
+      top: (dashed, transparent),
+      right: (solid, $arrow-color),
+      bottom: (dashed, transparent),
+      left: (dashed, transparent)
+    );
+  }
+  @else if $arrow-type == 'right' {
+    $borders: (
+      top: (dashed, transparent),
+      right: (dashed, transparent),
+      bottom: (dashed, transparent),
+      left: (solid, $arrow-color)
+    );
+  }
+  @each $key, $value in $borders {
+    $tmp: px2rem($arrow-width);
+    @each $item in $value {
+      $tmp: $tmp $item;
+    }
+    border-#{$key}: $tmp;
+  }
+  width: 0;
+  height: 0;
+  font-size: 0;
+  line-height: 0;
+  display: inline-flex;
+}

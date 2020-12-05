@@ -1,0 +1,62 @@
+.mine-page {
+  bottom:49px;
+  overflow-y:auto;
+}
+.mime-info-first {
+  .info-first-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    color: #ffffff;
+    height: 5.33rem;
+
+    .info-first-name {
+      font-size: .6rem;
+      margin: .43rem 0;
+    }
+
+    .info-first-edit-password {
+      width: 2.13rem;
+      height: .67rem;
+      line-height: .67rem;
+      background: rgba(255, 255, 255, 1);
+      border-radius: .33rem;
+      color: #4BA8FF;
+    }
+  }
+}
+
+.mime-info-second {
+  li {
+    height: 1.47rem;
+    line-height: 1.47rem;
+    padding: 0 .4rem;
+    border-bottom: .01rem solid #f3efef;
+    background: #ffffff;
+
+    .fl {
+      font-size: .43rem;
+    }
+
+    .fr {
+      font-size: .4rem;
+      color: #969393;
+    }
+  }
+}
+
+.out-login {
+  margin-top: 1.17rem;
+  // margin-top:0.6rem;
+  margin-bottom:0.5rem;
+  p {
+    width: 9.2rem;
+    height: 1.17rem;
+    line-height: 1.17rem;
+    background: rgba(75, 168, 255, 1);
+    border-radius: .13rem;
+    font-size: .43rem;
+    color: #ffffff;
+  }
+}
