@@ -154,6 +154,10 @@
                 <div class="subtitle">开户账号</div>
                 <div class="match-left-space align-right">{{detail.accountNumber}}</div>
               </div>
+              <div class="item">
+                <div class="subtitle">开户预留手机号</div>
+                <div class="match-left-space align-right">{{detail.bankPhone}}</div>
+              </div>
             </div>
 
             <div class="match-width box align-default">
@@ -680,6 +684,104 @@
             </div>
           </div>
         </div>
+<!--        银联现在没有 8-->
+<!--        拉卡拉现在没有 9-->
+        <div class="demo-text"
+             v-if="active === 8">
+          <div class="client-info-detail__content box match-left-space pb-40"
+               v-show="PROCESS.sjPos">
+            <div class="match-width box align-default">
+              <div class="title">手机pos通道</div>
+              <div class="item">
+                <div class="subtitle">手机pos交易费率</div>
+                <div class="match-left-space align-right">{{detail.posTradeRate}}%</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">手机pos提现费</div>
+                <div class="match-left-space align-right">{{detail.posDrawFee}}</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">网联交易费率</div>
+                <div class="match-left-space align-right">{{detail.quickTradeRate}}%</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">网联提现费</div>
+                <div class="match-left-space align-right">{{detail.quickDrawFee}}</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">商户手持证件照</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.holdingCardId"
+                       @click="previewImage(detail.holdingCardId)">
+                    <img class="match-parent"
+                         :src="detail.holdingCardId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="subtitle">结算卡背面</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.bankPhotoId"
+                       @click="previewImage(detail.bankPhotoId)">
+                    <img class="match-parent"
+                         :src="detail.bankPhotoId | loadImage" />
+                  </div>
+                </div>
+              </div>
+             <!-- <div class="item">
+                <div class="subtitle">经营许可证</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.businessCertPicId"
+                       @click="previewImage(detail.businessCertPicId)">
+                    <img class="match-parent"
+                         :src="detail.businessCertPicId | loadImage" />
+                  </div>
+                </div>
+              </div>-->
+              <div v-if="sjPosData"
+                   style="width:100%">
+                <div class="title">进件状态</div>
+                <div class="item">
+                  <div class="subtitle">商户编号</div>
+                  <div class="match-left-space align-right">{{sjPosData.posMchId}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">注册名称</div>
+                  <div class="match-left-space align-right">{{sjPosData.posRegisName}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">手机pos交易费率</div>
+                  <div class="match-left-space align-right">{{sjPosData.posTradeRate}}%</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">手机pos提现费</div>
+                  <div class="match-left-space align-right">{{sjPosData.posDrawFee}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">网联交易费率</div>
+                  <div class="match-left-space align-right">{{sjPosData.quickTradeRate}}%</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">网联提现费</div>
+                  <div class="match-left-space align-right">{{sjPosData.quickDrawFee}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">进件状态</div>
+                  <div class="match-left-space align-right">{{entryStatus[sjPosData.entryStatus]}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">进件结果</div>
+                  <div class="match-left-space align-right">{{sjPosData.posMsg}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">提交时间</div>
+                  <div class="match-left-space align-right">{{sjPosData.commitTime}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </mu-container>
     </div>
 
@@ -716,7 +818,8 @@ export default {
         CH: true,
         ZFB: true,
         FY: true,
-        LAL: true
+        LAL: true,
+        sjPos:true
       },
       isEdit: false,
       detail: {
@@ -730,6 +833,7 @@ export default {
       fyData: '',
       zfbData: '',
       lklData:'',
+      sjPosData:'',
       active: 0,
       wxList: [],
       sellCheck: [],
@@ -761,9 +865,17 @@ export default {
         { index: 5, name: '威富通', open: true },
         { index: 6, name: '传化', open: true },
         { index: 7, name: '富友', open: true },
-        // { index: 8, name: '拉卡拉', open: true }
+        // { index: 8, name: '银联', open: true },
+        // { index: 9, name: '拉卡拉', open: true }
+        { index: 10, name: '手机pos', open: true },
       ],
       fyEntryStatus: {
+        '-1': '进件失败',
+        1: '待进件',
+        2: '进件审核中',
+        3: '进件成功'
+      },
+      entryStatus: {
         '-1': '进件失败',
         1: '待进件',
         2: '进件审核中',
@@ -806,7 +918,7 @@ export default {
       } else if (item.channel === 1) { // 随行付
         clientInfoApi.getSxfcode({ id: item.id }).then(res => {
           this.sxfData = res.obj
-          console.log(res)
+          console.log('suixingfuchannel========================',res)
         })
       } else if (item.channel === 3) { // 乐刷
         clientInfoApi.getLsCode({ id: item.id }).then(res => {
@@ -826,17 +938,27 @@ export default {
       } else if (item.channel === 6) { // 富友
         clientInfoApi.getFyCode({ id: item.id }).then(res => {
           this.fyData = res.obj
-          console.log(res)
+          console.log('fuyouchannel========================',res)
         })
       } else if (item.channel === 7) { // 支付宝
         clientInfoApi.getZfbCode({ id: item.id }).then(res => {
           this.zfbData = res.obj
           console.log(res)
         })
-      }else if (item.channel === 8) { // 拉卡拉
+      }/*else if (item.channel === 8) { // 银联
         clientInfoApi.getLklCode({ id: item.id }).then(res => {
           this.lklData = res.obj
           console.log(res)
+        })
+      }else if (item.channel === 9) { // 拉卡拉
+        clientInfoApi.getLklCode({ id: item.id }).then(res => {
+          this.lklData = res.obj
+          console.log(res)
+        })
+      }*/else if (item.channel === 10) { // 手机pos &网联
+        clientInfoApi.getSjPosCode({ id: item.id }).then(res => {
+          this.sjPosData = res.obj
+          console.log('手机pos进件info==================',res)
         })
       }
     },
@@ -1016,6 +1138,7 @@ export default {
     this.isEdit = this.$route.query.isEdit || false
     // debugger
     this.wxList = (this.$route.query.list && this.$route.query.list.length) ? JSON.parse(this.$route.query.list) : []
+    console.log('bbbbbbbbbbbbbbbbbb==========',this.wxList)
     getProcess().then(res => {
       this.PROCESS = res
       this.tabList[1].open = res.SXF
@@ -1024,6 +1147,11 @@ export default {
       this.tabList[4].open = res.LS
       this.tabList[5].open = res.YS
       this.tabList[6].open = res.CH
+      this.tabList[7].open = res.FY
+      // this.tabList[8].open = res.YL
+      // this.tabList[9].open = res.LKL
+      this.tabList[8].open = res.sjPos
+
     })
     this.wxList.forEach(item => {
       this.getWxOrsxfcode(item)

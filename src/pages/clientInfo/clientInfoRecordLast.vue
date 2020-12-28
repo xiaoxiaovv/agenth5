@@ -15,6 +15,98 @@
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
       <div class="match-width box align-default"
+           v-if="PROCESS.sjPos">
+        <div class="title">
+          <mu-checkbox v-model="checkboxObj.sjPos"
+                       label="手机pos通道"></mu-checkbox>
+        </div>
+        <div class="item"
+             v-if="from!=='share'">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.sjPos">*</span>手机pos交易费率
+          </div>
+          <div class="match-left-space align-right input-number">
+            <input type="number"
+                   placeholder="请填写真实费率"
+                   v-model="detail.posTradeRate" />%
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.zfb">*</span>手机pos提现费
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.posDrawFee" />
+          </div>
+        </div>
+        <div class="item"
+             v-if="from!=='share'">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.sjPos">*</span>网联交易费率
+          </div>
+          <div class="match-left-space align-right input-number">
+            <input type="number"
+                   placeholder="请填写真实费率"
+                   v-model="detail.quickTradeRate" />%
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.zfb">*</span>网联提现费
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.quickDrawFee" />
+          </div>
+        </div>
+        <div class="item"
+             style="border:0;">
+          <div class="subtitle">结算银行卡背面照片</div>
+        </div>
+        <div class="item id_img_wp"
+             style="border:0;">
+          <div class="img_wp img_wp_width">
+
+            <vmaUploadImg ref="sjPosYinHangKaBeiMian"
+                          @change="onFileChange($event, 'sjPosYinHangKaBeiMian')"></vmaUploadImg>
+            <i v-if="detail.bankPhotoId"
+               class="icon iconfont iconshanchu"
+               @click="deleteImg('sjPosYinHangKaBeiMian')"></i>
+            <div class="icon iconfont iconzhaoxiangji ml-10"
+                 style="font-size:30px;"></div>
+            <img v-if="detail.bankPhotoId"
+                 :src="detail.bankPhotoId | previewLoadImage"
+                 @click="previewImage(detail.bankPhotoId)" />
+          </div>
+        </div>
+        <div class="item"
+             style="border:0;">
+          <div class="subtitle">手持身份证照片</div>
+        </div>
+        <div class="item id_img_wp"
+             style="border:0;">
+          <div class="img_wp img_wp_width">
+            <vmaUploadImg ref="sjPosShouChi"
+                          @change="onFileChange($event, 'sjPosShouChi')"></vmaUploadImg>
+            <i v-if="detail.holdingCardId"
+               class="icon iconfont iconshanchu"
+               @click="deleteImg('sjPosShouChi')"></i>
+            <div class="icon iconfont iconzhaoxiangji ml-10"
+                 style="font-size:30px;"></div>
+            <img v-if="detail.holdingCardId"
+                 :src="detail.holdingCardId | previewLoadImage"
+                 @click="previewImage(detail.holdingCardId)" />
+          </div>
+        </div>
+      </div>
+
+
+      <div class="match-width box align-default"
            v-if="PROCESS.SXF">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.sxf"
@@ -793,7 +885,8 @@ export default {
         CH: true,
         ZFB: true,
         FY: true,
-        LKL:true
+        LKL:true,
+        sjPos:true
       },
       curBankName: '',
       keyword: '',
@@ -815,7 +908,14 @@ export default {
         aliSpecialLicensePic: '',
         specialQualificationPhotoId: '',
         accounRegProvCd: '',
-        accounRegCityCd: ''
+        accounRegCityCd: '',
+        //  手机pos
+        posDrawFee: '', // 手机pos提现费
+        posTradeRate: '', // 手机pos交易费率
+        quickDrawFee: '', // 网联提现费
+        quickTradeRate: '', // 网联交易费率
+        bankPhotoId: '', //手机pos银行卡背面照片ID
+        holdingCardId: '' //手机pos手持身份证照片
       },
       maccList: [],
       lsMaccList: [],
@@ -862,7 +962,8 @@ export default {
         ys: true,
         ch: true,
         fy: true,
-        lkl: true
+        lkl: true,
+        sjPos: true
       },
       fuiouAliRate: '',
       fuiouWxRate: '',
@@ -1054,6 +1155,14 @@ export default {
       if (type === 'fyXuke') {
         this.detail.businessCertPicId = ''
       }
+      if (type === 'sjPosYinHangKaBeiMian') {
+        this.detail.bankPhotoId = ''
+      }
+      if (type === 'sjPosShouChi') {
+        this.detail.holdingCardId = ''
+      }
+
+
     },
     // 删除商家协议图片
     deleteProImg(index) {
@@ -1101,6 +1210,14 @@ export default {
       // 拉卡拉
       this.lklCascaderArr = []
       this.detail.lakalaMccCode = ''
+      //  手机pos
+      this.detail.posDrawFee = '' // 手机pos提现费
+      this.detail.posTradeRate = '' // 手机pos交易费率
+      this.detail.quickDrawFee = '' // 网联提现费
+      this.detail.quickTradeRate = '' // 网联交易费率
+      this.detail.bankPhotoId = '', //手机pos银行卡背面照片ID
+      this.detail.holdingCardId = '' //手机pos手持身份证照片
+
       if (this.from !== 'share') { // 复制链接进件时，不要重置费率
         this.detail.sxfRate = ''
         this.detail.ysRate = ''
@@ -1111,6 +1228,10 @@ export default {
         this.detail.fuiouWxRate = ''
         this.detail.fuiouAliRate = ''
         this.detail.lakalaRate = ''
+        this.detail.posDrawFee = '' // 手机pos提现费
+        this.detail.posTradeRate = '' // 手机pos交易费率
+        this.detail.quickDrawFee = '' // 网联提现费
+        this.detail.quickTradeRate = '' // 网联交易费率
        /* this.detail.lklWxRate = ''
         this.detail.lklAliRate = ''*/
       }
@@ -1542,6 +1663,14 @@ export default {
       let fyRequireData = ['fuiouFirstMccCode', 'fuiouAreaName', 'fuiouAliRate', 'fuiouWxRate']
       // 拉卡拉通道必填字段
       let lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
+      // 手机pos必填字段
+      /*posDrawFee 手机pos提现费
+      posTradeRate手机pos交易费率
+      quickDrawFee网联提现费
+      quickTradeRate网联交易费率
+      bankPhotoId银行卡背面照片ID
+      holdingCardId手持身份证照片*/
+      let sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee', 'bankPhotoId','holdingCardId']
       if (!this.detail.businessLicensePhotoId) {
         fyRequireData.push('inHandPicId')
       }
@@ -1554,6 +1683,7 @@ export default {
         fyRequireData = ['fuiouFirstMccCode', 'fuiouAreaName']
         // todo 是否需要处理share
         lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
+        sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee', 'bankPhotoId','holdingCardId']
       }
       if (Number(this.detail.businessType) === 2) {
         wxRequireData = [
@@ -1663,6 +1793,12 @@ export default {
       }
       //TODO 是否需要处理share
       if (this.checkboxObj.lkl && this.PROCESS.LKL) {
+        if (!lklRequireData.every(attr => this.detail[attr] !== '')) {
+          this.$toast.error('有内容未填入')
+          return
+        }
+      }
+      if (this.checkboxObj.sjPos && this.PROCESS.sjPos) {
         if (!lklRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
@@ -1829,11 +1965,19 @@ export default {
             if (res.code === 200) {
               this.$toast.success('图片上传成功')
               this.$refs[type].$refs.file.value = ''
+              // console.log('aaa=======================',this.$refs)
               let photoId = res.obj
+
               if (type === 'bank') {
                 // 获取银行卡照片
                 this.$set(this.detail, 'personAccountPicId', photoId)
                 this.getBankInfo(photoId)
+              }else if (type === 'sjPosShouChi') {
+                // 手机pos手持身份证
+                this.$set(this.detail, 'holdingCardId', photoId)
+              }else if (type === 'sjPosYinHangKaBeiMian') {
+                // 手机pos结算银行卡背面
+                this.$set(this.detail, 'bankPhotoId', photoId)
               } else if (type === 'zizhi') {
                 // 获取微信特殊资质照片
                 this.$set(this.detail, 'specialQualificationPhotoId', photoId)

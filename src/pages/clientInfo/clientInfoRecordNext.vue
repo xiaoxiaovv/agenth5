@@ -142,6 +142,17 @@
             </div>
           </div>
         </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star">*</span>开户预留手机号
+          </div>
+          <div class="match-left-space align-right">
+            <div class="input align-right">
+              <input placeholder="请输入内容"
+                     v-model="detail.bankPhone" />
+            </div>
+          </div>
+        </div>
       </div>
       <div class="match-width box align-center">
         <div class="next box align-center"
@@ -341,7 +352,8 @@ export default {
         lbnkCity: '',
         lbnkNo: '',
         accountHolder: '',
-        accountNumber: ''
+        accountNumber: '',
+        bankPhone: ''
       },
       open: false,
       status: 0,
@@ -599,7 +611,7 @@ export default {
     },
     // 下一步
     onNext() {
-      let requiredData = ['bnkCdName', 'lbnkProv', 'lbnkCity', 'lbnkNo', 'accountHolder', 'accountNumber']
+      let requiredData = ['bnkCdName', 'lbnkProv', 'lbnkCity', 'lbnkNo', 'accountHolder', 'accountNumber', 'bankPhone']
       if (Number(this.detail.businessType) === 1) { // 个体
         requiredData.push('openingAccountLicensePicId')
       } else { // 企业

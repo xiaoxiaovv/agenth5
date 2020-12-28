@@ -359,6 +359,18 @@ export default {
   },
 
   /**
+   * 手机pos&网联-查询进件状态
+   * @param {*} params
+   */
+  getSjPosCode(params) {
+    return requestAxios({
+      url: '/batchFeed/pos/get_pos_feedstatus',
+      method: 'get',
+      params
+    })
+  },
+
+  /**
    * 查询通道开关状态
    * @param {*} params
    */
