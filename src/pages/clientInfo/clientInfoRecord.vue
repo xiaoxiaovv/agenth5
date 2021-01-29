@@ -56,6 +56,22 @@
             </div>
             <p class="img_intro">身份证反面照</p>
           </div>
+
+          <div class="img_wp img_wp_width">
+            <vmaUploadImg ref="back"
+                          @change="onFileChange($event, 'inHand')"></vmaUploadImg>
+            <div>
+              <i v-if="detail.holdingCardId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('inHand')"></i>
+              <div class="icon iconfont iconzhaoxiangji ml-10"
+                   style="font-size:30px;"></div>
+              <img v-if="detail.holdingCardId"
+                   :src="detail.holdingCardId | previewLoadImage"
+                   @click="previewImage(detail.holdingCardId)" />
+            </div>
+            <p class="img_intro">手持身份证半身照</p>
+          </div>
         </div>
         <div class="title">联系信息</div>
         <div class="item">
@@ -410,6 +426,7 @@ export default {
         // isCommit: 0,
         epresentativePhotoId: '', // 身份正面
         epresentativePhotoId2: '',
+        holdingCardId: '',
         representativeName: '',
         certificateNum: '',
         startCertificateTime: '',
@@ -561,6 +578,10 @@ export default {
         this.detail.epresentativePhotoId2 = ''
         this.detail.startCertificateTime = ''
         this.detail.endCertificateTime = ''
+      }
+      // 身份证（手持）
+      if (type === 'inHank') {
+        this.detail.holdingCardId = ''
       }
       // 营业执照
       if (type === 'license') {
@@ -744,6 +765,7 @@ export default {
         requiredData = [
           'epresentativePhotoId',
           'epresentativePhotoId2',
+          'holdingCardId',
           'representativeName',
           'certificateNum',
           'startCertificateTime',
@@ -761,6 +783,7 @@ export default {
         requiredData = [
           'epresentativePhotoId',
           'epresentativePhotoId2',
+          'holdingCardId',
           'representativeName',
           'certificateNum',
           'startCertificateTime',

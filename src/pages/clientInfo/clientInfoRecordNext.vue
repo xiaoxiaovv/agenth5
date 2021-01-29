@@ -58,7 +58,25 @@
                    :src="detail.bankCardPositivePicId | previewLoadImage"
                    @click="previewImage(detail.bankCardPositivePicId)" />
             </template>
+            <p class="img_intro">银行卡正面</p>
           </div>
+
+          <div class="img_wp img_wp_width">
+            <vmaUploadImg ref="back"
+                          @change="onFileChange($event, 'back')"></vmaUploadImg>
+            <div>
+              <i v-if="detail.bankPhotoId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('back')"></i>
+              <div class="icon iconfont iconzhaoxiangji ml-10"
+                   style="font-size:30px;"></div>
+              <img v-if="detail.bankPhotoId"
+                   :src="detail.bankPhotoId | previewLoadImage"
+                   @click="previewImage(detail.bankPhotoId)" />
+            </div>
+            <p class="img_intro">银行卡背面</p>
+          </div>
+
         </div>
         <div class="item"
              style="color:red;background:#fff;border-bottom:none;"
@@ -351,6 +369,7 @@ export default {
         lbnkProv: '',
         lbnkCity: '',
         lbnkNo: '',
+        bankPhotoId:'',
         accountHolder: '',
         accountNumber: '',
         bankPhone: ''
@@ -423,6 +442,8 @@ export default {
 
         this.detail.lbnkNo = ''
         this.detail.lbnkNoName = ''
+      }else if (type === 'back'){
+        this.detail.bankPhotoId = ''
       }
     },
     openAlertDialog() {
@@ -611,7 +632,7 @@ export default {
     },
     // 下一步
     onNext() {
-      let requiredData = ['bnkCdName', 'lbnkProv', 'lbnkCity', 'lbnkNo', 'accountHolder', 'accountNumber', 'bankPhone']
+      let requiredData = ['bnkCdName', 'lbnkProv', 'lbnkCity', 'lbnkNo', 'accountHolder', 'accountNumber', 'bankPhone', 'bankPhotoId']
       if (Number(this.detail.businessType) === 1) { // 个体
         requiredData.push('openingAccountLicensePicId')
       } else { // 企业
@@ -694,6 +715,8 @@ export default {
                 this.$set(this.detail, 'bankCardPositivePicId', photoId)
                 this.getBankInfo(photoId)
               }
+            }else if (type === 'back') { // 获取银行卡背面照片
+                this.$set(this.detail, 'bankPhotoId', photoId)
             }
           } else {
             this.$toast.error(res.msg)
