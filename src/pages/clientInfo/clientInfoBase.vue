@@ -218,7 +218,7 @@ export default {
       this.openAlert = false
     },
     /**
-     * 省市排序--排序规则
+     * 省市排序--排序规则（估计是为了让每次获取到的数据位置不变用的）
      */
     sortCompare(a, b) {
       a = parseInt(a.id)
@@ -260,7 +260,7 @@ export default {
         this.detail.regDistCdName = val[2].name
       }
     },
-    // 获取列表详情
+    // 获取列表详情（提交过的数据）
     getMchInfo(id) {
       clientInfoApi.getMchInfo({ id }).then(res => {
         this.cascaderArr = [res.obj.regProvCd, res.obj.regCityCd, res.obj.regDistCd]

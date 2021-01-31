@@ -14,6 +14,63 @@
 
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
+
+      <!--开店宝-->
+      <div class="match-width box align-default"
+           v-if="PROCESS.KDB">
+        <div class="title">
+          <mu-checkbox v-model="checkboxObj.kdb"
+                       label="开店宝通道"></mu-checkbox>
+        </div>
+        <div class="item">
+          <VmaCascaderTree v-model="kdbCascaderArr"
+                           class="client-info"
+                           :dataTree="maccList"
+                           :placeholder="'请选择类目'"
+                           :modalLabel="'选择类目'"
+                           :required="checkboxObj.kdb"
+                           label="经营类目"
+                           @change="changeKdbMenu"></VmaCascaderTree>
+        </div>
+        <div class="item">
+          <VmaCascaderTree class="client-info"
+                           v-model="kdbAddressArr"
+                           :dataTree="kdbAddressTree"
+                           :label="'商户营业地区补充'"
+                           :placeholder="'请选择省市'"
+                           :modalLabel="'选择省市'"
+                           :required="true"
+                           @change="changeCityShopAdd"></VmaCascaderTree>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="detail.businessLicensePhotoId">*</span>到账周期
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callActionSheet(7)">
+            <div class="input ellipsis"
+                 style="text-align: right">
+              {{['D0','T1'][Number(detail.settlementCycle)]}}
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+        <div class="item"
+             v-if="from!=='share'">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.kdb">*</span>费率
+          </div>
+          <div class="match-left-space align-right input-number">
+            <input type="number"
+                   placeholder="请填写真实费率"
+                   v-model="detail.kdbRate" />%
+          </div>
+        </div>
+      </div>
+
+
       <div class="match-width box align-default"
            v-if="PROCESS.sjPos">
         <div class="title">
@@ -807,6 +864,23 @@
               </div>
             </div>
           </div>
+              <!--选择结算周期-->
+
+          <div v-if="status == 7">
+            <div class="action-sheet__content">
+              <div class="match-width"
+                   v-for="(item, index) in settlementCycleTypes"
+                   :key="index">
+                <div :class="['item align-hor-bet plr-30 ptb-30', (item.kdbWxSettlementCycle === detail.settlementCycle)?'active':'']"
+                     @click="getSettlementCycle(item)">
+                  <div>{{item.label}}</div>
+                  <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                  <!-- <div class="pass" v-else></div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
 
           <!-- 补脚 -->
           <div class="action-sheet__padding"></div>
@@ -854,6 +928,7 @@
 
 <script>
 import { url } from '@/utils/src/request'
+import { initProvinces } from '@/utils/src/common'
 import { CLIENT_INFO_BASE, CLIENT_INFO_DETAIL } from '@/router/types'
 // clientInfoDetailIDLocal
 import VmaCascaderTree from '@/components/common/vmaCascaderTree'
@@ -866,6 +941,8 @@ import indexMixins from './src/mixins'
 // import PROCESS from '@/constants'
 import { getProcess } from '@/constants'
 import { NativeAppRouter } from '../../utils/src/webviewBridgeUtils'
+
+
 export default {
   components: {
     VmaCascaderTree,
@@ -886,7 +963,8 @@ export default {
         ZFB: true,
         FY: true,
         LKL:true,
-        sjPos:true
+        sjPos:true,
+        KDB:true
       },
       curBankName: '',
       keyword: '',
@@ -896,9 +974,23 @@ export default {
       // iframe: sessionStorage.iframe ? JSON.parse(sessionStorage.iframe) : false,
       options: [],
       proImgList: [], // 商家协议图片id列表
+      kdbAddressTree: [], //开店宝经营地址树
+      settlementCycleTypes: [
+        {
+          value: 0,
+          label: 'D0'
+        },
+        {
+          value: 1,
+          label: 'T1'
+        }
+      ],//结算周期类型列表
       detail: {
+        settlementCycle:'',//结算周期
+
         isCommit: 1,
         sxfRate: 0.38,
+        kdbRate: 0.38,
         productDesc: '',
         personBankName: '',
         personAccountNumber: '',
@@ -927,12 +1019,15 @@ export default {
       cascaderArr: [], // (随行付)经营类目
       provinceArr: [],
       cascaderTree: [],
+
       ysCascaderArr: [], // (威富通)经营类目
       lsCascaderArr: [], // (乐刷)经营类目
       chCascaderArr: [], // (传化)经营类目
       zfbCascaderArr: [], // (支付宝)经营行业
       fyCascaderArr: [], // (富友)经营行业
       lklCascaderArr: [], // (拉卡拉)经营行业
+      kdbCascaderArr: [], // (开店宝)经营行业 v-module
+      kdbAddressArr: [], // (开店宝)经营行业
       rate: {},
       open: false,
       status: 0,
@@ -963,7 +1058,8 @@ export default {
         ch: true,
         fy: true,
         lkl: true,
-        sjPos: true
+        sjPos: true,
+        kdb:true
       },
       fuiouAliRate: '',
       fuiouWxRate: '',
@@ -1081,12 +1177,32 @@ export default {
     handleSearch() {
       this.getBranchCode(this.keyword)
     },
+    getSettlementCycle(item) {
+      this.detail.settlementCycle = String(item.value)
+    },
     handleInputSearch() {
       // this.handleSearch()
     },
     changeCity(item) {
       this.detail.accounRegProvName = item[0].name
       this.detail.accounRegCityName = item[1].name
+    },
+    //经营地址省市区选择
+    changeCityShopAdd(val) {
+      // id
+      this.detail.regProvCd = val[0].id
+      this.detail.regCityCd = val[1].id
+      this.detail.regDistCd = ''
+
+      // 名称
+      this.detail.regProvCdName = val[0].name
+      this.detail.regCityCdName = val[1].name
+      this.detail.regDistCdName = ''
+
+      if (val.length === 3) {
+        this.detail.regDistCd = val[2].id
+        this.detail.regDistCdName = val[2].name
+      }
     },
     // 选择随行付经营类目
     changeMenu(item) {
@@ -1117,6 +1233,14 @@ export default {
 
     // 选择富友经营类目
     changeFyMenu(item) {
+      if (item.length) {
+        this.detail.fuiouFirstMccCode = item[0].name
+        this.detail.fuiouSecondMccCode = item[1].name
+        this.detail.fuiouBusiness = item[2].name
+      }
+    },
+    // 选择开店宝经营类目
+    changeKdbMenu(item) {
       if (item.length) {
         this.detail.fuiouFirstMccCode = item[0].name
         this.detail.fuiouSecondMccCode = item[1].name
@@ -1334,6 +1458,7 @@ export default {
         // }
       })
     },
+
     /**
      * 省市排序--排序规则
      */
@@ -1358,6 +1483,9 @@ export default {
         this.detail.industrId = this.detail.industrId + ''
         this.detail.isIndustryDining = Boolean(this.detail.isIndustryDining)
         this.cascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
+        this.kdbAddressArr = [this.detail.regProvCd, this.detail.regCityCd, this.detail.regDistCd] //开店宝省市区
+        //todo 开店宝经营类目回显
+        this.kdbCascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
         this.lsCascaderArr = [this.detail.leFirstMccCode, this.detail.leSecondMccCode, this.detail.leMccCode]
         this.ysCascaderArr = [this.detail.ysFirstName, this.detail.ysSecondName, this.detail.industrId]
         let zfbNameArr = [this.detail.aliFirstLevel, this.detail.aliSecondLevel, this.detail.aliThirdLevel]
@@ -1450,6 +1578,13 @@ export default {
         this.fyMaccList = this.sortTreeAttr(res.obj)
       })
     },
+    // 获取富友费率列表
+    getFyRateList() {
+      if (!this.PROCESS.FY) return
+      clientInfoApi.getFyRateList().then(res => {
+        this.rateList = res.obj
+      })
+    },
     // 获取拉卡拉经营类目
     getLklMccList() {
       if (!this.PROCESS.LKL) return
@@ -1459,13 +1594,7 @@ export default {
       })
     },
 
-    // 获取富友费率列表
-    getFyRateList() {
-      if (!this.PROCESS.FY) return
-      clientInfoApi.getFyRateList().then(res => {
-        this.rateList = res.obj
-      })
-    },
+
 
     // 获取拉卡拉费率列表
   /*  getLklRateList() {
@@ -1474,6 +1603,24 @@ export default {
         this.rateList = res.obj
       })
     },*/
+    /**
+     * 获取开店宝省市区
+     */
+    async getKdbProviceAndCity() {
+      let that = this
+      await clientInfoApi.getKdbAddressList().then(res => {
+        // let resObj = res
+        this.kdbAddressTree = initProvinces(res.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
+        // console.log('kaidianbaotree==========================',this.kdbAddressTree)
+      })
+    },
+    // 获取开店宝经营类目
+    getKdbMccList() {
+      if (!this.PROCESS.FY) return
+      clientInfoApi.getKdbMccList().then(res => {
+        this.kdbMaccList = this.sortTreeAttr(res.data)
+      })
+    },
     // 最大只到2级
     sortTreeAttr(dataTree,channelName) {
 
@@ -1561,6 +1708,9 @@ export default {
       }
       if (status === 6) {
         this.curRateIndex = this.curWxRateIndex
+      }
+      if (status === 7) {
+      //  只需要置为true就可以  this.open = true
       }
       this.open = true
       this.status = +status
@@ -1663,6 +1813,8 @@ export default {
       let fyRequireData = ['fuiouFirstMccCode', 'fuiouAreaName', 'fuiouAliRate', 'fuiouWxRate']
       // 拉卡拉通道必填字段
       let lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
+      // 开店宝通道必填字段
+      let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbRate', '', '', '']
       // 手机pos必填字段
       /*posDrawFee 手机pos提现费
       posTradeRate手机pos交易费率
@@ -1671,6 +1823,9 @@ export default {
       bankPhotoId银行卡背面照片ID
       holdingCardId手持身份证照片*/
       let sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee', 'bankPhotoId','holdingCardId']
+
+
+
       if (!this.detail.businessLicensePhotoId) {
         fyRequireData.push('inHandPicId')
       }
@@ -1896,8 +2051,8 @@ export default {
       }
       return ''
     },
-    // 初始化详情数据
-    initDetail() {
+    // 初始化详情数据 20010131 韩注释 搜索发现没有引用
+   /* initDetail() {
       this.detail = JSON.parse(clientInfoDetailLocal.get())
       console.log('初始化详情数据', this.detail)
       this.rate.wxRate = Number(this.detail.wxRate) ? Number(this.detail.wxRate) * 100 : 0 // 微信费率
@@ -1909,12 +2064,12 @@ export default {
       this.rate.fyZfbRate = Number(this.detail.fyZfbRate) ? Number(this.detail.fyZfbRate) * 100 : 0// 富友费率
       this.rate.fyWxRate = Number(this.detail.fyWxRate) ? Number(this.detail.fyWxRate) * 100 : 0
       this.rate.lakalaRate = Number(this.detail.lakalaRate) ? Number(this.detail.lakalaRate) * 100 : 0
-      /*this.rate.lklZfbRate = Number(this.detail.lklZfbRate) ? Number(this.detail.lklZfbRate) * 100 : 0// 拉卡拉费率
-      this.rate.lklWxRate = Number(this.detail.lklWxRate) ? Number(this.detail.lklWxRate) * 100 : 0*/
+      /!*this.rate.lklZfbRate = Number(this.detail.lklZfbRate) ? Number(this.detail.lklZfbRate) * 100 : 0// 拉卡拉费率
+      this.rate.lklWxRate = Number(this.detail.lklWxRate) ? Number(this.detail.lklWxRate) * 100 : 0*!/
 
       this.merchantName = JSON.parse(clientInfoDetailMerchantNameLocal.get())
       this.merchantName = this.merchantName.merchantName
-    },
+    },*/
     // 获取银行卡信息
     getBankInfo(pathId) {
       this.loading = true
@@ -2042,12 +2197,16 @@ export default {
         this.getChMccList() // 传化经营类目
         this.getFyMccList() // 富友经营类目
         this.getLklMccList() // 拉卡拉经营类目
+        this.getKdbMccList() // 拉卡拉经营类目
       })
       this.getFyRateList() // 获取富友交易费率列表
     } else {
       this.$toast.error('详情数据丢失')
     }
-  }
+    //  开店宝地址树
+    this.getKdbProviceAndCity();
+  },
+
 }
 </script>
 

@@ -11,7 +11,8 @@ const PROCESS_NAME = {
   ZFB: '官方',
   FY: '富友',
   LKL: '拉卡拉',
-  sjPos: '手机pos'
+  sjPos: '手机pos',
+  KDB: '开店宝'
 }
 let PROCESS = {
   SXF: false,
@@ -22,7 +23,8 @@ let PROCESS = {
   ZFB: false,
   FY: false,
   LKL: false,
-  sjPos: false
+  sjPos: false,
+  KDB:false
 }
 
 // 通道开启状态

@@ -1,4 +1,5 @@
 import { requestAxios } from '@/utils'
+import { afterLoginInfoLocal } from '@/storage'
 // import qs from 'qs'
 
 export default {
@@ -157,7 +158,30 @@ export default {
     })
   },*/
 
-  // 获取列表信息
+  // 获取开店宝MccCd树类目列表
+  getKdbMccList() {
+    return requestAxios({
+      url: `/batchFeed/kdb/findAnyBusiness`,
+      method: 'get',
+      params:{
+        companyId: afterLoginInfoLocal.getJSON().companyId
+      }
+    })
+  },
+  // 获取开店宝区域列表
+  getKdbAddressList() {
+    console.log('afterLoginInfoLocal.getJSON().companyId********************',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/kdb/findAnyArea`,
+      method: 'get',
+      params:{
+        companyId: afterLoginInfoLocal.getJSON().companyId
+      }
+
+    })
+  },
+
+  // 获取列表信息（已填写过的信息）
   getMchInfo(params) {
     return requestAxios({
       url: `/merchant/mch_info/feedDetail`,
