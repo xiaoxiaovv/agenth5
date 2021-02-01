@@ -40,18 +40,56 @@
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
                            :required="true"
-                           @change="changeCityShopAdd"></VmaCascaderTree>
+                           @change="changeShopAddress"></VmaCascaderTree>
+        </div>
+
+
+
+
+        <div class="item">
+          <div class="subtitle">
+            <span class="star">*</span>公司类型
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(1)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="kdbCompanyTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
         </div>
         <div class="item">
           <div class="subtitle">
-            <span class="star"
-                  v-show="detail.businessLicensePhotoId">*</span>到账周期
+            <span class="star">*</span>到账周期
           </div>
           <div class="match-left-space box align-right"
-               @click="callActionSheet(7)">
+               @click="callSimpleTree(2)">
             <div class="input ellipsis"
-                 style="text-align: right">
-              {{['D0','T1'][Number(detail.settlementCycle)]}}
+                 style="text-align: right" v-text="settlementCycleTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star">*</span>性别
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(3)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="sexText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star">*</span>结算账户类型
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(4)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="kdbAccountTypeText">
             </div>
             <div class="icon iconfont iconenter ml-10"></div>
           </div>
@@ -65,9 +103,127 @@
           <div class="match-left-space align-right input-number">
             <input type="number"
                    placeholder="请填写真实费率"
-                   v-model="detail.kdbRate" />%
+                   v-model="detail.kdbWxTradeRate" />%
           </div>
         </div>
+        <div class="item"
+             v-if="from!=='share'">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.kdb">*</span>D0手续费
+          </div>
+          <div class="match-left-space align-right input-number">
+            <input type="number"
+                   placeholder="请填写真实手续费"
+                   v-model="detail.kdbServiceRate" />元
+          </div>
+        </div>
+
+
+        <div class="item"
+             style="border:0;">
+          <div class="subtitle">
+            <span class="star">*</span>注册登记表照片
+          </div>
+        </div>
+        <div class="item id_img_wp">
+          <div class="img_wp img_wp_width">
+            <!-- <input class="file"
+                   type="file"
+                   ref="out"
+                   accept="image/*"
+                   @change="onFileChange($event, 'out')" /> -->
+            <vmaUploadImg ref="kdbRegistryId"
+                          @change="onFileChange($event, 'kdbRegistryId')"></vmaUploadImg>
+            <div>
+              <i v-if="detail.storeEntrancePicId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('kdbRegistryId')"></i>
+              <div class="icon iconfont iconzhaoxiangji ml-10"
+                   style="font-size:30px;"></div>
+              <img v-if="detail.kdbRegistryId"
+                   :src="detail.kdbRegistryId | previewLoadImage"
+                   @click="previewImage(detail.kdbRegistryId)" />
+            </div>
+            <p class="img_intro">注册登记表照片</p>
+          </div>
+        </div>
+        <div class="item"
+             style="border:0;">
+          <div class="subtitle">
+            <span class="star">*</span>收单协议照片
+          </div>
+        </div>
+        <div class="item id_img_wp">
+          <div class="img_wp img_wp_width">
+            <!-- <input class="file"
+                   type="file"
+                   ref="out"
+                   accept="image/*"
+                   @change="onFileChange($event, 'out')" /> -->
+            <vmaUploadImg ref="kdbAgreementId"
+                          @change="onFileChange($event, 'kdbAgreementId')"></vmaUploadImg>
+            <div>
+              <i v-if="detail.storeEntrancePicId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('kdbAgreementId')"></i>
+              <div class="icon iconfont iconzhaoxiangji ml-10"
+                   style="font-size:30px;"></div>
+              <img v-if="detail.kdbAgreementId"
+                   :src="detail.kdbAgreementId | previewLoadImage"
+                   @click="previewImage(detail.kdbAgreementId)" />
+            </div>
+            <p class="img_intro">收单协议照片</p>
+          </div>
+        </div>
+        <div class="item"
+             style="border:0;">
+          <div class="subtitle">
+            商户变更登记表照片(变更时必传)
+          </div>
+        </div>
+        <div class="item id_img_wp">
+          <div class="img_wp img_wp_width">
+            <!-- <input class="file"
+                   type="file"
+                   ref="out"
+                   accept="image/*"
+                   @change="onFileChange($event, 'out')" /> -->
+            <vmaUploadImg ref="kdbUpregisterId"
+                          @change="onFileChange($event, 'kdbUpregisterId')"></vmaUploadImg>
+            <div>
+              <i v-if="detail.storeEntrancePicId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('kdbUpregisterId')"></i>
+              <div class="icon iconfont iconzhaoxiangji ml-10"
+                   style="font-size:30px;"></div>
+              <img v-if="detail.kdbUpregisterId"
+                   :src="detail.kdbUpregisterId | previewLoadImage"
+                   @click="previewImage(detail.kdbUpregisterId)" />
+            </div>
+            <p class="img_intro">商户变更登记表</p>
+          </div>
+        </div>
+        <!--<div class="item"
+             style="border:0;">
+          <div class="subtitle">特殊资质</div>
+        </div>
+        <div class="item id_img_wp"
+             style="border:0;">
+          <div class="img_wp img_wp_width">
+
+            <vmaUploadImg ref="sjPosYinHangKaBeiMian"
+                          @change="onFileChange($event, 'sjPosYinHangKaBeiMian')"></vmaUploadImg>
+            <i v-if="detail.bankPhotoId"
+               class="icon iconfont iconshanchu"
+               @click="deleteImg('sjPosYinHangKaBeiMian')"></i>
+            <div class="icon iconfont iconzhaoxiangji ml-10"
+                 style="font-size:30px;"></div>
+            <img v-if="detail.bankPhotoId"
+                 :src="detail.bankPhotoId | previewLoadImage"
+                 @click="previewImage(detail.bankPhotoId)" />
+          </div>
+        </div>-->
       </div>
 
 
@@ -765,6 +921,83 @@
              @click="onNext">提交</div>
       </div>
 
+<!--简单树-->
+      <mu-bottom-sheet :open.sync="openSimpleTree">
+        <div class="action-sheet box align-default">
+          <div class="title box align-hor-bet plr-30">
+            <div @click="simpleTreeBack">返回</div>
+            <!-- <div class="confirm">
+              <div  @click="onActionSheetConfirm(2)">确定</div>
+              <div v-else @click="onNextStep">取消</div>
+            </div> -->
+          </div>
+        </div>
+        <div v-if="simpleTreeStatus === 1">
+          <div class="action-sheet__header align-left box plr-30">请选择公司类型</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in kdbcompanyTypeList"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.kdbCompanyType)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.name}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="simpleTreeStatus === 2">
+          <div class="action-sheet__header align-left box plr-30">请选择到账周期类型</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in settlementCycleTypes"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.kdbWxSettlementCycle)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.name}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="simpleTreeStatus === 3">
+          <div class="action-sheet__header align-left box plr-30">请选择性别</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in sexList"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.kdbSex)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.name}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="simpleTreeStatus === 4">
+          <div class="action-sheet__header align-left box plr-30">请选择结算账户类型</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in kdbAccountTypeList"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.kdbAccountType)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.name}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </mu-bottom-sheet>
+
       <!-- action-sheet -->
       <mu-bottom-sheet :open.sync="open">
         <div class="action-sheet box align-default">
@@ -864,9 +1097,9 @@
               </div>
             </div>
           </div>
-              <!--选择结算周期-->
+              <!--选择到账周期-->
 
-          <div v-if="status == 7">
+          <!--<div v-if="status == 7">
             <div class="action-sheet__content">
               <div class="match-width"
                    v-for="(item, index) in settlementCycleTypes"
@@ -874,12 +1107,12 @@
                 <div :class="['item align-hor-bet plr-30 ptb-30', (item.kdbWxSettlementCycle === detail.settlementCycle)?'active':'']"
                      @click="getSettlementCycle(item)">
                   <div>{{item.label}}</div>
-                  <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
-                  <!-- <div class="pass" v-else></div> -->
+                  &lt;!&ndash; <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> &ndash;&gt;
+                  &lt;!&ndash; <div class="pass" v-else></div> &ndash;&gt;
                 </div>
               </div>
             </div>
-          </div>
+          </div>-->
 
 
           <!-- 补脚 -->
@@ -966,6 +1199,30 @@ export default {
         sjPos:true,
         KDB:true
       },
+      openSimpleTree:false, //简单选择树
+      simpleTreeStatus: 0,
+
+      kdbCompanyTypeText:'请选择公司类型',
+      kdbcompanyTypeList: [
+        {value:'1',
+          name:'股份有限责任公司'
+        },
+        {value:'2',
+          name:'有限责任公司'
+        },
+        {value:'3',
+          name:'非公司企业法人'
+        },
+        {value:'4',
+          name:'私营合伙企业5'
+        },
+        {value:'5',
+          name:'私营独资企业'
+        },
+        {value:'6',
+          name:'个体工商户'
+        },
+      ],
       curBankName: '',
       keyword: '',
       bankNameList: [],
@@ -978,19 +1235,40 @@ export default {
       settlementCycleTypes: [
         {
           value: 0,
-          label: 'D0'
+          name: 'D0'
         },
         {
           value: 1,
-          label: 'T1'
+          name: 'T1'
         }
       ],//结算周期类型列表
+      sexList: [
+        {
+          value: 1,
+          name: '男'
+        },
+        {
+          value: 2,
+          name: '女'
+        }
+      ],
+      kdbAccountTypeList: [
+        {
+          value: 1,
+          name: '对私结算'
+        },
+        {
+          value: 2,
+          name: '对公结算'
+        }
+      ],
+      sexText:'请选择性别',
+      settlementCycleTypeText:'请选择到账周期类型',
+      kdbAccountTypeText:'请选择结算账户类型',
       detail: {
-        settlementCycle:'',//结算周期
-
         isCommit: 1,
         sxfRate: 0.38,
-        kdbRate: 0.38,
+        kdbWxTradeRate: 0.38,
         productDesc: '',
         personBankName: '',
         personAccountNumber: '',
@@ -1007,7 +1285,29 @@ export default {
         quickDrawFee: '', // 网联提现费
         quickTradeRate: '', // 网联交易费率
         bankPhotoId: '', //手机pos银行卡背面照片ID
-        holdingCardId: '' //手机pos手持身份证照片
+        holdingCardId: '', //手机pos手持身份证照片
+      //  开店宝
+        kdbCompanyType:'', //公司类型
+        kdbWxSettlementCycle:'',//结算周期
+        kdbProvinceId:'',
+        kdbCityId:'',
+        kdbAreaId:'',
+        kdbAccountType:'',  //结算账户类型 1对私结算  2对公结算
+        kdbSex:'', //性别
+        kdbRegistryId:'',  //注册登记表照片id
+        kdbAgreementId:'',  //收单协议照片id
+        kdbUpregisterId:'',  //开店宝商户变更登记表照片id
+        kdbBusinessId:'',  //一级经营类目id
+        kdbBusinessId1:'',  //二级经营类目id
+      //  开店宝暂时不用字段--开始
+        kdbJjkTradeRate:'0.38',  //二级经营类目id
+        kdbDjkTradeRate:'0.38',  //二级经营类目id
+        kdbJjkSettlementCycle:'T1',  //二级经营类目id
+        kdbDjkSettlementCycle:'T1',  //二级经营类目id
+        kdbJjkDiscountRate:'0.38',  //二级经营类目id
+        kdbDjkDiscountRate:'0.38',  //二级经营类目id
+        kdbSingleServiceFeeUpLimit:'18',  //二级经营类目id
+      //  开店宝暂时不用字段--结束
       },
       maccList: [],
       lsMaccList: [],
@@ -1050,15 +1350,15 @@ export default {
       imgUrl: '',
       merchantName: '',
       checkboxObj: {
-        sxf: true,
-        wx: true,
-        zfb: true,
-        ls: true,
-        ys: true,
-        ch: true,
-        fy: true,
-        lkl: true,
-        sjPos: true,
+        sxf: false,
+        wx: false,
+        zfb: false,
+        ls: false,
+        ys: false,
+        ch: false,
+        fy: false,
+        lkl: false,
+        sjPos: false,
         kdb:true
       },
       fuiouAliRate: '',
@@ -1177,9 +1477,9 @@ export default {
     handleSearch() {
       this.getBranchCode(this.keyword)
     },
-    getSettlementCycle(item) {
+   /* getSettlementCycle(item) {
       this.detail.settlementCycle = String(item.value)
-    },
+    },*/
     handleInputSearch() {
       // this.handleSearch()
     },
@@ -1187,21 +1487,21 @@ export default {
       this.detail.accounRegProvName = item[0].name
       this.detail.accounRegCityName = item[1].name
     },
-    //经营地址省市区选择
-    changeCityShopAdd(val) {
+    //经营地址省市区选择  开店宝
+    changeShopAddress(val) {
       // id
-      this.detail.regProvCd = val[0].id
-      this.detail.regCityCd = val[1].id
-      this.detail.regDistCd = ''
+      this.detail.kdbProvinceId = val[0].id
+      this.detail.kdbCityId = val[1].id
+      this.detail.kdbAreaId = ''
 
       // 名称
-      this.detail.regProvCdName = val[0].name
+     /* this.detail.regProvCdName = val[0].name
       this.detail.regCityCdName = val[1].name
-      this.detail.regDistCdName = ''
+      this.detail.regDistCdName = ''*/
 
       if (val.length === 3) {
-        this.detail.regDistCd = val[2].id
-        this.detail.regDistCdName = val[2].name
+        this.detail.kdbAreaId = val[2].id
+        // this.detail.regDistCdName = val[2].name
       }
     },
     // 选择随行付经营类目
@@ -1284,6 +1584,15 @@ export default {
       }
       if (type === 'sjPosShouChi') {
         this.detail.holdingCardId = ''
+      }else if(type === 'kdbRegistryId'){
+        //开店宝注册登记表照片id
+        this.detail.kdbRegistryId = ''
+      }else if(type === 'kdbAgreementId'){
+        //开店宝收单协议照片id
+        this.detail.kdbAgreementId = ''
+      }else if(type === 'kdbUpregisterId'){
+        //开店宝开店宝商户变更登记表照片id
+        this.detail.kdbUpregisterId = ''
       }
 
 
@@ -1483,9 +1792,9 @@ export default {
         this.detail.industrId = this.detail.industrId + ''
         this.detail.isIndustryDining = Boolean(this.detail.isIndustryDining)
         this.cascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
-        this.kdbAddressArr = [this.detail.regProvCd, this.detail.regCityCd, this.detail.regDistCd] //开店宝省市区
+        this.kdbAddressArr = [this.detail.kdbProvinceId, this.detail.kdbCityId, this.detail.kdbAreaId] //开店宝省市区
         //todo 开店宝经营类目回显
-        this.kdbCascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
+        this.kdbCascaderArr = [this.detail.kdbBusinessId1, this.detail.kdbBusinessId] //开店宝
         this.lsCascaderArr = [this.detail.leFirstMccCode, this.detail.leSecondMccCode, this.detail.leMccCode]
         this.ysCascaderArr = [this.detail.ysFirstName, this.detail.ysSecondName, this.detail.industrId]
         let zfbNameArr = [this.detail.aliFirstLevel, this.detail.aliSecondLevel, this.detail.aliThirdLevel]
@@ -1610,7 +1919,7 @@ export default {
       let that = this
       await clientInfoApi.getKdbAddressList().then(res => {
         // let resObj = res
-        this.kdbAddressTree = initProvinces(res.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
+        this.kdbAddressTree = initProvinces(res.obj.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
         // console.log('kaidianbaotree==========================',this.kdbAddressTree)
       })
     },
@@ -1690,6 +1999,33 @@ export default {
       }
       return dataTree
     },
+    //唤醒简单树
+    callSimpleTree(status){
+      this.openSimpleTree = true;
+      this.simpleTreeStatus = status;
+    },
+    //simpleTree 选中
+    simpleTreeSelect(item){
+      if(this.simpleTreeStatus === 1){
+        // this.detail.kdbCompanyType = item.value;
+        this.$set(this.detail, "kdbCompanyType", item.value);
+        this.kdbCompanyTypeText = item.name;
+      }else if(this.simpleTreeStatus === 2){
+        this.$set(this.detail, "kdbWxSettlementCycle", item.value);
+        this.settlementCycleTypeText = item.name;
+      }else if(this.simpleTreeStatus === 3){
+        this.$set(this.detail, "kdbSex", item.value);
+        this.sexText = item.name;
+      }else if(this.simpleTreeStatus === 4){
+        this.$set(this.detail, "kdbAccountType", item.value);
+        this.kdbAccountTypeText = item.name;
+      }
+      this.openSimpleTree = false;
+
+    },
+    simpleTreeBack(){
+      this.openSimpleTree = false;
+    },
     // 唤醒action-sheet
     callActionSheet(status) {
       if (status === 3) {
@@ -1709,9 +2045,7 @@ export default {
       if (status === 6) {
         this.curRateIndex = this.curWxRateIndex
       }
-      if (status === 7) {
-      //  只需要置为true就可以  this.open = true
-      }
+
       this.open = true
       this.status = +status
     },
@@ -1727,6 +2061,7 @@ export default {
         this.bankNameList = res.obj
       })
     },
+
     // action-sheet取消
     onActionSheetClose() {
       this.open = false
@@ -1814,7 +2149,7 @@ export default {
       // 拉卡拉通道必填字段
       let lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
       // 开店宝通道必填字段
-      let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbRate', '', '', '']
+      let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxTradeRate', '', '', '']
       // 手机pos必填字段
       /*posDrawFee 手机pos提现费
       posTradeRate手机pos交易费率
@@ -2119,6 +2454,7 @@ export default {
           res => {
             if (res.code === 200) {
               this.$toast.success('图片上传成功')
+              console.log('this.$refs[type]77777777777777777777777777',this.$refs[type])
               this.$refs[type].$refs.file.value = ''
               // console.log('aaa=======================',this.$refs)
               let photoId = res.obj
@@ -2155,6 +2491,15 @@ export default {
               } else if (type === 'xieyi') {
                 // 商家协议
                 this.proImgList.push(photoId)
+              }else if(type === 'kdbRegistryId'){
+                //开店宝注册登记表照片id
+                this.$set(this.detail, 'kdbRegistryId', photoId)
+              }else if(type === 'kdbAgreementId'){
+                //开店宝收单协议照片id
+                this.$set(this.detail, 'kdbAgreementId', photoId)
+              }else if(type === 'kdbUpregisterId'){
+                //开店宝开店宝商户变更登记表照片id
+                this.$set(this.detail, 'kdbUpregisterId', photoId)
               }
             } else {
               this.$toast.error(res.msg)

@@ -170,14 +170,13 @@ export default {
   },
   // 获取开店宝区域列表
   getKdbAddressList() {
-    console.log('afterLoginInfoLocal.getJSON().companyId********************',afterLoginInfoLocal.getJSON().companyId)
+    // console.log('afterLoginInfoLocal.getJSON().companyId********************',afterLoginInfoLocal.getJSON().companyId)
     return requestAxios({
       url: `/batchFeed/kdb/findAnyArea`,
       method: 'get',
       params:{
         companyId: afterLoginInfoLocal.getJSON().companyId
       }
-
     })
   },
 
@@ -389,6 +388,18 @@ export default {
   getSjPosCode(params) {
     return requestAxios({
       url: '/batchFeed/pos/get_pos_feedstatus',
+      method: 'get',
+      params
+    })
+  },
+
+  /**
+   * 手机pos&网联-查询进件状态
+   * @param {*} params
+   */
+  getKdbCode(params) {
+    return requestAxios({
+      url: '/batchFeed/pos/get_kdb_feedstatus',
       method: 'get',
       params
     })

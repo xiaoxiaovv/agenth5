@@ -782,6 +782,91 @@
           </div>
         </div>
 
+
+        <div class="demo-text"
+             v-if="active === 9">
+          <div class="client-info-detail__content box match-left-space pb-40"
+               v-show="PROCESS.sjPos">
+            <div class="match-width box align-default">
+              <div class="title">开店宝通道</div>
+              <div class="item">
+                <div class="subtitle">开店宝交易费率</div>
+                <div class="match-left-space align-right">{{detail.kdbWxTradeRate}}%</div>
+              </div>
+
+              <div class="item">
+                <div class="subtitle">商户手持证件照</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.holdingCardId"
+                       @click="previewImage(detail.holdingCardId)">
+                    <img class="match-parent"
+                         :src="detail.holdingCardId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="subtitle">结算卡背面</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.bankPhotoId"
+                       @click="previewImage(detail.bankPhotoId)">
+                    <img class="match-parent"
+                         :src="detail.bankPhotoId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="item">
+                 <div class="subtitle">经营许可证</div>
+                 <div class="match-left-space align-right ellipsis">
+                   <div v-if="detail.businessCertPicId"
+                        @click="previewImage(detail.businessCertPicId)">
+                     <img class="match-parent"
+                          :src="detail.businessCertPicId | loadImage" />
+                   </div>
+                 </div>
+               </div>-->
+              <div v-if="kdbData"
+                   style="width:100%">
+                <div class="title">进件状态</div>
+                <div class="item">
+                  <div class="subtitle">商户编号</div>
+                  <div class="match-left-space align-right">{{kdbData.posMchId}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">注册名称</div>
+                  <div class="match-left-space align-right">{{kdbData.posRegisName}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">手机pos交易费率</div>
+                  <div class="match-left-space align-right">{{kdbData.posTradeRate}}%</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">手机pos提现费</div>
+                  <div class="match-left-space align-right">{{kdbData.posDrawFee}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">网联交易费率</div>
+                  <div class="match-left-space align-right">{{kdbData.quickTradeRate}}%</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">网联提现费</div>
+                  <div class="match-left-space align-right">{{kdbData.quickDrawFee}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">进件状态</div>
+                  <div class="match-left-space align-right">{{entryStatus[kdbData.entryStatus]}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">进件结果</div>
+                  <div class="match-left-space align-right">{{kdbData.posMsg}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">提交时间</div>
+                  <div class="match-left-space align-right">{{kdbData.commitTime}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </mu-container>
     </div>
 
@@ -868,6 +953,7 @@ export default {
         // { index: 8, name: '银联', open: true },
         // { index: 9, name: '拉卡拉', open: true }
         { index: 10, name: '手机pos', open: true },
+        { index: 11, name: '开店宝', open: true },
       ],
       fyEntryStatus: {
         '-1': '进件失败',
@@ -960,7 +1046,14 @@ export default {
           this.sjPosData = res.obj
           console.log('手机pos进件info==================',res)
         })
+      }else if (item.channel === 11) { // 手机pos &网联
+        clientInfoApi.getKdbCode({ id: item.id }).then(res => {
+          this.kdbData = res.obj
+          console.log('手机pos进件info==================',res)
+        })
       }
+
+
     },
     toEdit() {
       console.log('this')
