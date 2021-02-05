@@ -71,6 +71,7 @@ export default {
     selectStyle: {
       default: ''
     },
+    //应该是v-module传过来的数据
     value: {
       type: Array,
       default: function() {
@@ -170,12 +171,14 @@ export default {
     getCheckInfo(val, arr) {
       let dataTree = [...this.dataTree]
       let newArr = this.loopCall(dataTree, val, arr)
+      // console.log(5555555555555555,newArr)
       return newArr
+
     },
     loopCall(dataArr, val, arr) {
       if (dataArr.length) {
         for (let i = 0; i < dataArr.length; i++) {
-          if (val[0] === dataArr[i][this.compareDefaultValue]) {
+          if (/*Number(val[0]) === Number(dataArr[i][this.compareDefaultValue]) ||*/ val[0] == dataArr[i][this.compareDefaultValue]) {
             arr.push(dataArr[i])
             val.splice(0, 1)
             if (dataArr[i].children && dataArr[i].children.length) {

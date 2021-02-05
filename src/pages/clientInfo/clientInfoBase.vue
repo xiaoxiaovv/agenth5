@@ -68,6 +68,29 @@
           </div>
           <p class="img_intro">店内环境照片</p>
         </div>
+
+        <div class="img_wp img_wp_width">
+          <!-- <input class="file"
+                 type="file"
+                 ref="indoor"
+                 accept="image/*"
+                 @change="onFileChange($event, 'indoor')" /> -->
+          <vmaUploadImg ref="cashierDeskPicId"
+                        @change="onFileChange($event, 'indoor')"></vmaUploadImg>
+          <div>
+            <vmaUploadImg ref="cashierDeskPicId"
+                          @change="onFileChange($event, 'cashierDeskPicId')"></vmaUploadImg>
+            <i v-if="detail.cashierDeskPicId"
+               class="icon iconfont iconshanchu"
+               @click="deleteImg('cashierDeskPicId')"></i>
+            <div class="icon iconfont iconzhaoxiangji ml-10"
+                 style="font-size:30px;"></div>
+            <img v-if="detail.cashierDeskPicId"
+                 :src="detail.cashierDeskPicId | previewLoadImage"
+                 @click="previewImage(detail.cashierDeskPicId)" />
+          </div>
+          <p class="img_intro">收银台照片</p>
+        </div>
       </div>
       <div class="item">
         <VmaCascaderTree class="client-info"
@@ -184,7 +207,8 @@ export default {
         // isCommit: 0,
         regProvCd: '',
         regCityCd: '',
-        regDistCd: ''
+        regDistCd: '',
+        cashierDeskPicId:''
       },
       openAlert: false,
       cascaderTree: [], // 省市区树
@@ -209,6 +233,9 @@ export default {
       }
       if (type === 'indoor') {
         this.detail.indoorPicId = ''
+      }
+      if (type === 'cashierDeskPicId') {
+        this.detail.cashierDeskPicId = ''
       }
     },
     openAlertDialog() {
@@ -279,7 +306,7 @@ export default {
     },
     // 下一步
     onNext() {
-      let requiredData = ['storeEntrancePicId', 'indoorPicId', 'address', 'contact', 'phone', 'email', 'cusServiceTel', 'shortName', 'regProvCd', 'regCityCd']
+      let requiredData = ['storeEntrancePicId', 'indoorPicId', 'cashierDeskPicId', 'address', 'contact', 'phone', 'email', 'cusServiceTel', 'shortName', 'regProvCd', 'regCityCd']
       let flag = true
       for (let i in this.detail) {
         if (this.detail.hasOwnProperty(i) && requiredData.indexOf(i) !== -1) {
@@ -335,6 +362,8 @@ export default {
               this.$set(this.detail, 'storeEntrancePicId', photoId)
             } else if (type === 'indoor') { // 店内环境照片
               this.$set(this.detail, 'indoorPicId', photoId)
+            }else if (type === 'cashierDeskPicId') { // 店内环境照片
+              this.$set(this.detail, 'cashierDeskPicId', photoId)
             }
           } else {
             this.$toast.error(res.msg)

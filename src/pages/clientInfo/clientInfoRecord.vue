@@ -58,7 +58,7 @@
           </div>
 
           <div class="img_wp img_wp_width">
-            <vmaUploadImg ref="back"
+            <vmaUploadImg ref="inHand"
                           @change="onFileChange($event, 'inHand')"></vmaUploadImg>
             <div>
               <i v-if="detail.holdingCardId"
@@ -580,7 +580,7 @@ export default {
         this.detail.endCertificateTime = ''
       }
       // 身份证（手持）
-      if (type === 'inHank') {
+      if (type === 'inHand') {
         this.detail.holdingCardId = ''
       }
       // 营业执照
@@ -980,6 +980,8 @@ export default {
                 this.getLicense({
                   pathId: photoId
                 })
+              }else if(type === 'inHand'){
+                this.$set(this.detail, 'holdingCardId', photoId)
               }
             } else {
               this.$toast.error(res.msg)
@@ -1117,6 +1119,7 @@ export default {
       return id ? url + `/fms/upload/resource/thumbnail/${id}` : ''
     },
     previewLoadImage(id) {
+      // console.log(888888,id)
       return id ? url + `/fms/upload/resource/${id}` : ''
     },
     // app状态过滤

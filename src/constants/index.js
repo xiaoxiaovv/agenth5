@@ -3,6 +3,7 @@ export const SEX_MAN = 1
 export const SEX_MALE = 2
 
 const PROCESS_NAME = {
+  //所有字母必须大写
   SXF: '随行付',
   WX: '官方',
   LS: '乐刷',
@@ -11,10 +12,11 @@ const PROCESS_NAME = {
   ZFB: '官方',
   FY: '富友',
   LKL: '拉卡拉',
-  sjPos: '手机pos',
+  SJPOS: '手机pos',
   KDB: '开店宝'
 }
 let PROCESS = {
+  //所有字母必须大写
   SXF: false,
   WX: false,
   LS: false,
@@ -23,7 +25,7 @@ let PROCESS = {
   ZFB: false,
   FY: false,
   LKL: false,
-  sjPos: false,
+  SJPOS: false,
   KDB:false
 }
 

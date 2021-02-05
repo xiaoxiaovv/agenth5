@@ -399,7 +399,7 @@ export default {
    */
   getKdbCode(params) {
     return requestAxios({
-      url: '/batchFeed/pos/get_kdb_feedstatus',
+      url: '/batchFeed/kdb/get_kdb_feedstatus',
       method: 'get',
       params
     })

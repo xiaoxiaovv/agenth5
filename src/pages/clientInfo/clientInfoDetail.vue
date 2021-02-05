@@ -829,40 +829,53 @@
                 <div class="title">进件状态</div>
                 <div class="item">
                   <div class="subtitle">商户编号</div>
-                  <div class="match-left-space align-right">{{kdbData.posMchId}}</div>
+                  <div class="match-left-space align-right">{{kdbData.kdbMchId || "--"}}</div>
                 </div>
-                <div class="item">
-                  <div class="subtitle">注册名称</div>
-                  <div class="match-left-space align-right">{{kdbData.posRegisName}}</div>
+                <div v-if="kdbDetailShow">
+                  <div v-if="kdbKaShow">
+                    <div class="item">
+                      <div class="subtitle">卡支付渠道</div>
+                      <div class="match-left-space align-right">{{kdbKaStateText}}</div>
+                    </div>
+                    <div class="item" v-if="kdbKaMsgShow">
+                      <div class="subtitle">失败原因</div>
+                      <div class="match-left-space align-right">{{kdbKaMsg}}</div>
+                    </div>
+                  </div>
+                  <div v-if="kdbZfbShow">
+                    <div class="item">
+                      <div class="subtitle">支付宝支付渠道</div>
+                      <div class="match-left-space align-right">{{kdbZfbStateText}}</div>
+                    </div>
+                    <div class="item" v-if="kdbZfbMsgShow">
+                      <div class="subtitle">失败原因</div>
+                      <div class="match-left-space align-right">{{kdbZfbMsg}}</div>
+                    </div>
+                  </div>
+                  <div v-if="kdbWxShow">
+                    <div class="item">
+                      <div class="subtitle">微信支付渠道</div>
+                      <div class="match-left-space align-right">{{kdbWxStateText}}</div>
+                    </div>
+                    <div class="item" v-if="kdbWxMsgShow">
+                      <div class="subtitle">失败原因</div>
+                      <div class="match-left-space align-right">{{kdbWxMsg}}</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="item">
-                  <div class="subtitle">手机pos交易费率</div>
-                  <div class="match-left-space align-right">{{kdbData.posTradeRate}}%</div>
+                <div v-else>
+                  <div class="item">
+                    <div class="subtitle">进件结果</div>
+                    <div class="match-left-space align-right">{{kdbData.kdbMsg}}</div>
+                  </div>
                 </div>
-                <div class="item">
-                  <div class="subtitle">手机pos提现费</div>
-                  <div class="match-left-space align-right">{{kdbData.posDrawFee}}</div>
-                </div>
-                <div class="item">
-                  <div class="subtitle">网联交易费率</div>
-                  <div class="match-left-space align-right">{{kdbData.quickTradeRate}}%</div>
-                </div>
-                <div class="item">
-                  <div class="subtitle">网联提现费</div>
-                  <div class="match-left-space align-right">{{kdbData.quickDrawFee}}</div>
-                </div>
-                <div class="item">
-                  <div class="subtitle">进件状态</div>
-                  <div class="match-left-space align-right">{{entryStatus[kdbData.entryStatus]}}</div>
-                </div>
-                <div class="item">
-                  <div class="subtitle">进件结果</div>
-                  <div class="match-left-space align-right">{{kdbData.posMsg}}</div>
-                </div>
+
                 <div class="item">
                   <div class="subtitle">提交时间</div>
-                  <div class="match-left-space align-right">{{kdbData.commitTime}}</div>
+                  <div class="match-left-space align-right">{{kdbData.commitTime | formatTime}}</div>
                 </div>
+
+
               </div>
             </div>
           </div>
@@ -919,6 +932,7 @@ export default {
       zfbData: '',
       lklData:'',
       sjPosData:'',
+      kdbData:'',
       active: 0,
       wxList: [],
       sellCheck: [],
@@ -961,16 +975,46 @@ export default {
         2: '进件审核中',
         3: '进件成功'
       },
+      //我们系统的状态
       entryStatus: {
         '-1': '进件失败',
         1: '待进件',
         2: '进件审核中',
         3: '进件成功'
-      }
+      },
+      //开店宝枚举
+      kdbEnum: {
+        kdbMsg:{
+          wayType:{
+            1:'卡支付渠道',
+            7:'支付宝支付渠道',
+            8:'微信支付渠道'
+          },
+          state:{
+            1: '审核通过',
+            2: '审核失败',
+            3: '审核中'
+          }
+        }
+      },
+      kdbKaStateText:'',
+      kdbKaMsg:'',
+      kdbKaShow: false,
+      kdbKaMsgShow: false,
+      kdbZfbStateText:'',
+      kdbZfbMsg:'',
+      kdbZfbShow: false,
+      kdbZfbMsgShow: false,
+      kdbWxStateText:'',
+      kdbWxMsg:'',
+      kdbWxShow: false,
+      kdbWxMsgShow: false,
+      kdbDetailShow: false,
     }
   },
 
   methods: {
+
     // 返回
     onBack() {
       this.$router.push({
@@ -1046,10 +1090,14 @@ export default {
           this.sjPosData = res.obj
           console.log('手机pos进件info==================',res)
         })
-      }else if (item.channel === 11) { // 手机pos &网联
+      }else if (item.channel === 11) { // 开店宝
         clientInfoApi.getKdbCode({ id: item.id }).then(res => {
           this.kdbData = res.obj
-          console.log('手机pos进件info==================',res)
+          // console.log('this.kdbData0000000000',this.kdbData)
+          this.kdbData.kdbMsg = JSON.parse(this.kdbData.kdbMsg)
+          // console.log('this.kdbData11111111111',this.kdbData)
+          this.kdbMsgHandle(this.kdbData)
+          // console.log('开店宝进件info==================',res)
         })
       }
 
@@ -1173,10 +1221,71 @@ export default {
         this.imgUrl = id
         this.isImagePreview = true
       }
-    }
+    },
+    kdbMsgHandle(kdbData){
+      if(kdbData.entryStatus ==2 || kdbData.entryStatus ==3 ){
+        this.kdbDetailShow = true;
+      }else {
+        this.kdbDetailShow = false;
+         return //这代表kdbData.kdbMsg不是json，不需要下方的json处理
+      }
+
+      let msgArr = kdbData.kdbMsg
+      for(let i=0;i<msgArr.length;i++){
+        if(msgArr[i].wayType === 1){
+
+          this.kdbKaStateText = this.kdbEnum.kdbMsg.state[msgArr[i].state]
+          this.kdbKaMsg = msgArr[i].message
+          this.kdbKaShow = true;
+          if(msgArr[i].state === 2){
+            this.kdbKaMsgShow = true
+          }
+        }else if(msgArr[i].wayType === 7){
+          this.kdbZfbStateText = this.kdbEnum.kdbMsg.state[msgArr[i].state]
+          this.kdbZfbMsg = msgArr[i].message
+          this.kdbZfbShow = true;
+          if(msgArr[i].state === 2){
+            this.kdbZfbMsgShow = true
+          }
+        }else if(msgArr[i].wayType === 8){
+          this.kdbWxStateText = this.kdbEnum.kdbMsg.state[msgArr[i].state]
+          this.kdbWxMsg = msgArr[i].message
+          this.kdbWxShow = true;
+          if(msgArr[i].state === 2){
+            this.kdbWxMsgShow = true
+          }
+        }
+      }
+    },
   },
 
   filters: {
+    /**
+     *
+     * 工具
+     * @param ts 时间戳
+     * @returns {string} 格式化事时间
+     */
+    // 时间格式化
+    formatTime: function (ts) {
+      /**
+       * 补充0
+       * @param  m 月和日，补齐2位
+       * @returns {string} 补齐2二位后的时间
+       */
+      function  add0 (m) {
+        return m < 10 ? '0' + m : m
+      };
+      let time = new Date(ts)
+      let y = time.getFullYear()
+      let m = time.getMonth() + 1
+      let d = time.getDate()
+      let h = time.getHours();  //时
+      let mm = time.getMinutes();  //分
+      let s = time.getSeconds();  //秒
+      return y + '-' + add0(m) + '-' + add0(d)+ ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+    },
+
     representativeTypeFil: function (val) {
       let v = parseInt(val)
       let txt = ''
