@@ -160,22 +160,23 @@ export default {
 
   // 获取开店宝MccCd树类目列表
   getKdbMccList() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
     return requestAxios({
       url: `/batchFeed/kdb/findAnyBusiness`,
       method: 'get',
       params:{
-        companyId: afterLoginInfoLocal.getJSON().companyId
+        companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
       }
     })
   },
   // 获取开店宝区域列表
   getKdbAddressList() {
-    // console.log('afterLoginInfoLocal.getJSON().companyId********************',afterLoginInfoLocal.getJSON().companyId)
+    // console.log('afterLoginInfoLocal.getJSON().companyId33333333333',afterLoginInfoLocal.getJSON().companyId)
     return requestAxios({
       url: `/batchFeed/kdb/findAnyArea`,
       method: 'get',
       params:{
-        companyId: afterLoginInfoLocal.getJSON().companyId
+        companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
       }
     })
   },

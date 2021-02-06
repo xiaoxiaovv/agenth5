@@ -784,9 +784,9 @@
 
 
         <div class="demo-text"
-             v-if="active === 9">
+             v-if="active == 9">
           <div class="client-info-detail__content box match-left-space pb-40"
-               v-show="PROCESS.sjPos">
+               v-show="PROCESS.SJPOS">
             <div class="match-width box align-default">
               <div class="title">开店宝通道</div>
               <div class="item">
@@ -865,14 +865,14 @@
                 </div>
                 <div v-else>
                   <div class="item">
-                    <div class="subtitle">进件结果</div>
+                    <div class="subti;ltle">进件结果</div>
                     <div class="match-left-space align-right">{{kdbData.kdbMsg}}</div>
                   </div>
                 </div>
 
                 <div class="item">
                   <div class="subtitle">提交时间</div>
-                  <div class="match-left-space align-right">{{kdbData.commitTime | formatTime}}</div>
+                  <div class="match-left-space align-right">{{kdbData.commitTime}}</div>
                 </div>
 
 
@@ -1009,7 +1009,7 @@ export default {
       kdbWxMsg:'',
       kdbWxShow: false,
       kdbWxMsgShow: false,
-      kdbDetailShow: false,
+      kdbDetailShow: false
     }
   },
 
@@ -1256,7 +1256,7 @@ export default {
           }
         }
       }
-    },
+    }
   },
 
   filters: {
@@ -1267,12 +1267,12 @@ export default {
      * @returns {string} 格式化事时间
      */
     // 时间格式化
-    formatTime: function (ts) {
-      /**
+    /*formatTime: function (ts) {
+      /!**
        * 补充0
        * @param  m 月和日，补齐2位
        * @returns {string} 补齐2二位后的时间
-       */
+       *!/
       function  add0 (m) {
         return m < 10 ? '0' + m : m
       };
@@ -1284,7 +1284,7 @@ export default {
       let mm = time.getMinutes();  //分
       let s = time.getSeconds();  //秒
       return y + '-' + add0(m) + '-' + add0(d)+ ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
-    },
+    },*/
 
     representativeTypeFil: function (val) {
       let v = parseInt(val)

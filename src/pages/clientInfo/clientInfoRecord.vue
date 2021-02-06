@@ -524,6 +524,7 @@ export default {
     console.log('进来', location.href)
     if (this.$route.query.token) {
       sessionStorage.token = this.$route.query.token
+      sessionStorage.companyId = this.$route.query.companyId
       sessionStorage.link = location.href
       // sessionStorage.iframe = this.$route.query.iframe || false
     }

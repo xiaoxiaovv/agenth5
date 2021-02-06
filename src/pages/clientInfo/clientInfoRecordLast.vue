@@ -115,7 +115,7 @@
           <div class="match-left-space align-right input-number">
             <input type="number"
                    placeholder="请填写真实手续费"
-                   v-model="detail.kdbServiceRate" />元
+                   v-model="detail.kdbServiceRate" />%
           </div>
         </div>
 
@@ -1200,6 +1200,18 @@ export default {
         SJPOS:null,
         KDB:null
       },
+      checkboxObj: {
+        sxf: false,
+        wx: false,
+        zfb: false,
+        ls: false,
+        ys: false,
+        ch: false,
+        fy: false,
+        lkl: false,
+        sjPos: false,
+        kdb:false
+      },
       openSimpleTree:false, //简单选择树
       simpleTreeStatus: 0,
 
@@ -1354,18 +1366,6 @@ export default {
       openMacc: false,
       imgUrl: '',
       merchantName: '',
-      checkboxObj: {
-        sxf: false,
-        wx: false,
-        zfb: false,
-        ls: false,
-        ys: false,
-        ch: false,
-        fy: false,
-        lkl: false,
-        sjPos: false,
-        kdb:true
-      },
       fuiouAliRate: '',
       fuiouWxRate: '',
       rateList: [], // 费率列表
