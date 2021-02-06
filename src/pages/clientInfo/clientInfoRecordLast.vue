@@ -48,7 +48,7 @@
 
         <div class="item">
           <div class="subtitle">
-            <span class="star">*</span>公司类型
+            <span class="star">*</span>公司类型（小微可不选）
           </div>
           <div class="match-left-space box align-right"
                @click="callSimpleTree(1)">
@@ -1928,10 +1928,10 @@ export default {
     // 获取拉卡拉经营类目
     getLklMccList() {
       if (!this.PROCESS.LKL) return
-      clientInfoApi.getLklMccList().then(res => {
+     /* clientInfoApi.getLklMccList().then(res => {
         this.lklMaccList = this.sortTreeAttr(res.obj,'lkl')
         console.log('this.lklMaccList================',this.lklMaccList)
-      })
+      })*/
     },
 
 
@@ -1950,6 +1950,10 @@ export default {
       let that = this
       await clientInfoApi.getKdbAddressList().then(res => {
         // let resObj = res
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
         that.kdbAddressTree = initProvinces(res.obj.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
         // console.log('kaidianbaotree==========================',this.kdbAddressTree)
       })
@@ -1958,6 +1962,11 @@ export default {
     getKdbMccList() {
       if (!this.PROCESS.FY) return
       clientInfoApi.getKdbMccList().then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        res.obj = JSON.parse(res.obj)
         this.kdbMaccTree = this.sortTreeAttr(res.obj.data,'kdb')
       })
     },
@@ -2328,7 +2337,7 @@ export default {
         }
       }
 
-      if (this.checkboxObj.ch && this.PROCESS.CH) {
+      if (this.checkboxObj.kdb && this.PROCESS.KDB) {
         //开店宝
         if (!kdbRequireData.every(attr => this.detail[attr])) {
           this.$toast.error('有内容未填入')

@@ -689,7 +689,7 @@
         <div class="demo-text"
              v-if="active === 8">
           <div class="client-info-detail__content box match-left-space pb-40"
-               v-show="PROCESS.sjPos">
+               v-show="PROCESS.SJPOS">
             <div class="match-width box align-default">
               <div class="title">手机pos通道</div>
               <div class="item">
@@ -786,7 +786,7 @@
         <div class="demo-text"
              v-if="active == 9">
           <div class="client-info-detail__content box match-left-space pb-40"
-               v-show="PROCESS.SJPOS">
+               v-show="PROCESS.KDB">
             <div class="match-width box align-default">
               <div class="title">开店宝通道</div>
               <div class="item">
@@ -909,15 +909,16 @@ export default {
     return {
       // PROCESS,
       PROCESS: {
-        SXF: true,
-        WX: true,
-        LS: true,
-        YS: true,
-        CH: true,
-        ZFB: true,
-        FY: true,
-        LAL: true,
-        sjPos:true
+        SXF: null,
+        WX: null,
+        LS: null,
+        YS: null,
+        CH: null,
+        ZFB: null,
+        FY: null,
+        LAL: null,
+        SJPOS:null,
+        KDB:null
       },
       isEdit: false,
       detail: {
@@ -1352,7 +1353,7 @@ export default {
       this.tabList[7].open = res.FY
       // this.tabList[8].open = res.YL
       // this.tabList[9].open = res.LKL
-      this.tabList[8].open = res.sjPos
+      this.tabList[8].open = res.SJPOS
 
     })
     this.wxList.forEach(item => {

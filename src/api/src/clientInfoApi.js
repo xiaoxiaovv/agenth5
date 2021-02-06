@@ -144,12 +144,12 @@ export default {
     })
   },
   // 获取拉卡拉MccCd树类目列表
-  getLklMccList() {
+ /* getLklMccList() {
     return requestAxios({
       url: `/batchFeed/lakala/get_lkl_mcctree`,
       method: 'get'
     })
-  },
+  },*/
   // 获取拉卡拉费率列表
   /*getLklRateList() {
     return requestAxios({
@@ -165,7 +165,7 @@ export default {
       url: `/batchFeed/kdb/findAnyBusiness`,
       method: 'get',
       params:{
-        companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
       }
     })
   },
@@ -176,7 +176,7 @@ export default {
       url: `/batchFeed/kdb/findAnyArea`,
       method: 'get',
       params:{
-        companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
       }
     })
   },
