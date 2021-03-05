@@ -880,6 +880,56 @@
             </div>
           </div>
         </div>
+
+        <div class="demo-text"
+             v-if="active === 10">
+          <div class="client-info-detail__content box match-left-space pb-40"
+               v-show="PROCESS.FY">
+            <div class="match-width box align-default">
+              <div class="title">畅捷通道</div>
+
+              <div class="item">
+                <div class="subtitle">费率</div>
+                <div class="match-left-space align-right">{{detail.chanpayTradeRate}} %</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">经营许可证</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.businessCertPicId"
+                       @click="previewImage(detail.businessCertPicId)">
+                    <img class="match-parent"
+                         :src="detail.businessCertPicId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div v-if="cjData"
+                   style="width:100%">
+                <div class="title">进件状态</div>
+                <div class="item">
+                  <div class="subtitle">商户编号</div>
+                  <div class="match-left-space align-right">{{cjData.chanpayMchId}}</div>
+                </div>
+
+                <!--<div class="item">
+                  <div class="subtitle">费率</div>
+                  <div class="match-left-space align-right">{{cjData.chanpayTradeRate}}</div>
+                </div>-->
+                <div class="item">
+                  <div class="subtitle">进件状态</div>
+                  <div class="match-left-space align-right">{{entryStatus[cjData.entryStatus]}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">进件结果</div>
+                  <div class="match-left-space align-right">{{cjData.chanpayMsg}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">提交时间</div>
+                  <div class="match-left-space align-right">{{cjData.commitTime}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </mu-container>
     </div>
 
@@ -909,16 +959,17 @@ export default {
     return {
       // PROCESS,
       PROCESS: {
-        SXF: null,
-        WX: null,
-        LS: null,
-        YS: null,
-        CH: null,
-        ZFB: null,
-        FY: null,
-        LAL: null,
-        SJPOS:null,
-        KDB:null
+        SXF: false,
+        WX: false,
+        LS: false,
+        YS: false,
+        CH: false,
+        ZFB: false,
+        FY: false,
+        LAL: false,
+        SJPOS:false,
+        KDB:false,
+        CJ:false
       },
       isEdit: false,
       detail: {
@@ -934,6 +985,7 @@ export default {
       lklData:'',
       sjPosData:'',
       kdbData:'',
+      cjData:'',
       active: 0,
       wxList: [],
       sellCheck: [],
@@ -944,16 +996,6 @@ export default {
       sellScene_website: false,
       sellScene_app: false,
       isDirect: 0,
-      // tabList: []
-      // tabList: [
-      //   { index: 0, name: '基本材料', open: true },
-      //   { index: 1, name: '随行付', open: this.PROCESS.SXF },
-      //   { index: 2, name: '微信', open: this.PROCESS.WX },
-      //   { index: 3, name: '支付宝', open: this.PROCESS.ZFB },
-      //   { index: 4, name: '乐刷', open: this.PROCESS.LS },
-      //   { index: 5, name: '威富通', open: this.PROCESS.YS },
-      //   { index: 6, name: '传化', open: this.PROCESS.CH }
-      // ]
 
       //详情表头
       tabList: [
@@ -969,6 +1011,7 @@ export default {
         // { index: 9, name: '拉卡拉', open: true }
         { index: 10, name: '手机pos', open: true },
         { index: 11, name: '开店宝', open: true },
+        { index: 12, name: '畅捷', open: true },
       ],
       fyEntryStatus: {
         '-1': '进件失败',
@@ -1032,6 +1075,22 @@ export default {
         name: CLIENT_INFO_RECORD
       })
     },
+    isJson(str) {
+      if (typeof str == 'string') {
+        try {
+          var obj = JSON.parse(str);
+          if (typeof obj == 'object' && obj) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log('error：' + str + '!!!' + e);
+          return false;
+        }
+      }
+      console.log('It is not a string!')
+    },
     // 获取列表详情
     getMchInfo(id) {
       clientInfoApi.getMchInfo({ id }).then(res => {
@@ -1089,15 +1148,31 @@ export default {
       }*/else if (item.channel === 10) { // 手机pos &网联
         clientInfoApi.getSjPosCode({ id: item.id }).then(res => {
           this.sjPosData = res.obj
-          console.log('手机pos进件info==================',res)
+          // console.log('手机pos进件info==================',res)
         })
       }else if (item.channel === 11) { // 开店宝
         clientInfoApi.getKdbCode({ id: item.id }).then(res => {
           this.kdbData = res.obj
-          // console.log('this.kdbData0000000000',this.kdbData)
-          this.kdbData.kdbMsg = JSON.parse(this.kdbData.kdbMsg)
-          // console.log('this.kdbData11111111111',this.kdbData)
+          let jsonFlag= false
+          jsonFlag = this.isJson(this.kdbData.kdbMsg)
+          if(jsonFlag){
+            this.kdbData.kdbMsg = JSON.parse(this.kdbData.kdbMsg)
+          }
+          this.kdbData.jsonFlag = jsonFlag
           this.kdbMsgHandle(this.kdbData)
+          // console.log('this.kdbData0000000000',this.kdbData)
+
+          // console.log('this.kdbData11111111111',this.kdbData)
+
+          // console.log('开店宝进件info==================',res)
+        })
+      }else if (item.channel === 12) { // 畅捷
+        clientInfoApi.getCjCode({ id: item.id }).then(res => {
+          this.cjData = res.obj
+          // console.log('this.cjData0000000000',this.cjData)
+          // this.cjData.cjMsg = this.cjData.cjMsg
+          // console.log('this.cjData11111111111',this.cjData)
+          // this.cjMsgHandle(this.cjData)
           // console.log('开店宝进件info==================',res)
         })
       }
@@ -1113,7 +1188,7 @@ export default {
         }
       })
     },
-    // 获取商户详情
+    // 获取商户详情 这个方法没有任何地方调用
     getMerchantDetail() {
       let id = this.id.id
       // console.log(555, id)
@@ -1224,7 +1299,7 @@ export default {
       }
     },
     kdbMsgHandle(kdbData){
-      if(kdbData.entryStatus ==2 || kdbData.entryStatus ==3 ){
+      if(kdbData.jsonFlag ){
         this.kdbDetailShow = true;
       }else {
         this.kdbDetailShow = false;
@@ -1341,7 +1416,7 @@ export default {
     this.isEdit = this.$route.query.isEdit || false
     // debugger
     this.wxList = (this.$route.query.list && this.$route.query.list.length) ? JSON.parse(this.$route.query.list) : []
-    console.log('bbbbbbbbbbbbbbbbbb==========',this.wxList)
+    // console.log('bbbbbbbbbbbbbbbbbb==========',this.wxList)
     getProcess().then(res => {
       this.PROCESS = res
       this.tabList[1].open = res.SXF
@@ -1354,6 +1429,8 @@ export default {
       // this.tabList[8].open = res.YL
       // this.tabList[9].open = res.LKL
       this.tabList[8].open = res.SJPOS
+      this.tabList[9].open = res.KDB
+      this.tabList[10].open = res.CJ
 
     })
     this.wxList.forEach(item => {

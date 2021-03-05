@@ -181,6 +181,29 @@ export default {
     })
   },
 
+  // 获取畅捷MccCd树类目列表
+  getCjMccList() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/chanpay/findMccArray`,
+      method: 'get',
+      params:{
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+  // 获取畅捷区域列表
+  getCjAddressList() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId33333333333',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/chanpay/findAreaArray`,
+      method: 'get',
+      params:{
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+
   // 获取列表信息（已填写过的信息）
   getMchInfo(params) {
     return requestAxios({
@@ -395,12 +418,23 @@ export default {
   },
 
   /**
-   * 手机pos&网联-查询进件状态
+   * 开店宝-查询进件状态
    * @param {*} params
    */
   getKdbCode(params) {
     return requestAxios({
       url: '/batchFeed/kdb/get_kdb_feedstatus',
+      method: 'get',
+      params
+    })
+  },
+  /**
+   * 畅捷-查询进件状态
+   * @param {*} params
+   */
+  getCjCode(params) {
+    return requestAxios({
+      url: '/batchFeed/chanpay/get_cj_feedstatus',
       method: 'get',
       params
     })

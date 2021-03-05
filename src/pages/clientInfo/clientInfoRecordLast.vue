@@ -15,6 +15,46 @@
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
 
+      <!--畅捷-->
+      <div class="match-width box align-default"
+           v-if="PROCESS.KDB">
+        <div class="title">
+          <mu-checkbox v-model="checkboxObj.cj"
+                       label="畅捷通道"></mu-checkbox>
+        </div>
+        <div class="item">
+          <VmaCascaderTree v-model="cjCascaderArr"
+                           class="client-info"
+                           :dataTree="cjMaccTree"
+                           :placeholder="'请选择类目'"
+                           :modalLabel="'选择类目'"
+                           :required="checkboxObj.cj"
+                           label="经营类目"
+                           @change="changeCjMenu"></VmaCascaderTree>
+        </div>
+        <div class="item">
+          <VmaCascaderTree class="client-info"
+                           v-model="cjAddressArr"
+                           :dataTree="cjAddressTree"
+                           :label="'商户营业地区补充'"
+                           :placeholder="'请选择省市'"
+                           :modalLabel="'选择省市'"
+                           :required="checkboxObj.cj"
+                           @change="changeCjAddress"></VmaCascaderTree>
+        </div>
+        <div class="item"
+             v-if="from!=='share'">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.cj">*</span>费率
+          </div>
+          <div class="match-left-space align-right input-number">
+            <input type="number"
+                   placeholder="请填写真实费率"
+                   v-model="detail.chanpayTradeRate" />%
+          </div>
+        </div>
+      </div>
+
       <!--开店宝-->
       <div class="match-width box align-default"
            v-if="PROCESS.KDB">
@@ -39,16 +79,16 @@
                            :label="'商户营业地区补充'"
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
-                           :required="true"
+                           :required="checkboxObj.kdb"
                            @change="changeShopAddress"></VmaCascaderTree>
         </div>
 
 
 
 
-        <div class="item">
+        <div class="item" v-show="checkboxObj.kdb&&detail.businessLicensePhotoId">
           <div class="subtitle">
-            <span class="star">*</span>公司类型（小微可不选）
+            <span class="star">*</span>公司类型
           </div>
           <div class="match-left-space box align-right"
                @click="callSimpleTree(1)">
@@ -60,7 +100,7 @@
         </div>
         <div class="item">
           <div class="subtitle">
-            <span class="star">*</span>到账周期
+            <span class="star" v-show="checkboxObj.kdb">*</span>到账周期
           </div>
           <div class="match-left-space box align-right"
                @click="callSimpleTree(2)">
@@ -72,7 +112,7 @@
         </div>
         <div class="item">
           <div class="subtitle">
-            <span class="star">*</span>性别
+            <span class="star" v-show="checkboxObj.kdb">*</span>性别
           </div>
           <div class="match-left-space box align-right"
                @click="callSimpleTree(3)">
@@ -84,7 +124,7 @@
         </div>
         <div class="item">
           <div class="subtitle">
-            <span class="star">*</span>结算账户类型
+            <span class="star"  v-show="checkboxObj.kdb">*</span>结算账户类型
           </div>
           <div class="match-left-space box align-right"
                @click="callSimpleTree(4)">
@@ -115,7 +155,7 @@
           <div class="match-left-space align-right input-number">
             <input type="number"
                    placeholder="请填写真实手续费"
-                   v-model="detail.kdbServiceRate" />%
+                   v-model="detail.kdbServiceRate" /> （元）
           </div>
         </div>
 
@@ -123,7 +163,7 @@
         <div class="item"
              style="border:0;">
           <div class="subtitle">
-            <span class="star">*</span>注册登记表照片
+            <span class="star"  v-show="checkboxObj.kdb">*</span>注册登记表照片
           </div>
         </div>
         <div class="item id_img_wp">
@@ -151,7 +191,7 @@
         <div class="item"
              style="border:0;">
           <div class="subtitle">
-            <span class="star">*</span>收单协议照片
+            <span class="star"  v-show="checkboxObj.kdb">*</span>收单协议照片
           </div>
         </div>
         <div class="item id_img_wp">
@@ -228,7 +268,7 @@
 
 
       <div class="match-width box align-default"
-           v-if="PROCESS.SJPOS">
+           v-if="PROCESS.SJPOS && from!=='share'">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.sjPos"
                        label="手机pos通道"></mu-checkbox>
@@ -1188,17 +1228,18 @@ export default {
       // PROCESS,
       PROCESS: {
           //所有的值会被mounted里接口请求的数据覆盖
-          YL:null,
-        SXF: null,
-        WX: null,
-        LS: null,
-        YS: null,
-        CH: null,
-        ZFB: null,
-        FY: null,
-        LKL:null,
-        SJPOS:null,
-        KDB:null
+          YL:false,
+        SXF: false,
+        WX: false,
+        LS: false,
+        YS: false,
+        CH: false,
+        ZFB: false,
+        FY: false,
+        LKL:false,
+        SJPOS:false,
+        KDB:false,
+        CJ:false //畅捷
       },
       checkboxObj: {
         sxf: false,
@@ -1210,7 +1251,8 @@ export default {
         fy: false,
         lkl: false,
         sjPos: false,
-        kdb:false
+        kdb:false,
+        cj:false //畅捷
       },
       openSimpleTree:false, //简单选择树
       simpleTreeStatus: 0,
@@ -1224,7 +1266,7 @@ export default {
       // iframe: sessionStorage.iframe ? JSON.parse(sessionStorage.iframe) : false,
       options: [],
       proImgList: [], // 商家协议图片id列表
-      kdbAddressTree: [], //开店宝经营地址树
+
       kdbCompanyTypeText:'请选择公司类型',
       kdbcompanyTypeList: [
         {value:'1',
@@ -1301,6 +1343,7 @@ export default {
         bankPhotoId: '', //手机pos银行卡背面照片ID
         holdingCardId: '', //手机pos手持身份证照片
       //  开店宝
+
         kdbCompanyType:'', //公司类型
         kdbWxSettlementCycle:'',//结算周期
         kdbProvinceId:'',
@@ -1311,8 +1354,8 @@ export default {
         kdbRegistryId:'',  //注册登记表照片id
         kdbAgreementId:'',  //收单协议照片id
         kdbUpregisterId:'',  //开店宝商户变更登记表照片id
-        kdbBusinessId:'',  //一级经营类目id
-        kdbBusinessId1:'',  //二级经营类目id
+        kdbBusinessId:'',  //二级经营类目id
+        kdbBusinessId1:'',  //一级经营类目id
       //  开店宝暂时不用字段--开始
         kdbJjkTradeRate:'',  //
         kdbDjkTradeRate:'',  //
@@ -1322,6 +1365,18 @@ export default {
         kdbDjkDiscountRate:'',  //
         kdbSingleServiceFeeUpLimit:'',  //
       //  开店宝暂时不用字段--结束
+      //  畅捷
+        mccCodeClass: '', //一级经营类目    反显用
+        mccCode:'',  //二级经营类目id
+        mccName:'',  //二级经营类目name
+        productCode:'',
+        chanpayTradeRate:'',
+        operationProvinceCode:'',
+        operationProvinceName:'',
+        operationCityCode:'',
+        operationCityName:'',
+        operationDistrictCode:'',
+        operationDistrictName:''
       },
       //经营类目渲染树用
       maccList: [],
@@ -1334,9 +1389,13 @@ export default {
       cascaderArr: [], // (随行付)经营类目
       provinceArr: [],
       cascaderTree: [],
+      kdbAddressTree: [], //开店宝经营地址树
       kdbMaccTree:[],
+      cjMaccTree:[],
+      cjAddressTree: [],
 
-      // 经营类目有返显用
+
+      // 经营类目返显用
       ysCascaderArr: [], // (威富通)经营类目
       lsCascaderArr: [], // (乐刷)经营类目
       chCascaderArr: [], // (传化)经营类目
@@ -1344,7 +1403,10 @@ export default {
       fyCascaderArr: [], // (富友)经营行业
       lklCascaderArr: [], // (拉卡拉)经营行业
       kdbCascaderArr: [], // (开店宝)经营行业 v-module
-      kdbAddressArr: [], // (开店宝)经营地址
+      kdbAddressArr: [], // (开店宝)经营地址反显
+      cjAddressArr: [],
+      cjCascaderArr: [], // (畅捷)经营行业 v-module
+
       rate: {},
       open: false,
       status: 0,
@@ -1492,6 +1554,21 @@ export default {
       this.detail.accounRegProvName = item[0].name
       this.detail.accounRegCityName = item[1].name
     },
+
+    //经营地址省市区选择  畅捷
+    changeCjAddress(val) {
+      // id
+      this.detail.operationProvinceCode = val[0].id
+      this.detail.operationProvinceName = val[0].name
+      this.detail.operationCityCode = val[1].id
+      this.detail.operationCityName = val[1].name
+      this.detail.operationDistrictCode = ''
+      this.detail.operationDistrictName = ''
+      if (val.length === 3) {
+        this.detail.operationDistrictCode = val[2].id
+        this.detail.operationDistrictName = val[2].name
+      }
+    },
     //经营地址省市区选择  开店宝
     changeShopAddress(val) {
       // id
@@ -1499,14 +1576,8 @@ export default {
       this.detail.kdbCityId = val[1].id
       this.detail.kdbAreaId = ''
 
-      // 名称
-     /* this.detail.regProvCdName = val[0].name
-      this.detail.regCityCdName = val[1].name
-      this.detail.regDistCdName = ''*/
-
       if (val.length === 3) {
         this.detail.kdbAreaId = val[2].id
-        // this.detail.regDistCdName = val[2].name
       }
     },
     // 选择随行付经营类目
@@ -1553,6 +1624,17 @@ export default {
         this.$set(this.detail, "kdbBusinessId", item[1].id);
       }
     },
+    // 选择畅捷经营类目
+    changeCjMenu(item) {
+      if (item.length) {
+        // console.log('选择开店宝经营类目8888888888:',item[0].id)
+        // console.log('选择开店宝经营类目999999999:',item[1].id)
+        this.$set(this.detail, "mccCodeClass", item[0].id);
+        this.$set(this.detail, "mccCode", item[1].id);
+        this.$set(this.detail, "mccName", item[1].name);
+      }
+    },
+
     // 选择拉卡拉经营类目
     changeLklMenu(item) {
       /*this.detail.lklMccCdName = item ? item.map(res => res.name).join('/') : '';
@@ -1823,8 +1905,10 @@ export default {
         this.detail.isIndustryDining = Boolean(this.detail.isIndustryDining)
         this.cascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
         this.kdbAddressArr = [this.detail.kdbProvinceId, this.detail.kdbCityId, this.detail.kdbAreaId] //开店宝省市区
+        this.cjAddressArr = [this.detail.operationProvinceCode, this.detail.operationCityCode, this.detail.operationDistrictCode] //畅捷省市区
         //todo 开店宝经营类目回显
         this.kdbCascaderArr = [this.detail.kdbBusinessId1, this.detail.kdbBusinessId] //开店宝
+        this.cjCascaderArr = [this.detail.mccCodeClass, this.detail.mccCode] //畅捷
         this.lsCascaderArr = [this.detail.leFirstMccCode, this.detail.leSecondMccCode, this.detail.leMccCode]
         this.ysCascaderArr = [this.detail.ysFirstName, this.detail.ysSecondName, this.detail.industrId]
         let zfbNameArr = [this.detail.aliFirstLevel, this.detail.aliSecondLevel, this.detail.aliThirdLevel]
@@ -1960,7 +2044,7 @@ export default {
     },
     // 获取开店宝经营类目
     getKdbMccList() {
-      if (!this.PROCESS.FY) return
+      if (!this.PROCESS.KDB) return
       clientInfoApi.getKdbMccList().then(res => {
         //请求失败也会返回200
         if(!res.obj){
@@ -1968,6 +2052,35 @@ export default {
         }
         res.obj = JSON.parse(res.obj)
         this.kdbMaccTree = this.sortTreeAttr(res.obj.data,'kdb')
+      })
+    },
+    /**
+     * 获取畅捷省市区
+     */
+    async getCjProviceAndCity() {
+      let that = this
+      await clientInfoApi.getCjAddressList().then(res => {
+        // let resObj = res
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        that.cjAddressTree =  res.obj
+        // that.cjAddressTree = initProvinces(res.obj.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
+        // console.log('kaidianbaotree==========================',this.kdbAddressTree)
+      })
+    },
+    // 获取畅捷经营类目
+    getCjMccList() {
+      if (!this.PROCESS.CJ) return
+      clientInfoApi.getCjMccList().then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        // res.obj = JSON.parse(res.obj)
+        this.cjMaccTree = res.obj
+        // this.cjMaccTree = this.sortTreeAttr(res.obj.data,'cj')
       })
     },
     // 最大只到2级
@@ -2215,6 +2328,8 @@ export default {
       bankPhotoId银行卡背面照片ID
       holdingCardId手持身份证照片*/
       let sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee']
+      //畅捷通道必填字段
+      let cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName', 'chanpayTradeRate']
 
 
       if (this.detail.businessLicensePhotoId) {
@@ -2234,7 +2349,9 @@ export default {
         fyRequireData = ['fuiouFirstMccCode', 'fuiouAreaName']
         // todo 是否需要处理share
         lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
-        sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee', 'bankPhotoId','holdingCardId']
+        cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName']
+        sjPosRequireData = ['bankPhotoId','holdingCardId']
+        kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbAccountType', 'kdbRegistryId', 'kdbAgreementId']
       }
       if (Number(this.detail.businessType) === 2) {
         wxRequireData = [
@@ -2246,7 +2363,7 @@ export default {
         lsRequireData.push('foodHealthPermissionPic')
       }
       // 判断通道方式是否已有数据填入，有一项填入，全部为必填
-      // let zfbFlag = zfbRequiredData.every(attr => !this.detail[attr])
+      // let zfbFlag = zfbRequiredData.every(attr => !this.detail[attr] !== '')
       let checkProcess = false // 只要勾选了一个通道就为true
       for (let attr in this.checkboxObj) {
         if (this.PROCESS[attr.toLocaleUpperCase()]) {
@@ -2261,7 +2378,7 @@ export default {
       }
       // 勾选了通道，则为必填
       if (this.checkboxObj.sxf && this.PROCESS.SXF) {
-        if (!sxfRequiredData.every(attr => this.detail[attr])) {
+        if (!sxfRequiredData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2275,13 +2392,13 @@ export default {
         }
       }
       if (this.checkboxObj.wx && this.PROCESS.WX) {
-        if (!wxRequireData.every(attr => this.detail[attr])) {
+        if (!wxRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
       }
       if (this.checkboxObj.zfb && this.PROCESS.ZFB) {
-        if (!zfbRequiredData.every(attr => this.detail[attr])) {
+        if (!zfbRequiredData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2295,7 +2412,7 @@ export default {
         }
       }
       if (this.checkboxObj.ls && this.PROCESS.LS) {
-        if (!lsRequireData.every(attr => this.detail[attr])) {
+        if (!lsRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2309,7 +2426,7 @@ export default {
         }
       }
       if (this.checkboxObj.ys && this.PROCESS.YS) {
-        if (!ysRequireData.every(attr => this.detail[attr])) {
+        if (!ysRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2323,7 +2440,7 @@ export default {
         }
       }
       if (this.checkboxObj.ch && this.PROCESS.CH) {
-        if (!chRequireData.every(attr => this.detail[attr])) {
+        if (!chRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2337,9 +2454,24 @@ export default {
         }
       }
 
+      if (this.checkboxObj.cj && this.PROCESS.CJ) {
+        //畅捷
+        if (!cjRequireData.every(attr => this.detail[attr] !== '')) {
+          this.$toast.error('有内容未填入')
+          return
+        }
+        if (this.from !== 'share' && Number(this.detail.chanpayTradeRate) <= 0) {
+          this.$toast.error('费率必须大于0')
+          return
+        }
+        if (Number(this.detail.chanpayTradeRate) >= 1) {
+          this.$toast.error('费率不能超过1')
+          return
+        }
+      }
       if (this.checkboxObj.kdb && this.PROCESS.KDB) {
         //开店宝
-        if (!kdbRequireData.every(attr => this.detail[attr])) {
+        if (!kdbRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2612,22 +2744,45 @@ export default {
           this.getMerchantAreaList()
         })
       }) // 支付宝经营行业
+
       getProcess().then(res => {
         this.PROCESS = res
-        this.getMccCdList() // 随行付经营类目
-        this.getLsMccList() // 乐刷经营类目
-        this.getYsMccList() // 威富通经营类目
-        this.getChMccList() // 传化经营类目
-        this.getFyMccList() // 富友经营类目
-        this.getLklMccList() // 拉卡拉经营类目
-        this.getKdbMccList() // 开店宝经营类目
+        if(this.PROCESS.SXF){
+          this.getMccCdList() // 随行付经营类目
+        }
+        if(this.PROCESS.LS){
+          this.getLsMccList() // 乐刷经营类目
+        }
+        if(this.PROCESS.YS){
+          this.getYsMccList() // 威富通经营类目
+        }
+        if(this.PROCESS.CH){
+          this.getChMccList() // 传化经营类目
+        }
+        if(this.PROCESS.FY){
+          this.getFyMccList() // 富友经营类目
+          this.getFyRateList() // 获取富友交易费率列表
+        }
+        if(this.PROCESS.LKL){
+          this.getLklMccList() // 拉卡拉经营类目
+        }
+        if(this.PROCESS.KDB){
+          this.getKdbMccList() // 开店宝经营类目
+          //  开店宝地址树
+          this.getKdbProviceAndCity();
+        }
+        if(this.PROCESS.CJ){
+          this.getCjMccList() // 畅捷经营类目
+          //  畅捷地址树
+          this.getCjProviceAndCity();
+        }
       })
-      this.getFyRateList() // 获取富友交易费率列表
+
     } else {
       this.$toast.error('详情数据丢失')
     }
-    //  开店宝地址树
-    this.getKdbProviceAndCity();
+
+
   },
 
 }
