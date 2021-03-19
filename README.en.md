@@ -1,5 +1,9 @@
 # 代理商h5
 
+## clone项目之后先修改这里
+/indexDev-去掉中文.html
+/config/indexLocal-去掉中文.js
+
 #### Description
 {**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
 
