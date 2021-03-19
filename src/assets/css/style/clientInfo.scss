@@ -227,7 +227,7 @@
         border:2px dashed #ddd;
         padding: 10px;
         margin: 0 5px;
-        .file{
+        .file,.showSignBtn{
           display: inline-block;
           height: 100%;
           width: 100%;
@@ -240,9 +240,16 @@
           z-index: 2;
 
         }
+        .showSignBtn{
+          opacity: 100;
+        }
+        .signBackgroundColor {
+          background-color: white;
+        }
         img{
           @include size(242, 158);
         }
+
       }
       .img_wp_width {
         @include size(320, 180);
@@ -372,7 +379,7 @@
       justify-content: flex-end;
       flex-direction:inherit;
       .mu-input.full-width{
-        width: auto; 
+        width: auto;
         margin-bottom: 0;
         padding:0;
         min-height: auto;
@@ -382,7 +389,7 @@
         text-align: center;
       }
     }
-    
+
     .mu-input-line {
       height:0;
     }
@@ -578,6 +585,9 @@
     background-position: center;
   }
 }
+.sign-cover-x{
+  background-color: rgba(164,163,169,0.85);
+}
 
 .time-dialog {
   .mu-radio-wrapper {
@@ -605,4 +615,44 @@
      display: none;
    }
  }
+}
+.sign-dialog{
+  .container-sign {
+    width: 100%;
+    height: 100%;
+  }
+  #canvasBox {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .greet {
+    padding: 20px;
+    font-size: 20px;
+    user-select: none;
+  }
+  input {
+    font-size: 20px;
+  }
+  .greet select {
+    font-size: 18px;
+  }
+  .canvas-sign {
+    flex: 1;
+    cursor: crosshair;
+    border:2px dashed lightgray;
+  }
+  .image-box {
+    width: 100%;
+    height: 100%;
+  }
+  .image-box header{
+    font-size: 18px;
+  }
+  .image-box img {
+    max-width: 80%;
+    max-height: 80%;
+    margin-top: 50px;
+    border: 1px solid gray;
+  }
 }

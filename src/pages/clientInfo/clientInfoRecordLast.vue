@@ -146,7 +146,7 @@
                    v-model="detail.kdbWxTradeRate" />%
           </div>
         </div>
-        <div class="item"
+        <!--<div class="item"
              v-if="from!=='share'">
           <div class="subtitle">
             <span class="star"
@@ -157,16 +157,15 @@
                    placeholder="请填写真实手续费"
                    v-model="detail.kdbServiceRate" /> （元）
           </div>
-        </div>
+        </div>-->
 
 
-        <div class="item"
-             style="border:0;">
+        <div class="item" style="border:0;" v-if="detail.businessLicensePhotoId">
           <div class="subtitle">
             <span class="star"  v-show="checkboxObj.kdb">*</span>注册登记表照片
           </div>
         </div>
-        <div class="item id_img_wp">
+        <div class="item id_img_wp" v-if="detail.businessLicensePhotoId">
           <div class="img_wp img_wp_width">
             <!-- <input class="file"
                    type="file"
@@ -176,7 +175,7 @@
             <vmaUploadImg ref="kdbRegistryId"
                           @change="onFileChange($event, 'kdbRegistryId')"></vmaUploadImg>
             <div>
-              <i v-if="detail.storeEntrancePicId"
+              <i v-if="detail.kdbRegistryId"
                  class="icon iconfont iconshanchu"
                  @click="deleteImg('kdbRegistryId')"></i>
               <div class="icon iconfont iconzhaoxiangji ml-10"
@@ -188,13 +187,13 @@
             <p class="img_intro">注册登记表照片</p>
           </div>
         </div>
-        <div class="item"
+        <div class="item"  v-if="detail.businessLicensePhotoId"
              style="border:0;">
           <div class="subtitle">
             <span class="star"  v-show="checkboxObj.kdb">*</span>收单协议照片
           </div>
         </div>
-        <div class="item id_img_wp">
+        <div class="item id_img_wp"  v-if="detail.businessLicensePhotoId">
           <div class="img_wp img_wp_width">
             <!-- <input class="file"
                    type="file"
@@ -204,7 +203,7 @@
             <vmaUploadImg ref="kdbAgreementId"
                           @change="onFileChange($event, 'kdbAgreementId')"></vmaUploadImg>
             <div>
-              <i v-if="detail.storeEntrancePicId"
+              <i v-if="detail.kdbAgreementId"
                  class="icon iconfont iconshanchu"
                  @click="deleteImg('kdbAgreementId')"></i>
               <div class="icon iconfont iconzhaoxiangji ml-10"
@@ -216,13 +215,13 @@
             <p class="img_intro">收单协议照片</p>
           </div>
         </div>
-        <div class="item"
+        <div class="item"  v-if="detail.businessLicensePhotoId"
              style="border:0;">
           <div class="subtitle">
             商户变更登记表照片(变更时必传)
           </div>
         </div>
-        <div class="item id_img_wp">
+        <div class="item id_img_wp" v-if="detail.businessLicensePhotoId">
           <div class="img_wp img_wp_width">
             <!-- <input class="file"
                    type="file"
@@ -232,7 +231,7 @@
             <vmaUploadImg ref="kdbUpregisterId"
                           @change="onFileChange($event, 'kdbUpregisterId')"></vmaUploadImg>
             <div>
-              <i v-if="detail.storeEntrancePicId"
+              <i v-if="detail.kdbUpregisterId"
                  class="icon iconfont iconshanchu"
                  @click="deleteImg('kdbUpregisterId')"></i>
               <div class="icon iconfont iconzhaoxiangji ml-10"
@@ -244,26 +243,6 @@
             <p class="img_intro">商户变更登记表</p>
           </div>
         </div>
-        <!--<div class="item"
-             style="border:0;">
-          <div class="subtitle">特殊资质</div>
-        </div>
-        <div class="item id_img_wp"
-             style="border:0;">
-          <div class="img_wp img_wp_width">
-
-            <vmaUploadImg ref="sjPosYinHangKaBeiMian"
-                          @change="onFileChange($event, 'sjPosYinHangKaBeiMian')"></vmaUploadImg>
-            <i v-if="detail.bankPhotoId"
-               class="icon iconfont iconshanchu"
-               @click="deleteImg('sjPosYinHangKaBeiMian')"></i>
-            <div class="icon iconfont iconzhaoxiangji ml-10"
-                 style="font-size:30px;"></div>
-            <img v-if="detail.bankPhotoId"
-                 :src="detail.bankPhotoId | previewLoadImage"
-                 @click="previewImage(detail.bankPhotoId)" />
-          </div>
-        </div>-->
       </div>
 
 
@@ -1322,6 +1301,7 @@ export default {
       kdbSettlementCycleTypeText:'请选择到账周期类型',
       kdbAccountTypeText:'请选择结算账户类型',
       detail: {
+        importNums:[], //勾选则进件，不勾选不进件（以前的后台逻辑是该通道有值就会进件，会出现重复进件情况）
         isCommit: 1,
         sxfRate: 0.38,
         kdbWxTradeRate: 0.38,
@@ -1356,7 +1336,7 @@ export default {
         kdbUpregisterId:'',  //开店宝商户变更登记表照片id
         kdbBusinessId:'',  //二级经营类目id
         kdbBusinessId1:'',  //一级经营类目id
-      //  开店宝暂时不用字段--开始
+      //  开店宝手动赋值字段--开始
         kdbJjkTradeRate:'',  //
         kdbDjkTradeRate:'',  //
         kdbJjkSettlementCycle:'',  //
@@ -1364,7 +1344,8 @@ export default {
         kdbJjkDiscountRate:'',  //
         kdbDjkDiscountRate:'',  //
         kdbSingleServiceFeeUpLimit:'',  //
-      //  开店宝暂时不用字段--结束
+        kdbServiceRate:'',
+      //  开店宝手动赋值字段--结束
       //  畅捷
         mccCodeClass: '', //一级经营类目    反显用
         mccCode:'',  //二级经营类目id
@@ -1899,6 +1880,7 @@ export default {
         this.detail.kdbJjkDiscountRate = '0.38';  //
         this.detail.kdbDjkDiscountRate = '0.38';  //
         this.detail.kdbSingleServiceFeeUpLimit = '20';  //
+        this.detail.kdbServiceRate = '0.02'; //d0手续费  百分比
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--结束
         this.proImgList = this.detail.pro ? this.detail.pro.split(';') : []
         this.detail.industrId = this.detail.industrId + ''
@@ -2294,6 +2276,8 @@ export default {
     },
     // 下一步
     onNext() {
+      //重置已勾选的进件项，下方重新判断添加
+      this.detail.importNums = []
       // 随行付通道必填字段
       let sxfRequiredData = ['sxfRate', 'mccCd', 'mccClassCd']
       // 微信官方通道必填字段
@@ -2306,6 +2290,13 @@ export default {
         'personAccountNumber',
         'personBankName'
       ]
+      //businessType  1企业    2个体
+      if (Number(this.detail.businessType) === 2) {
+        wxRequireData = [
+          'productDesc',
+          'merchantBusiness'
+        ]
+      }
       // 支付宝通道必填字段
       let zfbRequiredData = ['aliAccount', 'aliFirstLevel', 'aliRate']
       // 乐刷通道必填字段
@@ -2319,7 +2310,7 @@ export default {
       // 拉卡拉通道必填字段
       let lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
       // 开店宝通道必填字段
-      let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxTradeRate', 'kdbServiceRate', 'kdbWxSettlementCycle', 'kdbSex', 'kdbAccountType', 'kdbRegistryId', 'kdbAgreementId']
+      let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxTradeRate', 'kdbWxSettlementCycle', 'kdbSex', 'kdbAccountType']
       // 手机pos必填字段
       /*posDrawFee 手机pos提现费
       posTradeRate手机pos交易费率
@@ -2334,7 +2325,7 @@ export default {
 
       if (this.detail.businessLicensePhotoId) {
         //营业执照
-        kdbRequireData.push('kdbCompanyType')
+        kdbRequireData.push('kdbCompanyType', 'kdbRegistryId', 'kdbAgreementId')
       }
       if (!this.detail.businessLicensePhotoId) {
         //营业执照
@@ -2353,12 +2344,7 @@ export default {
         sjPosRequireData = ['bankPhotoId','holdingCardId']
         kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbAccountType', 'kdbRegistryId', 'kdbAgreementId']
       }
-      if (Number(this.detail.businessType) === 2) {
-        wxRequireData = [
-          'productDesc',
-          'merchantBusiness'
-        ]
-      }
+
       if (this.detail.isIndustryDining) {
         lsRequireData.push('foodHealthPermissionPic')
       }
@@ -2377,7 +2363,9 @@ export default {
         return
       }
       // 勾选了通道，则为必填
+      //天阙随行付是12
       if (this.checkboxObj.sxf && this.PROCESS.SXF) {
+        this.detail.importNums.push('7')
         if (!sxfRequiredData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
@@ -2392,12 +2380,14 @@ export default {
         }
       }
       if (this.checkboxObj.wx && this.PROCESS.WX) {
+        this.detail.importNums.push('WX')
         if (!wxRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
       }
       if (this.checkboxObj.zfb && this.PROCESS.ZFB) {
+        this.detail.importNums.push('ZFB')
         if (!zfbRequiredData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
@@ -2412,6 +2402,7 @@ export default {
         }
       }
       if (this.checkboxObj.ls && this.PROCESS.LS) {
+        this.detail.importNums.push('10')
         if (!lsRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
@@ -2426,6 +2417,7 @@ export default {
         }
       }
       if (this.checkboxObj.ys && this.PROCESS.YS) {
+        this.detail.importNums.push('9')
         if (!ysRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
@@ -2440,6 +2432,7 @@ export default {
         }
       }
       if (this.checkboxObj.ch && this.PROCESS.CH) {
+        this.detail.importNums.push('11')
         if (!chRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
@@ -2455,6 +2448,7 @@ export default {
       }
 
       if (this.checkboxObj.cj && this.PROCESS.CJ) {
+        this.detail.importNums.push('20')
         //畅捷
         if (!cjRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
@@ -2470,6 +2464,7 @@ export default {
         }
       }
       if (this.checkboxObj.kdb && this.PROCESS.KDB) {
+        this.detail.importNums.push('19')
         //开店宝
         if (!kdbRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
@@ -2486,6 +2481,7 @@ export default {
       }
 
       if (this.checkboxObj.fy && this.PROCESS.FY) {
+        this.detail.importNums.push('6')
         if (!fyRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
@@ -2493,17 +2489,20 @@ export default {
       }
       //TODO 是否需要处理share
       if (this.checkboxObj.lkl && this.PROCESS.LKL) {
+        this.detail.importNums.push('8')
         if (!lklRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
       }
       if (this.checkboxObj.sjPos && this.PROCESS.SJPOS) {
+        this.detail.importNums.push('17')
         if (!sjPosRequireData.every(attr => this.detail[attr] !== '')) {
           this.$toast.error('有内容未填入')
           return
         }
       }
+      // this.detail.importNums = []
       if (this.from === 'share') {
         this.detail.isCommit = 0
       } else {

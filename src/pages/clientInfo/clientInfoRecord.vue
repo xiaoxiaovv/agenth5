@@ -1,5 +1,6 @@
 <template>
   <div class="client-info-detail client-info-record frame-container box align-default">
+
     <!-- 补白 -->
     <div class="client-info-detail__padding"
          v-if="!outside"></div>
@@ -14,8 +15,10 @@
       <div class="pass"></div>
     </div>
 
+
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
+
       <div class="match-width box align-default">
         <div class="title">可上传照片进行资料识别</div>
         <div class="item"
@@ -57,7 +60,7 @@
             <p class="img_intro">身份证反面照</p>
           </div>
 
-          <div class="img_wp img_wp_width">
+          <div class="img_wp img_wp_width mt-10">
             <vmaUploadImg ref="inHand"
                           @change="onFileChange($event, 'inHand')"></vmaUploadImg>
             <div>
@@ -72,8 +75,32 @@
             </div>
             <p class="img_intro">手持身份证半身照</p>
           </div>
+
+          <div class="img_wp img_wp_width mt-10">
+            <div>
+
+              <div @click="showSign" class="showSignBtn" :class="{signBackgroundColor:signBackgroundColor}"></div>
+              <i v-if="detail.holdingCardId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('sign')"></i>
+              <div class="icon iconfont iconzhaoxiangji ml-10"
+                   style="font-size:30px;"></div>
+              <img v-if="detail.signId"
+                   :src="detail.signId | previewLoadImage"
+                   @click="previewImage(detail.signId,true)" />
+              <img v-if="detail.sign"
+                   :src="detail.sign"
+                   @click="previewImage(detail.sign,true)"
+                   />
+            </div>
+            <p class="img_intro">进件签名</p>
+          </div>
+
         </div>
-        <div class="title">联系信息</div>
+
+
+
+
         <div class="item">
           <div class="subtitle">
             <span class="star">*</span>姓名
@@ -230,6 +257,7 @@
              @click="openAlertDialog">下一步</div>
       </div>
 
+
       <!-- action-sheet -->
       <mu-bottom-sheet :open.sync="open">
         <div class="action-sheet box align-default">
@@ -335,7 +363,7 @@
       </div>
     </div>
 
-    <!-- 图片预览 -->
+
     <vmaImagePreview :dialog="previewDialog"></vmaImagePreview>
     <mu-dialog title="提示"
                width="600"
@@ -352,6 +380,20 @@
                  flat
                  color="primary"
                  @click="onNext">确认无误</mu-button>
+    </mu-dialog>
+    <!-- 签名 -->
+    <mu-dialog title=""
+               class="sign-dialog"
+               :overlay="false"
+               width="600"
+               max-width="100%"
+               :fullscreen="true"
+               :esc-press-close="false"
+               :overlay-close="false"
+               :open.sync="openSignDialog">
+      <!--签名-->
+      <sign @signStr="getSignStr"></sign>
+
     </mu-dialog>
     <!-- 选择日期 -->
     <mu-dialog class="time-dialog"
@@ -407,14 +449,17 @@ import {
 import { clientInfoApi } from '@/api'
 import { validID } from '@/utils'
 import vmaUploadImg from '@/components/common/vmaUploadImg'
+import sign from '@/components/common/sign'
 import vmaImagePreview from '@/components/common/vmaImagePreview'
 import indexMixins from './src/mixins'
 
 export default {
-  components: { vmaUploadImg, vmaImagePreview },
+  components: { vmaUploadImg, vmaImagePreview, sign },
   mixins: [indexMixins],
   data() {
     return {
+      requiredData:[],
+      signBackgroundColor:false,
       type: '', // 1-身份证有效期
       endTime: '',
       timeType: 0, // 0-长期
@@ -422,7 +467,10 @@ export default {
         open: false
       },
       openAlert: false,
+      openSignDialog:false,
       detail: {
+        sign:'', //签名
+        signId:'', //签名照片id
         // isCommit: 0,
         epresentativePhotoId: '', // 身份正面
         epresentativePhotoId2: '',
@@ -539,6 +587,17 @@ export default {
     }
   },
   methods: {
+    getSignStr(signStr){
+      // this.$set(this.detail,signStr)
+      this.detail.sign = signStr
+      this.signBackgroundColor = true
+      console.log('12222222222222222',this.sign)
+      this.openSignDialog = false
+    },
+    //签名
+    showSign(){
+      this.openSignDialog = true
+    },
     // 选择时间
     selectEndTime(type) {
       this.type = type
@@ -594,6 +653,23 @@ export default {
         this.detail.person = ''
         this.detail.startBusinessTime = ''
         this.detail.endBusinessTime = ''
+      }
+      // 营业执照
+      if (type === 'license') {
+        this.detail.businessLicensePhotoId = ''
+        this.detail.license = ''
+        this.detail.businessLicenseName = ''
+        this.detail.businessType = '2'
+        this.detail.registerAddress = ''
+        this.detail.person = ''
+        this.detail.startBusinessTime = ''
+        this.detail.endBusinessTime = ''
+      }
+      // 签名
+      if (type === 'sign') {
+        this.signBackgroundColor = false
+        this.detail.sign = ''
+        this.detail.signId = ''
       }
     },
     openAlertDialog() {
@@ -761,9 +837,8 @@ export default {
     },
     // 下一步
     onNext() {
-      let requiredData = []
       if (this.detail.businessLicensePhotoId) {
-        requiredData = [
+        this.requiredData = [
           'epresentativePhotoId',
           'epresentativePhotoId2',
           'holdingCardId',
@@ -779,9 +854,10 @@ export default {
           'person',
           'startBusinessTime',
           'endBusinessTime'
+
         ]
       } else {
-        requiredData = [
+        this.requiredData = [
           'epresentativePhotoId',
           'epresentativePhotoId2',
           'holdingCardId',
@@ -794,7 +870,7 @@ export default {
       }
       let flag = true
       for (let i in this.detail) {
-        if (this.detail.hasOwnProperty(i) && requiredData.indexOf(i) !== -1) {
+        if (this.detail.hasOwnProperty(i) && this.requiredData.indexOf(i) !== -1) {
           if (!this.detail[i]) {
             flag = false
             break
@@ -1054,6 +1130,12 @@ export default {
       clientInfoApi.getMchInfo({ id }).then(res => {
         res.obj.businessType = String(res.obj.businessType) || '2'
         this.detail = Object.assign({}, this.detail, res.obj)
+        if(this.detail.signId){
+          this.signBackgroundColor = true;
+        }else{
+          this.signBackgroundColor = false;
+          this.requiredData.push('sign')
+        }
         console.log('this.detail', this.detail)
       })
     },
@@ -1111,7 +1193,7 @@ export default {
           return item.value === this.threeList[0]
         })[0].children
       }
-    }
+    },
   },
 
   filters: {
@@ -1120,8 +1202,16 @@ export default {
       return id ? url + `/fms/upload/resource/thumbnail/${id}` : ''
     },
     previewLoadImage(id) {
+
       // console.log(888888,id)
       return id ? url + `/fms/upload/resource/${id}` : ''
+      /*if(id.indexOf('data:image/png;base64')===0){
+        //兼容签名的
+        return id
+      }else{
+        return id ? url + `/fms/upload/resource/${id}` : ''
+      }
+*/
     },
     // app状态过滤
     appStatusFilter(index) {

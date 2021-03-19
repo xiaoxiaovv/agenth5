@@ -729,7 +729,7 @@ export default {
     // 获取列表详情
     getMchInfo(id) {
       clientInfoApi.getMchInfo({ id }).then(res => {
-        res.obj.accountHolder = res.obj.accountHolder || res.obj.representativeName
+        // res.obj.accountHolder = res.obj.accountHolder || res.obj.representativeName
         this.detail = Object.assign({}, this.detail, res.obj)
       })
     },

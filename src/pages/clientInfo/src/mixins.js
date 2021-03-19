@@ -5,7 +5,8 @@ export default {
       // datail: {},
       previewDialog: { // 预览弹窗
         open: false,
-        id: ''
+        id: '',
+        isSign:false
       }
     }
   },
@@ -17,9 +18,14 @@ export default {
     //   })
     // },
     // 预览图片
-    previewImage(id) {
+    previewImage(id,isSign) {
       console.log('预览图片', id)
       if (!id) return
+      if(isSign){
+        this.previewDialog.isSign = true
+      }else{
+        this.previewDialog.isSign = false
+      }
       this.previewDialog.open = true
       this.previewDialog.id = id
     }

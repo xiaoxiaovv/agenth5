@@ -1,6 +1,7 @@
 <template>
   <!-- 图片预览 -->
   <div class="cover-x align-default"
+       :class="{'sign-cover-x':isSign}"
        v-if="dialog.open"
        @click="closeDialog"
        style="z-index: 9;">
@@ -15,6 +16,13 @@
 <script>
 import { url } from '@/utils/src/request'
 export default {
+  data(){
+
+    return {
+      isSign:false
+    }
+
+  },
   props: {
     dialog: {
       type: Object,
@@ -31,7 +39,19 @@ export default {
 
     // 生成图片地址
     createImgUrl(id) {
-      return id ? url + `/fms/upload/resource/${id}` : ''
+      if(id.indexOf('data:image/png;base64')===0){
+        this.isSign = true
+        return id
+
+      }else{
+        if(this.dialog.isSign){
+          this.isSign = true
+        }else {
+          this.isSign = false
+        }
+        return id ? url + `/fms/upload/resource/${id}` : ''
+      }
+
     }
   }
 }

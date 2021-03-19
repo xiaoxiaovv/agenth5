@@ -3,6 +3,7 @@ import backgroundImg from './src/backgroundImg'
 import requestAxios from './src/request'
 import cxby from './src/cxby'
 import registerRequestAxios from './src/registerRequest'
+import Draw from './src/draw'
 
 export * from 'vma-vue-assist/dist/static/js/utils'
 export * from './src/validator'
@@ -11,5 +12,6 @@ export {
   backgroundImg,
   requestAxios,
   registerRequestAxios,
-  cxby
+  cxby,
+  Draw
 }
