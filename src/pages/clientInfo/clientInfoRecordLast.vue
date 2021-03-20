@@ -17,7 +17,7 @@
 
       <!--畅捷-->
       <div class="match-width box align-default"
-           v-if="PROCESS.KDB">
+           v-if="PROCESS.CJ">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.cj"
                        label="畅捷通道"></mu-checkbox>
@@ -267,7 +267,7 @@
         <div class="item">
           <div class="subtitle">
             <span class="star"
-                  v-show="checkboxObj.zfb">*</span>手机pos提现费
+                  v-show="checkboxObj.sjPos">*</span>手机pos提现费
           </div>
           <div class="match-left-space align-right">
             <input placeholder="请输入"
@@ -289,7 +289,7 @@
         <div class="item">
           <div class="subtitle">
             <span class="star"
-                  v-show="checkboxObj.zfb">*</span>网联提现费
+                  v-show="checkboxObj.sjPos">*</span>网联提现费
           </div>
           <div class="match-left-space align-right">
             <input placeholder="请输入"
@@ -1875,8 +1875,6 @@ export default {
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--开始
         this.detail.kdbJjkTradeRate = '0.55';  //
         this.detail.kdbDjkTradeRate = '0.55';  //
-        this.detail.kdbJjkSettlementCycle = this.detail.kdbWxSettlementCycle;  //
-        this.detail.kdbDjkSettlementCycle = this.detail.kdbWxSettlementCycle;  //
         this.detail.kdbJjkDiscountRate = '0.38';  //
         this.detail.kdbDjkDiscountRate = '0.38';  //
         this.detail.kdbSingleServiceFeeUpLimit = '20';  //
@@ -2509,6 +2507,9 @@ export default {
         this.detail.isCommit = 1
       }
       this.detail.isIndustryDining = this.detail.isIndustryDining ? 1 : 0
+      //开店宝借记卡和贷记卡结算周期都取页面上的周期
+      this.detail.kdbJjkSettlementCycle = this.detail.kdbWxSettlementCycle;
+      this.detail.kdbDjkSettlementCycle = this.detail.kdbWxSettlementCycle;
       //todo  return
       clientInfoApi.submitMchIfo(this.detail).then(
         res => {

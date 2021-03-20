@@ -80,7 +80,10 @@
             <div>
 
               <div @click="showSign" class="showSignBtn" :class="{signBackgroundColor:signBackgroundColor}"></div>
-              <i v-if="detail.holdingCardId"
+              <i v-if="detail.signId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('sign')"></i>
+              <i v-if="detail.sign"
                  class="icon iconfont iconshanchu"
                  @click="deleteImg('sign')"></i>
               <div class="icon iconfont iconzhaoxiangji ml-10"
@@ -572,7 +575,7 @@ export default {
     console.log('进来', location.href)
     if (this.$route.query.token) {
       sessionStorage.token = this.$route.query.token
-      sessionStorage.companyId = this.$route.query.companyId
+      // sessionStorage.companyId = this.$route.query.companyId
       sessionStorage.link = location.href
       // sessionStorage.iframe = this.$route.query.iframe || false
     }
