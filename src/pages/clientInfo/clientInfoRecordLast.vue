@@ -160,12 +160,12 @@
         </div>-->
 
 
-        <div class="item" style="border:0;" v-if="detail.businessLicensePhotoId">
+        <div class="item" style="border:0;">
           <div class="subtitle">
-            <span class="star"  v-show="checkboxObj.kdb">*</span>注册登记表照片
+            <span class="star"  v-show="checkboxObj.kdb&&detail.businessLicensePhotoId&&detail.businessType==1">*</span>注册登记表照片
           </div>
         </div>
-        <div class="item id_img_wp" v-if="detail.businessLicensePhotoId">
+        <div class="item id_img_wp">
           <div class="img_wp img_wp_width">
             <!-- <input class="file"
                    type="file"
@@ -187,13 +187,13 @@
             <p class="img_intro">注册登记表照片</p>
           </div>
         </div>
-        <div class="item"  v-if="detail.businessLicensePhotoId"
+        <div class="item"
              style="border:0;">
           <div class="subtitle">
-            <span class="star"  v-show="checkboxObj.kdb">*</span>收单协议照片
+            <span class="star"  v-show="checkboxObj.kdb&&detail.businessLicensePhotoId&&detail.businessType==1">*</span>收单协议照片
           </div>
         </div>
-        <div class="item id_img_wp"  v-if="detail.businessLicensePhotoId">
+        <div class="item id_img_wp">
           <div class="img_wp img_wp_width">
             <!-- <input class="file"
                    type="file"
@@ -215,13 +215,13 @@
             <p class="img_intro">收单协议照片</p>
           </div>
         </div>
-        <div class="item"  v-if="detail.businessLicensePhotoId"
+        <div class="item"  v-if="detail.businessLicensePhotoId&&detail.businessType==1"
              style="border:0;">
           <div class="subtitle">
             商户变更登记表照片(变更时必传)
           </div>
         </div>
-        <div class="item id_img_wp" v-if="detail.businessLicensePhotoId">
+        <div class="item id_img_wp" v-if="detail.businessLicensePhotoId&&detail.businessType==1">
           <div class="img_wp img_wp_width">
             <!-- <input class="file"
                    type="file"
@@ -1880,6 +1880,17 @@ export default {
         this.detail.kdbSingleServiceFeeUpLimit = '20';  //
         this.detail.kdbServiceRate = '0.02'; //d0手续费  百分比
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--结束
+        //设置开店宝默认费率
+        this.detail.kdbWxTradeRate = this.detail.kdbWxTradeRate || '0.36'
+        //设置手机pos默认费率 'posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee'
+        this.detail.posTradeRate = this.detail.posTradeRate || '0.55'
+        this.detail.posDrawFee = this.detail.posDrawFee || '3'
+        this.detail.quickTradeRate = this.detail.quickTradeRate || '0.55'
+        this.detail.quickDrawFee = this.detail.quickDrawFee || '3'
+
+
+
+
         this.proImgList = this.detail.pro ? this.detail.pro.split(';') : []
         this.detail.industrId = this.detail.industrId + ''
         this.detail.isIndustryDining = Boolean(this.detail.isIndustryDining)
@@ -2321,7 +2332,7 @@ export default {
       let cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName', 'chanpayTradeRate']
 
 
-      if (this.detail.businessLicensePhotoId) {
+      if (this.detail.businessLicensePhotoId&&this.detail.businessType==1) {
         //营业执照
         kdbRequireData.push('kdbCompanyType', 'kdbRegistryId', 'kdbAgreementId')
       }
@@ -2329,6 +2340,7 @@ export default {
         //营业执照
         fyRequireData.push('inHandPicId')
       }
+      //share 不需要填费率
       if (this.from === 'share') {
         sxfRequiredData = ['mccCd', 'mccClassCd']
         ysRequireData = ['ysFirstName', 'ysSecondName', 'pro']
@@ -2347,7 +2359,7 @@ export default {
         lsRequireData.push('foodHealthPermissionPic')
       }
       // 判断通道方式是否已有数据填入，有一项填入，全部为必填
-      // let zfbFlag = zfbRequiredData.every(attr => !this.detail[attr] !== '')
+      // let zfbFlag = zfbRequiredData.every(attr => !this.detail[attr] !== '' && this.detail[attr] !== null)
       let checkProcess = false // 只要勾选了一个通道就为true
       for (let attr in this.checkboxObj) {
         if (this.PROCESS[attr.toLocaleUpperCase()]) {
@@ -2364,7 +2376,7 @@ export default {
       //天阙随行付是12
       if (this.checkboxObj.sxf && this.PROCESS.SXF) {
         this.detail.importNums.push('7')
-        if (!sxfRequiredData.every(attr => this.detail[attr] !== '')) {
+        if (!sxfRequiredData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2379,14 +2391,14 @@ export default {
       }
       if (this.checkboxObj.wx && this.PROCESS.WX) {
         this.detail.importNums.push('WX')
-        if (!wxRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!wxRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
       }
       if (this.checkboxObj.zfb && this.PROCESS.ZFB) {
         this.detail.importNums.push('ZFB')
-        if (!zfbRequiredData.every(attr => this.detail[attr] !== '')) {
+        if (!zfbRequiredData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2401,7 +2413,7 @@ export default {
       }
       if (this.checkboxObj.ls && this.PROCESS.LS) {
         this.detail.importNums.push('10')
-        if (!lsRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!lsRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2416,7 +2428,7 @@ export default {
       }
       if (this.checkboxObj.ys && this.PROCESS.YS) {
         this.detail.importNums.push('9')
-        if (!ysRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!ysRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2431,7 +2443,7 @@ export default {
       }
       if (this.checkboxObj.ch && this.PROCESS.CH) {
         this.detail.importNums.push('11')
-        if (!chRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!chRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2445,26 +2457,11 @@ export default {
         }
       }
 
-      if (this.checkboxObj.cj && this.PROCESS.CJ) {
-        this.detail.importNums.push('20')
-        //畅捷
-        if (!cjRequireData.every(attr => this.detail[attr] !== '')) {
-          this.$toast.error('有内容未填入')
-          return
-        }
-        if (this.from !== 'share' && Number(this.detail.chanpayTradeRate) <= 0) {
-          this.$toast.error('费率必须大于0')
-          return
-        }
-        if (Number(this.detail.chanpayTradeRate) >= 1) {
-          this.$toast.error('费率不能超过1')
-          return
-        }
-      }
+
       if (this.checkboxObj.kdb && this.PROCESS.KDB) {
         this.detail.importNums.push('19')
         //开店宝
-        if (!kdbRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!kdbRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2477,10 +2474,26 @@ export default {
           return
         }
       }
+      if (this.checkboxObj.cj && this.PROCESS.CJ) {
+        this.detail.importNums.push('20')
+        //畅捷
+        if (!cjRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
+          this.$toast.error('有内容未填入')
+          return
+        }
+        if (this.from !== 'share' && Number(this.detail.chanpayTradeRate) <= 0) {
+          this.$toast.error('费率必须大于0')
+          return
+        }
+        if (Number(this.detail.chanpayTradeRate) >= 1) {
+          this.$toast.error('费率不能超过1')
+          return
+        }
+      }
 
       if (this.checkboxObj.fy && this.PROCESS.FY) {
         this.detail.importNums.push('6')
-        if (!fyRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!fyRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
@@ -2488,14 +2501,14 @@ export default {
       //TODO 是否需要处理share
       if (this.checkboxObj.lkl && this.PROCESS.LKL) {
         this.detail.importNums.push('8')
-        if (!lklRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!lklRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
       }
       if (this.checkboxObj.sjPos && this.PROCESS.SJPOS) {
         this.detail.importNums.push('17')
-        if (!sjPosRequireData.every(attr => this.detail[attr] !== '')) {
+        if (!sjPosRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }

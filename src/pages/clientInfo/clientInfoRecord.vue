@@ -499,7 +499,7 @@ export default {
         id: '',
         businessLicensePhotoId: '',
         license: '',
-        businessType: '2',
+        businessType: '2',  //1企业  2个体
         registerAddress: '',
         person: '',
         startBusinessTime: '',

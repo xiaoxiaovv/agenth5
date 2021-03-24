@@ -3,8 +3,8 @@
     <div id="canvasBox" :style="getHorizontalStyle" v-show="!showBox">
       <div class="greet">
         <span>{{msg}}</span>
-        <input type="button" value="删除" @touchstart="clear" @mousedown="clear"/>
-        <input type="button" value="签名" @touchstart="savePNG" @mousedown="savePNG"/>
+        <input class="sign-btns" type="button" value="重写" @touchstart="clear" @mousedown="clear"/>
+        <input class="sign-btns ml-30" type="button" value="确认" @touchstart="savePNG" @mousedown="savePNG"/>
       </div>
       <canvas class="canvas-sign"></canvas>
     </div>
@@ -25,7 +25,7 @@ export default {
   name: 'signCanvas',
   data() {
     return {
-      msg: '请在下方空白处签名',
+      msg: '请在下方空白处签名（身份证姓名）',
       degree: 90,
       signImage: null,
       showBox: false,
