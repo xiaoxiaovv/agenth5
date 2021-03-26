@@ -14,7 +14,8 @@ const PROCESS_NAME = {
   LKL: '拉卡拉',
   SJPOS: '手机pos',
   KDB: '开店宝',
-  CJ:'畅捷支付'
+  CJ:'畅捷支付',
+  YIS:'易生'
 }
 let PROCESS = {
   //所有字母必须大写
@@ -28,7 +29,8 @@ let PROCESS = {
   LKL: false,
   SJPOS: false,
   KDB:false,
-  CJ:false
+  CJ:false,
+  YIS:false
 }
 
 // 通道开启状态

@@ -6,7 +6,7 @@
            alt="">
       <div class="info-first-container center-flex">
         <div>
-          <p><span v-if="userInfo.userType === 2">一级代理商</span><span v-if="userInfo.userType === 3">二级代理商</span></p>
+          <p><span v-if="userInfo.userType === 2">一级代理商</span><span v-if="userInfo.userType === 3">二级代理商</span><span v-if="userInfo.userType === 4">三级代理商</span></p>
           <p class="info-first-name">{{userInfo.name}}</p>
           <div class="center-flex">
             <p class="info-first-edit-password" @click="resetPsw">修改密码</p>
@@ -64,6 +64,10 @@
           <p class="fl">{{item.name}}</p>
           <p class="fr">{{item.value}}</p>
         </li> -->
+        <li class="clearfix"  @click="toCommission">
+          <p class="fl">分润提现管理</p>
+          <p class="fr"></p>
+        </li>
         <li class="clearfix"  @click="toPrivacy">
           <p class="fl">隐私政策</p>
           <p class="fr"></p>
@@ -161,6 +165,9 @@ export default {
     },
     toPrivacy() {
       this.$router.push({name: types.PRIVACY})
+    },
+    toCommission(){
+      this.$router.push({name: types.COMMISSION})
     }
   }
 }

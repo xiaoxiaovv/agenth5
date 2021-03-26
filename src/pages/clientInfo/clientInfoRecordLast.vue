@@ -15,6 +15,46 @@
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
 
+      <!--<div class="match-width box align-default"
+           v-if="PROCESS.YIS">
+        <div class="title">
+          <mu-checkbox v-model="checkboxObj.cj"
+                       label="畅捷通道"></mu-checkbox>
+        </div>
+        <div class="item">
+          <VmaCascaderTree v-model="cjCascaderArr"
+                           class="client-info"
+                           :dataTree="cjMaccTree"
+                           :placeholder="'请选择类目'"
+                           :modalLabel="'选择类目'"
+                           :required="checkboxObj.cj"
+                           label="经营类目"
+                           @change="changeCjMenu"></VmaCascaderTree>
+        </div>
+        <div class="item">
+          <VmaCascaderTree class="client-info"
+                           v-model="cjAddressArr"
+                           :dataTree="cjAddressTree"
+                           :label="'商户营业地区补充'"
+                           :placeholder="'请选择省市'"
+                           :modalLabel="'选择省市'"
+                           :required="checkboxObj.cj"
+                           @change="changeCjAddress"></VmaCascaderTree>
+        </div>
+        <div class="item"
+             v-if="from!=='share'">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.cj">*</span>费率
+          </div>
+          <div class="match-left-space align-right input-number">
+            <input type="number"
+                   placeholder="请填写真实费率"
+                   v-model="detail.chanpayTradeRate" />%
+          </div>
+        </div>
+      </div>-->
+
+
       <!--畅捷-->
       <div class="match-width box align-default"
            v-if="PROCESS.CJ">
@@ -1218,7 +1258,9 @@ export default {
         LKL:false,
         SJPOS:false,
         KDB:false,
-        CJ:false //畅捷
+        CJ:false, //畅捷
+        YIS:false
+
       },
       checkboxObj: {
         sxf: false,
@@ -1231,7 +1273,8 @@ export default {
         lkl: false,
         sjPos: false,
         kdb:false,
-        cj:false //畅捷
+        cj:false, //畅捷
+        yiS:false
       },
       openSimpleTree:false, //简单选择树
       simpleTreeStatus: 0,
@@ -1357,7 +1400,10 @@ export default {
         operationCityCode:'',
         operationCityName:'',
         operationDistrictCode:'',
-        operationDistrictName:''
+        operationDistrictName:'',
+
+      //  易生
+
       },
       //经营类目渲染树用
       maccList: [],

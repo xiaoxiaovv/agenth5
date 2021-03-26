@@ -16,4 +16,21 @@ export default [{
     isShowFooter: false,
     title: '隐私政策'
   }
-}]
+}, {
+  path: '/commission',
+  name: types.COMMISSION,
+  component: resolve => require(['@/pages/mine/commission/index'], resolve),
+  meta: {
+    isShowFooter: false,
+    title: '分润管理'
+  }
+}, {
+  path: '/private',
+  name: types.COMMISSIONADDCARD,
+  component: resolve => require(['@/pages/mine/commission/addCard'], resolve),
+  meta: {
+    isShowFooter: false,
+    title: '分润提现加卡'
+  }
+}
+]

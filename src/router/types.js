@@ -42,3 +42,7 @@ export const REGISTER = `REGISTER`
 export const RESETPASSWORD = `RESETPASSWORD`
 //隐私政策
 export const PRIVACY = `PRIVACY`
+//分润管理
+export const COMMISSION = `COMMISSION`
+//分润提现加卡
+export const COMMISSIONADDCARD = `COMMISSIONADDCARD`
