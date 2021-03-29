@@ -44,5 +44,7 @@ export const RESETPASSWORD = `RESETPASSWORD`
 export const PRIVACY = `PRIVACY`
 //分润管理
 export const COMMISSION = `COMMISSION`
-//分润提现加卡
-export const COMMISSIONADDCARD = `COMMISSIONADDCARD`
+//分润提现申请
+export const COMMISSIONAPPLY = `COMMISSIONAPPLY`
+//分润提现加卡/编辑卡
+export const COMMISSION_ADD_BANK_CARD = `COMMISSION_ADD_BANK_CARD`

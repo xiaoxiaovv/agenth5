@@ -25,12 +25,20 @@ export default [{
     title: '分润管理'
   }
 }, {
-  path: '/private',
-  name: types.COMMISSIONADDCARD,
-  component: resolve => require(['@/pages/mine/commission/addCard'], resolve),
+  path: '/commission_apply',
+  name: types.COMMISSIONAPPLY,
+  component: resolve => require(['@/pages/mine/commission/commissionApply'], resolve),
   meta: {
     isShowFooter: false,
-    title: '分润提现加卡'
+    title: '分润提现'
+  }
+}, {
+  path: '/commission_add_bank_card',
+  name: types.COMMISSION_ADD_BANK_CARD,
+  component: resolve => require(['@/pages/mine/commission/commissionAddBankCard'], resolve),
+  meta: {
+    isShowFooter: false,
+    title: '添加/编辑提现卡'
   }
 }
 ]

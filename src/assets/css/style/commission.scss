@@ -1,17 +1,17 @@
 @import "../cxby/mixins.scss";
 
-// 进件页
+// 展示页
 .commission-index {
   @include match-width();
 
-   .pandect-data {
+  .pandect-data {
     height: 2rem;
-     width:9.2rem;
+    width:9.2rem;
     background: #ffffff;
     box-shadow: 0px 10px 20px 0px rgba(175, 191, 207, 0.2);
     border-radius: .13rem;
     //padding-top: .2rem;
-     padding-bottom: 1rem;
+    padding-bottom: 1rem;
     margin-top: .3rem;
     margin-bottom: .3rem;
     position: relative;
@@ -46,6 +46,19 @@
       justify-content: center;
     }
   }
+   /*.pandect-data {
+    height: 2rem;
+     width:9.2rem;
+    background: #ffffff;
+    box-shadow: 0px 10px 20px 0px rgba(175, 191, 207, 0.2);
+    border-radius: .13rem;
+    //padding-top: .2rem;
+     padding-bottom: 1rem;
+    margin-top: .3rem;
+    margin-bottom: .3rem;
+    position: relative;
+
+  }*/
   &__padding {
     @include match-width();
     @include height(50);
@@ -172,15 +185,76 @@
     @include match-width();
     @include height(98);
   }
+  &__out-login {
+    //margin-top: 1.17rem;
+     margin-top:0.5rem;
+    margin-bottom:0.5rem;
+    p {
+      width: 9.2rem;
+      height: 1.17rem;
+      line-height: 1.17rem;
+      background: rgba(75, 168, 255, 1);
+      border-radius: .13rem;
+      font-size: .43rem;
+      color: #ffffff;
+    }
+  }
 }
-
-
-// 进件详情页
-.commission-index-detail {
-  background-color: #f0f0f0;
+.commission-apply {
   @include match-width();
-  @include font-weight(500);
+  &__title{
+    background-color: #4ba8ff;
+    color: white;
+    border-radius: .13rem;
+    .money{
+      font-size: 0.5rem;
+      font-weight: bold;
+    }
+    .title-text{
+      font-size: 0.4rem;
+    }
 
+
+  }
+  .pandect-data {
+    @include match-width(90);
+    @include height(200);
+    //height: 3rem;
+    //width:90%;
+    background: #ffffff;
+    box-shadow: 0px 10px 20px 0px rgba(175, 191, 207, 0.2);
+    border-radius: .13rem;
+    //padding-top: .2rem;
+    padding-bottom: 1rem;
+    margin-top: .3rem;
+    margin-bottom: .3rem;
+    position: relative;
+    .order-more{
+      position: absolute;
+      top:5px;
+      right:5px;
+      color: #4BA8FF;
+    }
+    .order-eye {
+      color: #4BA8FF;
+      padding-left: 5px;
+      padding-right: 10px;
+    }
+
+
+    .pandect-data-price {
+      font-size: .36rem;
+      font-weight: bold;
+      color: rgba(51, 51, 51, 1);
+    }
+
+    .pandect-data-name {
+      font-size: .35rem;
+      font-weight: 500;
+      color: rgba(153, 153, 153, 1);
+      justify-content: center;
+    }
+  }
   &__padding {
     @include match-width();
     @include height(50);
@@ -189,13 +263,11 @@
 
   &__nav {
     @include match-width();
-    @include height(88);
-    border-bottom: px2rem(2) solid #F0F0F0;
+    @include height(78);
     background-color: #FFF;
 
-    .icon {
-      @include font-size(36);
-      color: #999;
+    .pass {
+      @include size(20, 20);
     }
 
     .title {
@@ -204,215 +276,121 @@
       color: #333;
     }
 
-    .text {
-      @include font-size(28);
-      color: #666;
+    .search {
+      @include size(31, 31);
     }
+  }
 
-    .pass {
-      @include size(20);
+  &__tabs {
+    @include match-width();
+    @include height(80);
+    @include font-size(28);
+    @include font-weight(500);
+    background-color: #FFF;
+    color: #666;
+
+    .item {
+
+      .bar {
+        @include size(44, 6);
+        @include radius(3);
+        background-color: transparent;
+      }
+
+      &.active {
+        // font-weight: bold;
+        color: #4BA8FF;
+
+        .bar {
+          background-color: #4BA8FF;
+        }
+      }
+
+      &:active {
+        // background-color: #DDD;
+      }
     }
   }
 
   &__content {
+    position: relative;
+    overflow: auto;
+    height: 9.2rem;
+    width:9.2rem;
+    background: white;
+
+
+
+    .loading {
+      @include match-width();
+      @include font-size(24);
+      @include font-weight(400);
+      color: #999;
+    }
+  }
+
+  &__item {
     @include match-width();
     @include font-size(32);
+    @include font-weight(500);
+    @include height(150);
+    border-bottom: px2rem(1) solid #DDD;
     color: #999;
-    overflow-y: auto;
-    overflow-x: hidden;
 
     .title {
-      @include match-width();
-      @include font-size(30);
-      margin-top:px2rem(40);
-      color: #999;
-      background-color: #fff;
-      box-sizing: border-box;
-      padding: px2rem(22) px2rem(30);
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #F0F0F0;
-      .mu-checkbox-label {
-        color:#999;
-      }
+      color: #333;
     }
 
-    .item {
-      @include match-width();
-      background-color: #FFF;
-      box-sizing: border-box;
-      padding: px2rem(30) px2rem(30);
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      flex-wrap: wrap;
-      border-bottom: px2rem(1) solid #F0F0F0;
-
-      .subtitle {
-        color: #333;
-      }
-
-      img {
-        @include size(121, 79);
-        width: auto;
-      }
-
-      .img {
-        @include size(121, 79);
-        background-color: #DDD;
-      }
-      .img_wp{
-        position: relative;
-        flex: 1;
-        border:2px dashed #ddd;
-        padding: 10px;
-        margin: 0 5px;
-        .file,.showSignBtn{
-          display: inline-block;
-          height: 100%;
-          width: 100%;
-          opacity: 0;
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          z-index: 2;
-
-        }
-        .showSignBtn{
-          opacity: 100;
-        }
-        .signBackgroundColor {
-          background-color: white;
-        }
-        img{
-          @include size(242, 158);
-        }
-
-      }
-      .img_wp_width {
-        @include size(320, 180);
-        flex:inherit;
-        // overflow: hidden;
-        img {
-          @include size(310, 170);
-          position: absolute;
-          top:0;
-          left:0;
-          // z-index:1;
-          z-index:3;
-        }
-        .iconshanchu {
-          position: absolute;
-          top: -12px;
-          right:-12px;
-          font-size: 24px;
-          height: 24px;
-          line-height: 1;
-          z-index:4;
-        }
-      }
-      .star {
-        color: #FF7878;
-        margin-right: px2rem(10);
-      }
-    }
-
-    .next {
-      @include size(690, 88);
-      @include radius(12);
-      @include font-size(32);
-      background-color: #4BA8FF;
-      color: #FFF;
-      margin: px2rem(100) 0 px2rem(150) 0;
-
-      &:active {
-        opacity: 0.8;
-      }
-    }
-
-    .input, input {
-      @include width(450);
-      @include font-size(32);
-      text-align: right;
+    .subtile {
       color: #666;
+    }
 
-      &.merchant {
-        @include width(480);
+    .btn {
+      color: #999;
+
+      &.active {
+        color: #4BA8FF;
       }
-
-      &.register {
-        @include width(520);
-      }
-
-      &.mini {
-        @include width(320);
-      }
-
-      .icon {
-        color: #CCC;
+      &.wait-statue{
+        color: #FFAE3D;
       }
     }
 
-    .input {
+    .icon {
+      @include font-size(32);
+      color: #CCC;
+    }
 
-      input {
-        text-align: right;
-      }
+    &.active {
+      border-bottom: px2rem(1) solid transparent;
+    }
 
-      .mu-input-label {
-        right: 0;
-        top:-20px;
-      }
-
-      .no-empty-state {
-
-        .mu-input-label {
-          display: none;
-        }
-      }
-
-      .mu-input-line {
-        height: px2rem(2);
-        background-color: #F0F0F0;
-      }
+    &:active {
+      // background-color: #DDD;
     }
   }
 
-  &.short {
-
-    .input, input {
-      @include width(400);
-    }
+  &__footer {
+    @include match-width();
+    @include height(98);
   }
-  .input-number {
-    input {
-      // @include width(250);
-      width: 80%;
-      padding-right: 4px;
-      text-align: right;
+  &__out-login {
+    //margin-top: 1.17rem;
+    margin-top:0.5rem;
+    margin-bottom:0.5rem;
+    p {
+      width: 9.2rem;
+      height: 1.17rem;
+      line-height: 1.17rem;
+      background: rgba(75, 168, 255, 1);
+      border-radius: .13rem;
+      font-size: .43rem;
+      color: #ffffff;
     }
-  }
-  .commission-index {
-    .vm-select-tip {
-      left:px2rem(30);
-    }
-    .vm-select-content {
-      padding:0 px2rem(30);
-    }
-    .vm-select {
-      border-bottom: none;
-      height: auto;
-    }
-  }
-  .fixed-height {
-    @include height(200);
-    overflow-y: auto;
   }
 }
+
+
 .commission-index-record {
   .commission-index-detail__content {
     .time-range{
@@ -593,43 +571,10 @@
   }
 }
 
-// 图片上传
-.file {
-  position: relative;
 
-  input {
-    opacity: 0;
-  }
 
-  .cover {
-    @include match-parent();
-    position: absolute;
-    top: 0;
-    z-index: 100;
-  }
-}
 
-// 遮罩层
-.cover-x {
-  @include match-parent();
-  background-color: rgba(0, 0, 0, 0.8);
-  position: fixed;
-  top: 0;
-  z-index:101;
 
-  // 图片预览
-  .image-preview {
-    width: 100%;
-    height: 80%;
-    background-repeat: no-repeat;
-    background-size: contain;
-    //background-color: #FFF;
-    background-position: center;
-  }
-}
-.sign-cover-x{
-  background-color: rgba(164,163,169,0.85);
-}
 
 .time-dialog {
   .mu-radio-wrapper {
@@ -658,53 +603,4 @@
    }
  }
 }
-.sign-dialog{
-  .container-sign {
-    width: 100%;
-    height: 100%;
-  }
-  #canvasBox {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  .greet {
-    padding: 20px;
-    font-size: 20px;
-    user-select: none;
-  }
-  input {
-    font-size: 20px;
-  }
-  .greet select {
-    font-size: 18px;
-  }
-  .canvas-sign {
-    flex: 1;
-    cursor: crosshair;
-    border:2px dashed lightgray;
-  }
-  .image-box {
-    width: 100%;
-    height: 100%;
-  }
-  .image-box header{
-    font-size: 18px;
-  }
-  .image-box img {
-    max-width: 80%;
-    max-height: 80%;
-    margin-top: 50px;
-    border: 1px solid gray;
-  }
-  .sign-btns{
-    background-color: #4BA8FF;
-    height: 30px;
-    width: 60px;
-    font-size: 0.5rem;
-    padding: 0px 8px!important;
-    color: #fff;
-    border-radius: 3px;
 
-  }
-}

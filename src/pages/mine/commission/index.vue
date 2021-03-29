@@ -80,12 +80,12 @@ import { isProd } from '../../config';
                 <div class="match-left-space box align-left">
                   <div class="flex-1 text-right">
 
-                    <div class="btn match-left-space align-right text-right' ">
+                    <div class="btn match-left-space align-right text-right ">
                       <!-- <br /> -->
                       ￥{{item.applyAmount}}
                     </div>
                   </div>
-                  <div class="icon iconfont iconenter ml-20"></div>
+<!--                  <div class="icon iconfont iconenter ml-20"></div>-->
                 </div>
               </div>
 
@@ -105,9 +105,11 @@ import { isProd } from '../../config';
         </mu-container>
       </mu-paper>
     </div>
-
+    <div class="commission-index__out-login center-flex">
+      <p @click="toApply">申请提现</p>
+    </div>
     <!-- 补脚 -->
-    <div class="commission-index__footer"></div>
+<!--    <div class="commission-index__footer"></div>-->
 
   </div>
 </template>
@@ -118,7 +120,7 @@ import { afterLoginInfoLocal } from '@/storage'
 import { clientInfoApi, commissionApi } from '@/api'
 import { isProd } from '@/config'
 // CLIENT_INFO_DETAIL
-import { CLIENT_INFO_DETAIL, CLIENT_INFO_RECORD } from '@/router/types'
+import { COMMISSIONAPPLY,COMMISSION_ADD_BANK_CARD } from '@/router/types'
 import VmaNoData from '@/components/common/vmaNoData'
 export default {
   components: { VmaNoData },
@@ -177,6 +179,14 @@ export default {
     // this.getMerchantList()
   },
   methods: {
+    toApply(){
+      /*this.$router.push({
+        name: COMMISSIONAPPLY
+      })*/
+      this.$router.push({
+       name: COMMISSION_ADD_BANK_CARD
+     })
+    },
     getList(index, status) {
       if(status ==1){
         this.commissionApplyAllList()
@@ -187,11 +197,43 @@ export default {
 
     },
     commissionApplySuccessList(){
-      commissionApi.commissionApplySuccessList().then(
+      let params = {
+        pageNumber:1,
+        pageSize:10
+      }
+      commissionApi.commissionApplySuccessList(params).then(
         res => {
           this.loading = false
           if (res.code === 200) {
-            this.dataList = [...this.dataList, ...res.obj]
+            for(let i=0;i<10;i++){
+              this.dataList.push({
+                "accountNum": "",
+                "accountType": 0,
+                "actPayAmount": 0,
+                "actPayUser": "",
+                "allCommissionTotal": 0,
+                "applyAmount": 60,
+                "canCommission":6,
+                "cashOutAmount": 0,
+                "cashOutWay": "",
+                "company": "",
+                "companyId": "",
+                "createTime": "",
+                "delFlag": 0,
+                "id": "",
+                "name": "",
+                "payDate": "",
+                "payWay": "",
+                "rateCash": 0,
+                "remark": "",
+                "serviceProviderId": "",
+                "status": 2,
+                "updateTime": "2021-03-25 11:27:29",
+                "validCode": ""
+              })
+            }
+
+            // this.dataList = [...this.dataList, ...res.obj]
             console.log('this.dataList', this.dataList)
             if (1/*this.dataList.length < res.obj.totalElements*/) {
               this.isLoadedAll = false
@@ -199,12 +241,14 @@ export default {
               this.isLoadedAll = true
             }
           } else {
+            this.loading = false
             if (res && res.msg) {
               this.$toast.error(res.msg)
             }
           }
         },
         err => {
+          this.loading = false
           if (err && err.msg) {
             this.$toast.error(err.msg)
           }
@@ -212,11 +256,42 @@ export default {
       )
     },
     commissionApplyAllList(){
-      commissionApi.commissionApplyAllList().then(
+      let params = {
+        pageNumber:1,
+        pageSize:10
+      }
+      commissionApi.commissionApplyAllList(params).then(
         res => {
           this.loading = false
           if (res.code === 200) {
-            this.dataList = [...this.dataList, ...res.obj]
+            for(let i=0;i<10;i++){
+              this.dataList.push({
+                "accountNum": "",
+                "accountType": 0,
+                "actPayAmount": 0,
+                "actPayUser": "",
+                "allCommissionTotal": 0,
+                "applyAmount": 50,
+                "canCommission":5,
+                "cashOutAmount": 0,
+                "cashOutWay": "",
+                "company": "",
+                "companyId": "",
+                "createTime": "",
+                "delFlag": 0,
+                "id": "",
+                "name": "",
+                "payDate": "",
+                "payWay": "",
+                "rateCash": 0,
+                "remark": "",
+                "serviceProviderId": "",
+                "status": 2,
+                "updateTime": "2021-03-25 11:27:29",
+                "validCode": ""
+              })
+            }
+            // this.dataList = [...this.dataList, ...res.obj.content]
             console.log('this.dataList', this.dataList)
             if (1/*this.dataList.length < res.obj.totalElements*/) {
               this.isLoadedAll = false
@@ -230,6 +305,7 @@ export default {
           }
         },
         err => {
+          this.loading = false
           if (err && err.msg) {
             this.$toast.error(err.msg)
           }
