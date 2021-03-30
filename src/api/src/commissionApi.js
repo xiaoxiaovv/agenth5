@@ -28,22 +28,27 @@ export default {
    * 佣金提现申请列表
    */
 
-  commissionApplyAllList (params) {
+  commissionApplyAllList (pageNumber,pageSize) {
     return requestAxios({
       url: '/order/cash/out/apply_list',
       method: 'get',
-      params
+      params:{
+        pageNumber,
+        pageSize
+      }
     })
   },
   /**
    * 佣金提现申请密码验证
    */
 
-  commissionApplyAuth (params) {
+  commissionApplyAuth (password) {
     return requestAxios({
       url: '/order/cash/out/valid_password',
       method: 'post',
-      params: params
+      params: {
+        password
+      }
       // jsonHeader: true
     })
   },
@@ -51,12 +56,37 @@ export default {
    * 佣金提现申请提交
    */
 
-  commissionApplyCommit (params) {
+  commissionApplyCommit (validCode, accountType, applyAmount) {
     return requestAxios({
       url: '/order/cash/out/apply_cash_out',
       method: 'post',
+      data: {
+        validCode,
+        accountType,
+        applyAmount
+      },
+      jsonHeader: true
+    })
+  },
+  /**
+   * 绑定佣金提现卡
+   */
+
+  commissionAddBankCard (params) {
+    return requestAxios({
+      url: '/auth/user/do_band',
+      method: 'post',
       data:params,
       jsonHeader: true
+    })
+  },
+  commissionGetBankCard (companyId) {
+    return requestAxios({
+      url: '/auth/user/find_band',
+      method: 'get',
+      params:{
+        companyId
+      }
     })
   }
 }

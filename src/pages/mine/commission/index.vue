@@ -45,7 +45,7 @@ import { isProd } from '../../config';
       <div v-for="(item, index) in tabList"
            :key="index"
            :class="['item', 'box', 'match-left-space', 'align-ver-bottom', index == current ? 'active' : '' ]"
-           @click="getList(index, item.status)">
+           @click="onTabItemClick(index, item.status)">
         <div>{{item.name}}</div>
         <div class="bar mt-20"></div>
       </div>
@@ -110,7 +110,22 @@ import { isProd } from '../../config';
     </div>
     <!-- 补脚 -->
 <!--    <div class="commission-index__footer"></div>-->
-
+    <mu-dialog title="提示"
+               width="600"
+               max-width="80%"
+               :esc-press-close="false"
+               :overlay-close="false"
+               :open.sync="openAlert">
+      请您先绑定提现银行卡
+      <mu-button slot="actions"
+                 flat
+                 color="primary"
+                 @click="closeAlertDialog">取消</mu-button>
+      <mu-button slot="actions"
+                 flat
+                 color="primary"
+                 @click="toAddBankCard">去绑卡</mu-button>
+    </mu-dialog>
   </div>
 </template>
 
@@ -135,11 +150,11 @@ export default {
         },*/
         {
           name: '申请记录',
-          status: 1
+          status: 0
         },
         {
           name: '提现记录',
-          status: 2
+          status: 1
         },
        /* {
           name: '签约成功',
@@ -150,6 +165,7 @@ export default {
           status: 4
         }*/
       ],
+      openAlert:false,
       current: 0,
       dataList: [],
       refreshing: false,
@@ -173,29 +189,46 @@ export default {
   },
   mounted() {
     // TODO
-    console.log('============================111')
+    // console.log('============================111')
+    let userInfo = afterLoginInfoLocal.getJSON()
+    this.companyId = userInfo.companyId
+    this.commissionGetBankCard();
     this.findCommissionCurrentMonth()
-    this.commissionApplyAllList()
+    // this.commissionApplyAllList()
     // this.getMerchantList()
   },
   methods: {
-    toApply(){
-      /*this.$router.push({
-        name: COMMISSIONAPPLY
-      })*/
+    closeAlertDialog() {
+      this.openAlert = false
+    },
+    // 获取佣金提现卡
+    commissionGetBankCard() {
+      commissionApi.commissionGetBankCard(this.companyId).then(res => {
+        if(res.obj && res.obj.cardNo === null){
+          this.cardNotExit = true
+
+        }else{
+
+        }
+
+      })
+    },
+    toAddBankCard(){
       this.$router.push({
-       name: COMMISSION_ADD_BANK_CARD
-     })
+        name: COMMISSION_ADD_BANK_CARD
+      })
     },
-    getList(index, status) {
-      if(status ==1){
-        this.commissionApplyAllList()
-      }else if(status ==2){
-        this.commissionApplySuccessList()
+    toApply(){
+      if(this.cardNotExit){
+        this.openAlert = true
+        return
       }
-
+      this.$router.push({
+        name: COMMISSIONAPPLY
+      })
 
     },
+
     commissionApplySuccessList(){
       let params = {
         pageNumber:1,
@@ -204,8 +237,9 @@ export default {
       commissionApi.commissionApplySuccessList(params).then(
         res => {
           this.loading = false
+          this.isLoading = false
           if (res.code === 200) {
-            for(let i=0;i<10;i++){
+           /* for(let i=0;i<10;i++){
               this.dataList.push({
                 "accountNum": "",
                 "accountType": 0,
@@ -231,17 +265,18 @@ export default {
                 "updateTime": "2021-03-25 11:27:29",
                 "validCode": ""
               })
-            }
+            }*/
 
-            // this.dataList = [...this.dataList, ...res.obj]
+            this.dataList = [...this.dataList, ...res.obj]
             console.log('this.dataList', this.dataList)
-            if (1/*this.dataList.length < res.obj.totalElements*/) {
+            if (this.dataList.length < res.obj.totalElements) {
               this.isLoadedAll = false
             } else {
               this.isLoadedAll = true
             }
           } else {
             this.loading = false
+            this.isLoading = false
             if (res && res.msg) {
               this.$toast.error(res.msg)
             }
@@ -256,15 +291,13 @@ export default {
       )
     },
     commissionApplyAllList(){
-      let params = {
-        pageNumber:1,
-        pageSize:10
-      }
-      commissionApi.commissionApplyAllList(params).then(
+
+      commissionApi.commissionApplyAllList(this.pageNumber,this.pageSize).then(
         res => {
           this.loading = false
+          this.isLoading = false
           if (res.code === 200) {
-            for(let i=0;i<10;i++){
+            /*for(let i=0;i<10;i++){
               this.dataList.push({
                 "accountNum": "",
                 "accountType": 0,
@@ -290,10 +323,10 @@ export default {
                 "updateTime": "2021-03-25 11:27:29",
                 "validCode": ""
               })
-            }
-            // this.dataList = [...this.dataList, ...res.obj.content]
+            }*/
+            this.dataList = [...this.dataList, ...res.obj.content]
             console.log('this.dataList', this.dataList)
-            if (1/*this.dataList.length < res.obj.totalElements*/) {
+            if (this.dataList.length < res.obj.totalElements) {
               this.isLoadedAll = false
             } else {
               this.isLoadedAll = true
@@ -306,6 +339,7 @@ export default {
         },
         err => {
           this.loading = false
+          this.isLoading = false
           if (err && err.msg) {
             this.$toast.error(err.msg)
           }
@@ -340,9 +374,9 @@ export default {
       this.pageNumber = 1
       this.dataList = []
       // 获取商户数据
-      if(status == 1){
+      if(status == 0){
         this.commissionApplyAllList()
-      }else if(status == 2){
+      }else if(status == 1){
         this.commissionApplySuccessList()
       }
       // this.getMerchantList()
@@ -350,17 +384,28 @@ export default {
     // 下拉刷新
     refresh() {
       console.log('下拉刷新')
-      this.refreshing = true
+      // this.refreshing = true
+      this.isLoading = true
       this.$refs.container.scrollTop = 0
       this.pageNumber = 1
       this.dataList = []
+      if(this.status == 0){
+        this.commissionApplyAllList()
+      }else if(this.status == 1){
+        this.commissionApplySuccessList()
+      }
       // 获取商户数据
       // this.getMerchantList()
     },
-    // 加载更多
+    // 上拉加载更多
     load() {
       console.log('加载更多')
       this.pageNumber++
+      if(this.status == 0){
+        this.commissionApplyAllList()
+      }else if(this.status == 1){
+        this.commissionApplySuccessList()
+      }
       // 获取商户数据
       // this.getMerchantList()
     },

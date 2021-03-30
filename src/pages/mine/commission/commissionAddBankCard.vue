@@ -11,14 +11,14 @@
     <!-- 导航栏 -->
     <div class="client-info-detail__nav box plr-30 align-hor-bet">
       <div class="icon iconfont  iconreturn"
-           @click="onBack">
+           @click="$router.back(-1)">
       </div>
       <div class="title">
         <!-- {{merchantName}} -->
         添加/编辑提现卡
       </div>
       <div class="text"
-           @click="onBack">
+           @click="$router.back(-1)">
       </div>
     </div>
 
@@ -41,14 +41,14 @@
           <!-- <div class="match-left-space align-right">
             <div class="input align-right"
                  @click="callActionSheet('bank')">
-              <div>{{detail.bnkCdName}}</div>
+              <div>{{detail.bankName}}</div>
               <div class="icon iconfont iconenter ml-10"></div>
             </div>
           </div> -->
           <div class="match-left-space align-right">
             <div class="input align-right">
               <input placeholder="请与卡面名称保持一致"
-                     v-model="detail.bnkCdName" />
+                     v-model="detail.bankName" />
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@
           <div class="match-left-space align-right">
             <div class="input align-right">
               <input placeholder="请输入内容"
-                     v-model="detail.accountHolder" />
+                     v-model="detail.bankAccount" />
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@
           <div class="match-left-space align-right">
             <div class="input align-right">
               <input placeholder="请输入内容"
-                     v-model="detail.accountNumber" />
+                     v-model="detail.cardNo" />
             </div>
           </div>
         </div>
@@ -124,10 +124,16 @@
       </div>
       <div class="match-width box align-center">
         <div class="next box align-center"
-             @click="openAlertDialog">
-          下一步
+             @click="commissionAddBankCard">
+          提交
         </div>
       </div>
+      <!--<div class="match-width box align-center">
+        <div class="next box align-center"
+             @click="commissionGetBankCard">
+          获取
+        </div>
+      </div>-->
 
       <!-- action-sheet 编码 -->
       <mu-bottom-sheet :open.sync="open">
@@ -277,30 +283,34 @@
     </div>
 
     <!-- 图片预览 -->
-    <vmaImagePreview :dialog="previewDialog"></vmaImagePreview>
+<!--    <vmaImagePreview :dialog="previewDialog"></vmaImagePreview>-->
     <mu-dialog title="提示"
                width="600"
                max-width="80%"
                :esc-press-close="false"
                :overlay-close="false"
                :open.sync="openAlert">
-      请核对当前页面信息
+      添加银行卡成功
       <mu-button slot="actions"
                  flat
                  color="primary"
-                 @click="closeAlertDialog">需要修改</mu-button>
+                 @click="closeAlertDialog">取消</mu-button>
       <mu-button slot="actions"
                  flat
                  color="primary"
-                 @click="onNext">确认无误</mu-button>
+                 @click="toApplyPage">去提现</mu-button>
     </mu-dialog>
   </div>
 </template>
 
 <script>
 import { url } from '@/utils/src/request'
-import { CLIENT_INFO_RECORD, CLIENT_INFO_BASE } from '@/router/types'
-import { clientInfoApi } from '@/api'
+import { COMMISSIONAPPLY } from '@/router/types'
+// import { commissionAddBankCard, commissionGetBankCard } from '@/api/src/commissionApi'
+import { commissionApi, clientInfoApi } from '@/api'
+import { afterLoginInfoLocal } from '@/storage'
+
+
 import vmaUploadImg from '@/components/common/vmaUploadImg'
 import vmaImagePreview from '@/components/common/vmaImagePreview'
 // import indexMixins from './src/mixins'
@@ -328,8 +338,6 @@ export default {
         bankCardPositivePicId: '',
         bnkCd: '',
         bankPhotoId:'',
-        accountHolder: '',
-        accountNumber: '',
         bankPhone: ''
       },
       open: false,
@@ -371,7 +379,7 @@ export default {
 
   methods: {
     // 返回
-    onBack() {
+    /*onBack() {
       // TODO
       this.$router.push({
         name: CLIENT_INFO_RECORD,
@@ -379,7 +387,7 @@ export default {
           id: this.detail.id
         }
       })
-    },
+    },*/
     openAlertDialog() {
       this.openAlert = true
     },
@@ -433,7 +441,7 @@ export default {
         this.$toast.message('请选择市行政编码')
         return
       }
-      if (!this.detail.bnkCdName) {
+      if (!this.detail.bankName) {
         this.$toast.message('请输入开户总行银行')
         return
       }
@@ -454,7 +462,7 @@ export default {
       //   this.branchCodeList = res.obj
       // })
       let params = {
-        bankName: this.detail.bnkCdName,
+        bankName: this.detail.bankName,
         province: this.detail.commissionProvName,
         city: this.detail.commissionCityName,
         appointBankName: keyWord || ''
@@ -499,7 +507,7 @@ export default {
       this.onActionSheetClose()
       if (this.codeType === 'bank') {
         this.detail.bnkCd = this.curBnkCode
-        this.detail.bnkCdName = this.curBnkName
+        this.detail.bankName = this.curBnkName
       }
       if (this.codeType === 'province') {
         if (this.detail.commissionProvCode !== this.curProvinceCode) {
@@ -564,14 +572,16 @@ export default {
       // console.log('相机', this.photoTaker, status)
       this.openMenu = false
     },
-    // 下一步
-    onNext() {
-      let requiredData = ['bnkCdName', 'commissionProvCode', 'commissionCityCode', 'openBankCode', 'accountHolder', 'accountNumber', 'bankPhone', 'bankPhotoId']
-      if (Number(this.detail.businessType) === 1) { // 个体
-        requiredData.push('openingAccountLicensePicId')
-      } else { // 企业
-        requiredData.push('bankCardPositivePicId')
-      }
+    //
+    toApplyPage(){
+      this.$router.push({
+        name: COMMISSIONAPPLY,
+      })
+    },
+    // 提交
+    commissionAddBankCard() {
+      let requiredData = ['bankName', 'commissionProvCode', 'commissionCityCode', 'openBankCode', 'bankAccount', 'cardNo']
+
       let flag = true
       for (let i in this.detail) {
         if (this.detail.hasOwnProperty(i) && requiredData.indexOf(i) !== -1) {
@@ -582,23 +592,33 @@ export default {
         }
       }
       if (flag) {
-        clientInfoApi.submitMchIfo(this.detail).then(res => {
-          this.$router.push({
+        commissionApi.commissionAddBankCard(this.detail).then(res => {
+          if(res.code === 200){
+            this.openAlert = true
+
+          }else{
+            if(res.msg)
+            this.$toast.error(res.msg)
+          }
+          /*this.$router.push({
             name: CLIENT_INFO_BASE,
             query: {
               id: this.detail.id
             }
-          })
+          })*/
         })
       } else {
         this.$toast.error('有内容未填入')
       }
     },
+
+
+
     // 获取对公账户
     getOpenAccountInfo(pathId) {
       clientInfoApi.getOpenBankCard(pathId).then(res => {
-        this.detail.accountHolder = res.obj.name || ''
-        this.detail.accountNumber = res.obj.bankNo || ''
+        this.detail.bankAccount = res.obj.name || ''
+        this.detail.cardNo = res.obj.bankNo || ''
       })
     },
     // 获取银行卡信息
@@ -606,7 +626,7 @@ export default {
       this.loading = true
       clientInfoApi.getBankCard(pathId).then(res => {
         this.detail.bnkCd = res.obj.bnkCd || '' // 开户行总行行(银行编码)
-        this.detail.bnkCdName = res.obj.bankInfo || ''
+        this.detail.bankName = res.obj.bankInfo || ''
         if (!res.obj.bankAreaBO) {
           this.detail.commissionProvCode = '' // 开户支行所在省编码
           this.detail.commissionProvName = ''
@@ -628,7 +648,7 @@ export default {
 
         this.detail.openBankCode = '' // 开户支行行号编码
         this.detail.openBank = '' // 开户支行行号编码
-        this.detail.accountNumber = res.obj.cardNo
+        this.detail.cardNo = res.obj.cardNo
       }).finally(() => {
         this.loading = false
       })
@@ -663,7 +683,7 @@ export default {
     // 获取列表详情
     getMchInfo(id) {
       clientInfoApi.getMchInfo({ id }).then(res => {
-        // res.obj.accountHolder = res.obj.accountHolder || res.obj.representativeName
+        // res.obj.bankAccount = res.obj.accountHolder || res.obj.representativeName
         this.detail = Object.assign({}, this.detail, res.obj)
       })
     },
@@ -697,6 +717,8 @@ export default {
   },
 
   mounted() {
+    let userInfo = afterLoginInfoLocal.getJSON()
+    this.detail.companyId = userInfo.companyId
     this.getProvinceList()
     /*this.detail.id = this.$route.query.id
     if (this.detail.id) {

@@ -318,7 +318,22 @@
     height: 9.2rem;
     width:9.2rem;
     background: white;
-
+    .bank-info-box{
+      //@include match-width();
+      width: 90%;
+      //border-radius: .13rem;
+    }
+    .bank-cark-btn-box{
+      text-align: right;
+      .bank-cark-btn{
+        background-color: #4BA8FF;
+        height: 32px;
+        font-size: 0.3rem;
+        padding: 2px 8px;
+        color: #fff;
+        border-radius: 3px;
+      }
+    }
 
 
     .loading {

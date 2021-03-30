@@ -36,7 +36,14 @@ function isEmptyObject (obj) {
   return keys.length === 0
 }
 
+// 银行卡号用*代替
+ const cardFilter = (num) => {
+  if (num) {
+    return '****  ****  ****  ' + num.substring(num.length - 4);
+  }
+}
 export default {
   hasEmptyStrValueOfObject,
-  isEmptyObject
+  isEmptyObject,
+  cardFilter
 }
