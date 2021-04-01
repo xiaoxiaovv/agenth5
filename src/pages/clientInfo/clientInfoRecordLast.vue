@@ -14,12 +14,12 @@
 
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
-
-      <!--<div class="match-width box align-default"
+      <!--易生通道-->
+      <div class="match-width box align-default"
            v-if="PROCESS.YIS">
         <div class="title">
-          <mu-checkbox v-model="checkboxObj.cj"
-                       label="畅捷通道"></mu-checkbox>
+          <mu-checkbox v-model="checkboxObj.yiS"
+                       label="易生通道"></mu-checkbox>
         </div>
         <div class="item">
           <VmaCascaderTree v-model="cjCascaderArr"
@@ -27,7 +27,7 @@
                            :dataTree="cjMaccTree"
                            :placeholder="'请选择类目'"
                            :modalLabel="'选择类目'"
-                           :required="checkboxObj.cj"
+                           :required="checkboxObj.yiS"
                            label="经营类目"
                            @change="changeCjMenu"></VmaCascaderTree>
         </div>
@@ -38,13 +38,13 @@
                            :label="'商户营业地区补充'"
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
-                           :required="checkboxObj.cj"
+                           :required="checkboxObj.yiS"
                            @change="changeCjAddress"></VmaCascaderTree>
         </div>
         <div class="item"
              v-if="from!=='share'">
           <div class="subtitle">
-            <span class="star" v-show="checkboxObj.cj">*</span>费率
+            <span class="star" v-show="checkboxObj.yiS">*</span>费率
           </div>
           <div class="match-left-space align-right input-number">
             <input type="number"
@@ -52,7 +52,7 @@
                    v-model="detail.chanpayTradeRate" />%
           </div>
         </div>
-      </div>-->
+      </div>
 
 
       <!--畅捷-->
