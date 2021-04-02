@@ -24,22 +24,22 @@
         <div class="item">
           <VmaCascaderTree v-model="cjCascaderArr"
                            class="client-info"
-                           :dataTree="cjMaccTree"
+                           :dataTree="yiSMaccTree"
                            :placeholder="'请选择类目'"
                            :modalLabel="'选择类目'"
                            :required="checkboxObj.yiS"
                            label="经营类目"
-                           @change="changeCjMenu"></VmaCascaderTree>
+                           @change="changeYiSMenu"></VmaCascaderTree>
         </div>
         <div class="item">
           <VmaCascaderTree class="client-info"
-                           v-model="cjAddressArr"
-                           :dataTree="cjAddressTree"
+                           v-model="yiSAddressArr"
+                           :dataTree="yiSAddressTree"
                            :label="'商户营业地区补充'"
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
                            :required="checkboxObj.yiS"
-                           @change="changeCjAddress"></VmaCascaderTree>
+                           @change="changeYiSAddress"></VmaCascaderTree>
         </div>
         <div class="item"
              v-if="from!=='share'">
@@ -49,7 +49,19 @@
           <div class="match-left-space align-right input-number">
             <input type="number"
                    placeholder="请填写真实费率"
-                   v-model="detail.chanpayTradeRate" />%
+                   v-model="detail.ysWxRate" />%
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.yiS">*</span>到账周期
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(5)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="yiSSettlementCycleTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
           </div>
         </div>
       </div>
@@ -910,6 +922,7 @@
           </div>
         </div>
       </div>
+
       <!--<div class="match-width box align-default"
            v-if="PROCESS.LKL">
         <div class="title">
@@ -1055,8 +1068,45 @@
           </div>
         </div>
 
+        <div v-if="simpleTreeStatus === 5">
+          <div class="action-sheet__header align-left box plr-30">请选择到账周期类型</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in yiSSettlementCycleTypeList"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.ysIsService)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.name}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
       </mu-bottom-sheet>
 
+<!--易生验证码-->
+      <mu-dialog title="提示"
+                 width="600"
+                 max-width="80%"
+                 :esc-press-close="false"
+                 :overlay-close="false"
+                 :open.sync="openAlert">
+        <!--      <p class="fs-14 mb-12">请输入登录密码</p>-->
+        <input
+          type="password"
+          placeholder="请输入易生手机验证码"
+          v-model="yiSMsgCode" />
+        <mu-button slot="actions"
+                   flat
+                   color="primary"
+                   @click="closeAlertDialog">取消</mu-button>
+        <mu-button slot="actions"
+                   flat
+                   color="primary"
+                   @click="getYiSMsgCode">确定</mu-button>
+      </mu-dialog>
       <!-- action-sheet -->
       <mu-bottom-sheet :open.sync="open">
         <div class="action-sheet box align-default">
@@ -1276,6 +1326,7 @@ export default {
         cj:false, //畅捷
         yiS:false
       },
+      openAlert: false,
       openSimpleTree:false, //简单选择树
       simpleTreeStatus: 0,
 
@@ -1320,6 +1371,16 @@ export default {
           name: 'T1'
         }
       ],//结算周期类型列表
+      yiSSettlementCycleTypeList: [
+        {
+          value: 1,
+          name: 'D0'
+        },
+        {
+          value: 0,
+          name: 'T1'
+        }
+      ],//结算周期类型列表
       kdbsexList: [
         {
           value: 1,
@@ -1343,6 +1404,9 @@ export default {
       kdbSexText:'请选择性别',
       kdbSettlementCycleTypeText:'请选择到账周期类型',
       kdbAccountTypeText:'请选择结算账户类型',
+      yiSSettlementCycleTypeText:'请选择到账周期类型',
+      yiSMsgCode:'',
+      yiSUserId:'', //获取验证码的接口返回的
       detail: {
         importNums:[], //勾选则进件，不勾选不进件（以前的后台逻辑是该通道有值就会进件，会出现重复进件情况）
         isCommit: 1,
@@ -1403,6 +1467,25 @@ export default {
         operationDistrictName:'',
 
       //  易生
+        ysJjkRate:  '',  //银联借记卡费率  0.55
+        ysDjkRate:  '',  //银联贷记卡费率 0.55
+        ysZfbRate:  '',  //支付宝费率  0.38
+        ysWxRate:  '',  //微信费率  0.38
+        ysYlRate:  '',  //银联费率  0.38
+        ysJjkDiscountRate:  '',  //借记卡封顶金额 20
+        ysServiceType :  '',  //实时到账服务计费类型 0-按笔数（单位：元）;1-按比例（单位：%）  1
+        ysJjkRateType:  '',  //借记卡扣率方式 :1-封顶;0-不封顶  1
+        ysJjkRateMin :  '',  //借记卡手续费最低值 0
+        ysDjkRateMin :  '',  //信用卡手续费最低值 0
+        ysAgreementId:  '',  // 易生协议图片id
+        ysRegistryId:  '',  // 易生注册登记表图片id
+        ysIsService :  '',  //是否开通D0秒到服务  0否1是
+        ysYloneAreaCode:  '',  //银联标准一级区域编码
+        ysYltwoAreaCode:  '',  //银联标准二级区域编码
+        ysYlthreeAreaCode:  '',  //银联标准三级区域编码
+        ysYloneMccCode:  '',  //银联标准一级Mcc编码
+        ysYltwoMccCode:  '',  //银联标准二级Mcc编码
+        ysYlthreeMccCode:  '',  //银联标准三级Mcc编码
 
       },
       //经营类目渲染树用
@@ -1420,6 +1503,8 @@ export default {
       kdbMaccTree:[],
       cjMaccTree:[],
       cjAddressTree: [],
+      yiSMaccTree:[],
+      yiSAddressTree: [],
 
 
       // 经营类目返显用
@@ -1433,6 +1518,8 @@ export default {
       kdbAddressArr: [], // (开店宝)经营地址反显
       cjAddressArr: [],
       cjCascaderArr: [], // (畅捷)经营行业 v-module
+      yiSAddressArr: [],
+      yiSCascaderArr: [], // (畅捷)经营行业 v-module
 
       rate: {},
       open: false,
@@ -1568,6 +1655,33 @@ export default {
 
   },
   methods: {
+    closeAlertDialog() {
+      this.openAlert = false
+    },
+    sendYiSMsgCode(){
+      Object.assign(this.detail,{userId:this.yiSUserId,messageCode:this.yiSMsgCode})
+      clientInfoApi.sendYiSMsgCode(this.detail).then(res=>{
+
+        this.submitMchIfo(this.detail,{ysRegistryId:res.obj.ysRegistryId,ysAgreementId:res.obj.ysAgreementId});
+        },
+        err => {
+          if (err && err.msg) {
+            this.$toast.error(err.msg)
+          }
+        })
+    },
+    getYiSMsgCode(){
+      clientInfoApi.getYiSMessageCode(this.detail).then(res=>{
+        this.yiSUserId = res.obj
+        this.sendYiSMsgCode();
+
+      },
+        err => {
+          if (err && err.msg) {
+            this.$toast.error(err.msg)
+          }
+        })
+    },
     handleSearch() {
       this.getBranchCode(this.keyword)
     },
@@ -1661,12 +1775,41 @@ export default {
         this.$set(this.detail, "mccName", item[1].name);
       }
     },
-
     // 选择拉卡拉经营类目
     changeLklMenu(item) {
       /*this.detail.lklMccCdName = item ? item.map(res => res.name).join('/') : '';
       this.detail.lakalaMccCode = item ? item[0].code:'';*/
     },
+// ===================================================================
+    // 选择经营类目  易生
+    changeYiSMenu(item) {
+      if (item.length) {
+        this.detail.ysYloneMccCode = item[0].id
+        this.detail.ysYltwoMccCode = item[1].id
+        this.detail.ysYlthreeMccCode = item[2].id
+        // console.log('选择开店宝经营类目8888888888:',item[0].id)
+        // console.log('选择开店宝经营类目999999999:',item[1].id)
+        /*this.$set(this.detail, "mccCodeClass", item[0].id);
+        this.$set(this.detail, "mccCode", item[1].id);
+        this.$set(this.detail, "mccName", item[1].name);*/
+      }
+    },
+
+    //经营地址省市区选择  易生
+    changeYiSAddress(val) {
+      this.detail.ysYloneAreaCode = val[0].id
+      // this.detail.operationProvinceName = val[0].name
+      this.detail.ysYltwoAreaCode = val[1].id
+      // this.detail.operationCityName = val[1].name
+      this.detail.ysYlthreeAreaCode = ''
+      // this.detail.operationDistrictName = ''
+      if (val.length === 3) {
+        this.detail.ysYlthreeAreaCode = val[2].id
+        // this.detail.operationDistrictName = val[2].name
+      }
+    },
+
+
     /**
      * 删除图片，清空相关的所有数据
      */
@@ -1905,6 +2048,9 @@ export default {
       if(detailData.kdbWxSettlementCycle===0 || detailData.kdbWxSettlementCycle){
         this.kdbSettlementCycleTypeText = this.kdbSettlementCycleTypeList[detailData.kdbWxSettlementCycle].name;
       }
+      if(detailData.ysIsService===0 || detailData.ysIsService){
+        this.yiSSettlementCycleTypeText = this.yiSSettlementCycleTypeList[detailData.ysIsService].name;
+      }
       if(detailData.kdbSex){
         this.kdbSexText = this.kdbsexList[Number(detailData.kdbSex)-1].name;
       }
@@ -1943,9 +2089,11 @@ export default {
         this.cascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
         this.kdbAddressArr = [this.detail.kdbProvinceId, this.detail.kdbCityId, this.detail.kdbAreaId] //开店宝省市区
         this.cjAddressArr = [this.detail.operationProvinceCode, this.detail.operationCityCode, this.detail.operationDistrictCode] //畅捷省市区
+        this.yiSAddressArr = [this.detail.ysYloneAreaCode, this.detail.ysYltwoAreaCode, this.detail.ysYlthreeAreaCode] //易生省市区
         //todo 开店宝经营类目回显
         this.kdbCascaderArr = [this.detail.kdbBusinessId1, this.detail.kdbBusinessId] //开店宝
         this.cjCascaderArr = [this.detail.mccCodeClass, this.detail.mccCode] //畅捷
+        this.yiSCascaderArr = [this.detail.ysYloneMccCode, this.detail.ysYltwoMccCode, this.detail.ysYlthreeMccCode] //易生
         this.lsCascaderArr = [this.detail.leFirstMccCode, this.detail.leSecondMccCode, this.detail.leMccCode]
         this.ysCascaderArr = [this.detail.ysFirstName, this.detail.ysSecondName, this.detail.industrId]
         let zfbNameArr = [this.detail.aliFirstLevel, this.detail.aliSecondLevel, this.detail.aliThirdLevel]
@@ -2120,6 +2268,35 @@ export default {
         // this.cjMaccTree = this.sortTreeAttr(res.obj.data,'cj')
       })
     },
+    /**
+     * 获取易生省市区
+     */
+    async getYiSProviceAndCity() {
+      let that = this
+      await clientInfoApi.getYiSProviceAndCity().then(res => {
+        // let resObj = res
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        that.yiSAddressTree =  res.obj
+        // that.cjAddressTree = initProvinces(res.obj.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
+        // console.log('kaidianbaotree==========================',this.kdbAddressTree)
+      })
+    },
+    // 获取易生经营类目
+    getYiSMccList() {
+      // if (!this.PROCESS.CJ) return
+      clientInfoApi.getYiSMccList().then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        // res.obj = JSON.parse(res.obj)
+        this.yiSMaccTree = res.obj
+        // this.cjMaccTree = this.sortTreeAttr(res.obj.data,'cj')
+      })
+    },
     // 最大只到2级
     sortTreeAttr(dataTree,channelName) {
 
@@ -2226,6 +2403,9 @@ export default {
       }else if(this.simpleTreeStatus === 4){
         this.$set(this.detail, "kdbAccountType", item.value);
         this.kdbAccountTypeText = item.name;
+      }else if(this.simpleTreeStatus === 5){
+        this.detail.ysIsService = item.value
+        this.yiSSettlementCycleTypeText = item.name;
       }
       this.openSimpleTree = false;
 
@@ -2329,8 +2509,63 @@ export default {
       // index
       // 1  组织机构代码照片
     },
+    //提交进件接口
+    submitMchIfo() {
+      clientInfoApi.submitMchIfo(data).then(
+        res => {
+          if (res.code === 200) {
+            this.$toast.success('提交成功')
+            let from = fromReactNativeLocal.get()
+            if (from === 'iframe') { // 是否为iframe内嵌的环境
+              console.log('iframe内嵌的环境：触发')
+              let data = {}
+              window.parent.postMessage(data, '*')
+              return
+            }
+            // 分销APPRN来源
+            if (from === 'react-native') {
+              NativeAppRouter.goBack()
+              return
+              // return window.ReactNativeWebView && window.ReactNativeWebView.postMessage('goBack')
+            }
+
+            if (this.from === 'share' && sessionStorage.link) {
+              return (window.location.href = sessionStorage.link)
+            }
+            // this.$router.push({
+            //   name: CLIENT_INFO
+            // })
+            this.$router.push({
+              name: CLIENT_INFO_DETAIL,
+              query: {
+                id: this.detail.id
+              }
+            })
+          } else {
+            this.$toast.error(res.msg)
+          }
+        },
+        err => {
+          this.$toast.error(err.msg)
+        }
+      )
+    },
     // 下一步
     onNext() {
+      this.detail.isIndustryDining = this.detail.isIndustryDining ? 1 : 0
+      //开店宝借记卡和贷记卡结算周期都取页面上的周期
+      this.detail.kdbJjkSettlementCycle = this.detail.kdbWxSettlementCycle;
+      this.detail.kdbDjkSettlementCycle = this.detail.kdbWxSettlementCycle;
+      //易生写死字段--开始
+      this.detail.ysJjkRate = '0.55';
+      this.detail.ysDjkRate = '0.55';
+      this.detail.ysZfbRate = this.detail.ysWxRate;
+      this.detail.ysYlRate = this.detail.ysWxRate;
+      this.detail.ysJjkDiscountRate = '20';
+      this.detail.ysServiceType = '1';
+      this.detail.ysJjkRateMin = '0';
+      this.detail.ysDjkRateMin = '0';
+      //易生写死字段--结束
       //重置已勾选的进件项，下方重新判断添加
       this.detail.importNums = []
       // 随行付通道必填字段
@@ -2376,6 +2611,7 @@ export default {
       let sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee']
       //畅捷通道必填字段
       let cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName', 'chanpayTradeRate']
+      let yiSRequireData = ['ysWxRate', 'ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
 
 
       if (this.detail.businessLicensePhotoId&&this.detail.businessType==1) {
@@ -2399,6 +2635,7 @@ export default {
         cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName']
         sjPosRequireData = ['bankPhotoId','holdingCardId']
         kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbAccountType', 'kdbRegistryId', 'kdbAgreementId']
+        yiSRequireData = ['ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
       }
 
       if (this.detail.isIndustryDining) {
@@ -2536,6 +2773,22 @@ export default {
           return
         }
       }
+      if (this.checkboxObj.yiS && this.PROCESS.YIS) {
+        this.detail.importNums.push('13')
+        //畅捷
+        if (!yiSRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
+          this.$toast.error('有内容未填入')
+          return
+        }
+        if (this.from !== 'share' && Number(this.detail.ysWxRate) <= 0) {
+          this.$toast.error('费率必须大于0')
+          return
+        }
+        if (Number(this.detail.ysWxRate) >= 1) {
+          this.$toast.error('费率不能超过1')
+          return
+        }
+      }
 
       if (this.checkboxObj.fy && this.PROCESS.FY) {
         this.detail.importNums.push('6')
@@ -2565,49 +2818,14 @@ export default {
       } else {
         this.detail.isCommit = 1
       }
-      this.detail.isIndustryDining = this.detail.isIndustryDining ? 1 : 0
-      //开店宝借记卡和贷记卡结算周期都取页面上的周期
-      this.detail.kdbJjkSettlementCycle = this.detail.kdbWxSettlementCycle;
-      this.detail.kdbDjkSettlementCycle = this.detail.kdbWxSettlementCycle;
-      //todo  return
-      clientInfoApi.submitMchIfo(this.detail).then(
-        res => {
-          if (res.code === 200) {
-            this.$toast.success('提交成功')
-            let from = fromReactNativeLocal.get()
-            if (from === 'iframe') { // 是否为iframe内嵌的环境
-              console.log('iframe内嵌的环境：触发')
-              let data = {}
-              window.parent.postMessage(data, '*')
-              return
-            }
-            // 分销APPRN来源
-            if (from === 'react-native') {
-              NativeAppRouter.goBack()
-              return
-              // return window.ReactNativeWebView && window.ReactNativeWebView.postMessage('goBack')
-            }
 
-            if (this.from === 'share' && sessionStorage.link) {
-              return (window.location.href = sessionStorage.link)
-            }
-            // this.$router.push({
-            //   name: CLIENT_INFO
-            // })
-            this.$router.push({
-              name: CLIENT_INFO_DETAIL,
-              query: {
-                id: this.detail.id
-              }
-            })
-          } else {
-            this.$toast.error(res.msg)
-          }
-        },
-        err => {
-          this.$toast.error(err.msg)
-        }
-      )
+      if (this.checkboxObj.yiS && this.PROCESS.YIS) {
+        this.getYiSMsgCode()
+      }else{
+        this.submitMchIfo()
+      }
+
+
     },
     // 时间改变
     onDateTimeChange(status, index, e) {
@@ -2834,6 +3052,11 @@ export default {
           this.getCjMccList() // 畅捷经营类目
           //  畅捷地址树
           this.getCjProviceAndCity();
+        }
+        if(this.PROCESS.YIS){
+          this.getYiSMccList() // 畅捷经营类目
+          //  畅捷地址树
+          this.getYiSProviceAndCity();
         }
       })
 

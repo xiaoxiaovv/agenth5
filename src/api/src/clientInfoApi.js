@@ -203,6 +203,28 @@ export default {
       }
     })
   },
+  // 获取易生MccCd树类目列表
+  getYiSMccList() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/yisheng/getYlMcc`,
+      method: 'get',
+      params:{
+
+      }
+    })
+  },
+  // 获取易生区域列表
+  getYiSProviceAndCity() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId33333333333',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/yisheng/getYlArea`,
+      method: 'get',
+      params:{
+
+      }
+    })
+  },
 
   // 获取列表信息（已填写过的信息）
   getMchInfo(params) {
@@ -449,6 +471,30 @@ export default {
       url: '/pay/pay_channel/find_pay_channel_system_config',
       method: 'get'
     })
-  }
+  },
+  /**
+   * 获取易生验证码
+   * @param {*} params
+   */
+  getYiSMessageCode(params) {
+    return requestAxios({
+      url: `/merchant/mch_info/getYsMessageCode`,
+      method: 'post',
+      data: params,
+      jsonHeader: true
+    })
+  },
+  /**
+   * 获取易生验证码
+   * @param {*} params
+   */
+  sendYiSMsgCode(params) {
+    return requestAxios({
+      url: `/merchant/mch_info/getYsMessageCode`,
+      method: 'post',
+      data: params,
+      jsonHeader: true
+    })
+  },
 
 }
