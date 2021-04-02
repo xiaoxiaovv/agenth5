@@ -1105,7 +1105,7 @@
         <mu-button slot="actions"
                    flat
                    color="primary"
-                   @click="getYiSMsgCode">确定</mu-button>
+                   @click="sendYiSMsgCode">确定</mu-button>
       </mu-dialog>
       <!-- action-sheet -->
       <mu-bottom-sheet :open.sync="open">
@@ -1659,7 +1659,7 @@ export default {
       this.openAlert = false
     },
     sendYiSMsgCode(){
-      Object.assign(this.detail,{userId:this.yiSUserId,messageCode:this.yiSMsgCode})
+      Object.assign(this.detail,{userId:this.yiSUserId, messageCode:this.yiSMsgCode})
       clientInfoApi.sendYiSMsgCode(this.detail).then(res=>{
 
         this.submitMchIfo(this.detail,{ysRegistryId:res.obj.ysRegistryId,ysAgreementId:res.obj.ysAgreementId});
@@ -1673,7 +1673,8 @@ export default {
     getYiSMsgCode(){
       clientInfoApi.getYiSMessageCode(this.detail).then(res=>{
         this.yiSUserId = res.obj
-        this.sendYiSMsgCode();
+        this.openAlert = true;
+        // this.sendYiSMsgCode();
 
       },
         err => {

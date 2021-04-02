@@ -490,7 +490,7 @@ export default {
    */
   sendYiSMsgCode(params) {
     return requestAxios({
-      url: `/merchant/mch_info/getYsMessageCode`,
+      url: `/merchant/mch_info/createYsAgreementToMsg`,
       method: 'post',
       data: params,
       jsonHeader: true
