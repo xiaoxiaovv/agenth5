@@ -183,6 +183,16 @@
                 </div>
               </div>
               <div class="item">
+                <div class="subtitle">收银台照片</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.cashierDeskPicId"
+                       @click="previewImage(detail.cashierDeskPicId)">
+                    <img class="match-parent"
+                         :src="detail.cashierDeskPicId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div class="item">
                 <div class="subtitle">经营省市区</div>
                 <div class="match-left-space align-right">{{detail.regProvCdName}}{{detail.regCityCdName}}{{detail.regDistCdName}}</div>
               </div>
@@ -811,6 +821,16 @@
                        @click="previewImage(detail.bankPhotoId)">
                     <img class="match-parent"
                          :src="detail.bankPhotoId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="subtitle">收银台照片</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.cashierDeskPicId"
+                       @click="previewImage(detail.cashierDeskPicId)">
+                    <img class="match-parent"
+                         :src="detail.cashierDeskPicId | loadImage" />
                   </div>
                 </div>
               </div>
