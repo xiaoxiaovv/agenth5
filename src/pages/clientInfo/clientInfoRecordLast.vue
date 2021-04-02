@@ -1095,7 +1095,7 @@
                  :open.sync="openAlert">
         <!--      <p class="fs-14 mb-12">请输入登录密码</p>-->
         <input
-          type="password"
+          type="text"
           placeholder="请输入易生手机验证码"
           v-model="yiSMsgCode" />
         <mu-button slot="actions"
@@ -1659,6 +1659,7 @@ export default {
       this.openAlert = false
     },
     sendYiSMsgCode(){
+      this.openAlert = false
       Object.assign(this.detail,{userId:this.yiSUserId, messageCode:this.yiSMsgCode})
       clientInfoApi.sendYiSMsgCode(this.detail).then(res=>{
 
@@ -2511,7 +2512,7 @@ export default {
       // 1  组织机构代码照片
     },
     //提交进件接口
-    submitMchIfo() {
+    submitMchIfo(data) {
       clientInfoApi.submitMchIfo(data).then(
         res => {
           if (res.code === 200) {
