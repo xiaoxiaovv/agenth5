@@ -54,6 +54,8 @@ export default {
   },
   /**
    * 佣金提现申请提交
+   *validCode  密码得到的确认码
+   *accountType 提现方式
    */
 
   commissionApplyCommit (validCode, accountType, applyAmount) {

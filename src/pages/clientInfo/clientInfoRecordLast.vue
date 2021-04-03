@@ -22,7 +22,7 @@
                        label="易生通道"></mu-checkbox>
         </div>
         <div class="item">
-          <VmaCascaderTree v-model="cjCascaderArr"
+          <VmaCascaderTree v-model="yiSCascaderArr"
                            class="client-info"
                            :dataTree="yiSMaccTree"
                            :placeholder="'请选择类目'"
@@ -1373,13 +1373,14 @@ export default {
       ],//结算周期类型列表
       yiSSettlementCycleTypeList: [
         {
-          value: 1,
-          name: 'D0'
-        },
-        {
           value: 0,
           name: 'T1'
+        },
+        {
+          value: 1,
+          name: 'D0'
         }
+
       ],//结算周期类型列表
       kdbsexList: [
         {
@@ -1483,6 +1484,7 @@ export default {
         ysYloneAreaCode:  '',  //银联标准一级区域编码
         ysYltwoAreaCode:  '',  //银联标准二级区域编码
         ysYlthreeAreaCode:  '',  //银联标准三级区域编码
+        ysYlAreaCode:'', //三级区域code
         ysYloneMccCode:  '',  //银联标准一级Mcc编码
         ysYltwoMccCode:  '',  //银联标准二级Mcc编码
         ysYlthreeMccCode:  '',  //银联标准三级Mcc编码
@@ -1662,8 +1664,8 @@ export default {
       this.openAlert = false
       Object.assign(this.detail,{userId:this.yiSUserId, messageCode:this.yiSMsgCode})
       clientInfoApi.sendYiSMsgCode(this.detail).then(res=>{
-
-        this.submitMchIfo(this.detail,{ysRegistryId:res.obj.ysRegistryId,ysAgreementId:res.obj.ysAgreementId});
+        Object.assign(this.detail,{ysRegistryId:res.obj.ysRegistryId,ysAgreementId:res.obj.ysAgreementId})
+        this.submitMchIfo(this.detail);
         },
         err => {
           if (err && err.msg) {
@@ -1799,6 +1801,7 @@ export default {
 
     //经营地址省市区选择  易生
     changeYiSAddress(val) {
+      //id 回显用 ysYlAreaCode，后台真正用的值
       this.detail.ysYloneAreaCode = val[0].id
       // this.detail.operationProvinceName = val[0].name
       this.detail.ysYltwoAreaCode = val[1].id
@@ -1807,6 +1810,7 @@ export default {
       // this.detail.operationDistrictName = ''
       if (val.length === 3) {
         this.detail.ysYlthreeAreaCode = val[2].id
+        this.detail.ysYlAreaCode = val[2].code
         // this.detail.operationDistrictName = val[2].name
       }
     },
@@ -2559,13 +2563,14 @@ export default {
       this.detail.kdbJjkSettlementCycle = this.detail.kdbWxSettlementCycle;
       this.detail.kdbDjkSettlementCycle = this.detail.kdbWxSettlementCycle;
       //易生写死字段--开始
-      this.detail.ysJjkRate = '0.55';
-      this.detail.ysDjkRate = '0.55';
+      this.detail.ysJjkRate = '0.52';
+      this.detail.ysDjkRate = '0.62';
       this.detail.ysZfbRate = this.detail.ysWxRate;
       this.detail.ysYlRate = this.detail.ysWxRate;
       this.detail.ysJjkDiscountRate = '20';
       this.detail.ysServiceType = '1';
       this.detail.ysJjkRateMin = '0';
+      this.detail.ysJjkRateType = '1'
       this.detail.ysDjkRateMin = '0';
       //易生写死字段--结束
       //重置已勾选的进件项，下方重新判断添加

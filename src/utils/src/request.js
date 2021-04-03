@@ -12,7 +12,7 @@ export const url = window.serverUrl || window.location.protocol + '//' + window.
 
 const instance = axios.create({
   baseURL: url,
-  timeout: 10000,
+  timeout: 60000,
   headers: {
     'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'
   },

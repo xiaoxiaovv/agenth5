@@ -24,7 +24,7 @@
           <p class="fl">加入时间</p>
           <p class="fr">{{info.createTime}}</p>
         </li>
-        <template v-if="userType===2 || userType===3 || userType===4 ">
+        <!--<template v-if="userType===2 || userType===3 || userType===4 ">
           <li class="clearfix" v-if="channelList.indexOf('官方') > -1">
             <p class="fl">微信分润</p>
             <p class="fr">{{info.wxPayProrata | toPercent}}</p>
@@ -57,7 +57,7 @@
             <p class="fl">天阙随行付分润</p>
             <p class="fr">{{info.tqSxfPayProrata | toPercent}}</p>
           </li>
-        </template>
+        </template>-->
         <!-- <li v-for="(item,i) in secondInfoList"
             :key="`mine_${i}`"
             class="clearfix">
