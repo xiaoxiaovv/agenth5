@@ -93,6 +93,19 @@
             <mu-text-field v-model="params.businessLevOne"
                            style="display: none"></mu-text-field>
           </mu-form-item>
+
+          <div class="vm-list-ul vm-bg-white vmalis-fontweight-400">
+            <div class="vm-list-li">
+              <div class="vma-list-li-left">定位开关</div>
+              <div class="vma-list-li-right vm-ell"><mu-switch v-model="params.isOpen"></mu-switch></div>
+
+            </div>
+            <div class="vm-list-li">
+              <div class="vma-list-li-left">定位</div>
+              <div class="vma-list-li-right vm-ell"><span @click="showLocationModule" class="vm-small-btn">重新定位</span></div>
+            </div>
+
+          </div>
           <!-- <mu-form-item label="" prop="payProrata" :rules="payProrataRules">
             <mu-text-field v-model.trim="params.payProrata" type="number" autocomplete="off" icon="*" action-icon="%" underline-color="#F0F0F0"  prefix="手续费率" placeholder="请选择输入手续费率"></mu-text-field>
           </mu-form-item> -->
@@ -108,6 +121,41 @@
       </div>
       -->
     </div>
+    <!--简单树-->
+    <mu-bottom-sheet :open.sync="openSimpleTree">
+      <div class="action-sheet box align-default">
+        <div class="title box align-hor-bet plr-30">
+          <div @click="simpleTreeBack">返回</div>
+          <div class="vm-small-btn" @click="geolocationFn">重新定位</div>
+          <!-- <div class="confirm">
+            <div  @click="onActionSheetConfirm(2)">确定</div>
+            <div v-else @click="onNextStep">取消</div>
+          </div> -->
+        </div>
+      </div>
+<!--      <div v-if="simpleTreeStatus === 1">-->
+      <div >
+        <div class="action-sheet__header align-left box plr-30"><input style="width: 90%;height: 30px;font-size: 0.45rem" v-model="shopAddress" type="text" value="" placeholder="请输入商铺地址"></div>
+        <!--<div class="action-sheet__content">
+&lt;!&ndash;          <div><input v-model="shopAddress" type="text" value="11111111111111111" placeholder="请输入商铺地址"></div>&ndash;&gt;
+
+          &lt;!&ndash;<div class="match-width"
+               v-for="(item, index) in kdbcompanyTypeList"
+               :key="index">
+            <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.kdbCompanyType)?'active':'']"
+                 @click="simpleTreeSelect(item)">
+              <div>{{item.name}}</div>
+              &lt;!&ndash; <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> &ndash;&gt;
+              &lt;!&ndash; <div class="pass" v-else></div> &ndash;&gt;
+            </div>
+          </div>&ndash;&gt;
+        </div>-->
+        <div class="vm-btn agent-detail-btn mb-50">
+          <mu-button color="primary" @click="geoCode">保存位置</mu-button>
+        </div>
+      </div>
+
+    </mu-bottom-sheet>
   </div>
 </template>
 
@@ -117,17 +165,22 @@ import * as types from '@/router/types'
 import { afterLoginInfoLocal, fromReactNativeLocal } from '@/storage'
 import VmaCascaderTree from '@/components/common/vmaCascaderTree'
 import typeJson from '@/assets/merchant/merchantType.json'
-
+import AMapLoader from '@amap/amap-jsapi-loader';
 export default {
   components: { VmaCascaderTree },
   data() {
     return {
+      geocoder: null,
+      geolocation:null,
+      shopAddress:'',
+      openSimpleTree:false,
       isEdit: false,
       id: '',
       from: '', // 上级父级来源
       fxUserId: '', // 上级用户id
       detail: {},
       params: {
+        // isOpen:true,
         companyId: afterLoginInfoLocal.getJSON().companyId,
         managerId: afterLoginInfoLocal.getJSON().userId,
         status: '1' // 正常状态
@@ -183,6 +236,33 @@ export default {
     }
   },
   created() {
+    AMapLoader.load({
+      "key": "ec2655d926a9b2662c416608d087fff6",              // 申请好的Web端开发者Key，首次调用 load 时必填
+      "version": "1.4.15",   // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
+      "plugins": ['AMap.Geocoder', 'AMap.Geolocation'],           // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+      "AMapUI": {             // 是否加载 AMapUI，缺省不加载
+        "version": '1.1',   // AMapUI 缺省 1.1
+        "plugins":[],       // 需要加载的 AMapUI ui插件
+      },
+      "Loca":{                // 是否加载 Loca， 缺省不加载
+        "version": '1.3.2'  // Loca 版本，缺省 1.3.2
+      },
+    }).then((AMap)=>{
+      // map = new AMap.Map('container');
+      this.geocoder = new AMap.Geocoder({
+        city: "", //城市设为北京，默认：“全国”
+      });
+      this.geolocation = new AMap.Geolocation({
+        enableHighAccuracy: true, //是否使用高精度定位，默认:true
+        timeout: 10000, //超过10秒后停止定位，默认：5s
+        // position: 'RB', //定位按钮的停靠位置
+        // buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+        // zoomToAccuracy: true //定位成功后是否自动调整地图视野到定位点
+      })
+    }).catch(e => {
+      console.log(e);
+    })
+
     this.id = this.$route.query.id
     if (this.$route.query.token) {
       sessionStorage.token = this.$route.query.token
@@ -208,8 +288,62 @@ export default {
     this.getProviceAndCity()
   },
   mounted() {
+    // let that = this;
+
   },
   methods: {
+    simpleTreeBack(){
+      this.openSimpleTree = false;
+    },
+    showLocationModule(){
+      this.openSimpleTree = true;
+    },
+    //获取坐标转为中文地址
+    geolocationFn(){
+      // var  that = this;
+      this.geolocation.getCurrentPosition((status, result) => {
+        if (status == 'complete') {
+          // this.longitude = result.position.lng
+          // this.latitude = result.position.lat
+          console.log('获取坐标================',result.position.lng+','+result.position.lat)
+          this.geocoder.getAddress([result.position.lng, result.position.lat], (status, result)=> {
+            if (status === 'complete'&&result.regeocode) {
+              let address = result.regeocode.formattedAddress;
+              this.shopAddress = address
+              console.log('经纬度转地址==================',address)
+              // alert('经纬度转地址'+address)
+            }else{
+              log.error('根据经纬度查询地址失败')
+            }
+          });
+          // 应该监听这四个数据 当全部存在时 执行
+          // if(this.oilData.longitude && this.oilData.latitude && this.oilData.phone && this.startGet) {
+            // this.init()
+          // }
+
+        } else {
+          this.$toast.error('定位失败', result.message)
+        }
+      })
+    },
+
+
+    //根据中文地址转为坐标
+    geoCode() {
+      // let address  = document.getElementById('address').value;
+      this.geocoder.getLocation(this.shopAddress, (status, result)=> {
+        if (status === 'complete'&&result.geocodes.length) {
+          let lngLat = result.geocodes[0].location
+          this.params.longitude = lngLat.lng
+          this.params.latitude = lngLat.lat
+          this.$toast.success('点击确定提交')
+          // document.getElementById('lnglat').value = lnglat;
+        }else{
+          // log.error('根据地址查询位置失败');
+          this.$toast.error('根据地址查询位置失败')
+        }
+      });
+    },
     loginByTokenToGetInfo() {
       loginApi.getUserInfoByToken().then(res => {
         afterLoginInfoLocal.setJSON(res.obj) // 存储登录后信息
@@ -253,9 +387,19 @@ export default {
           city: res.obj.city,
           email: res.obj.email,
           id: this.$route.query.id,
-          status: res.obj.email
+          status: res.obj.email,
+          longitude: res.obj.longitude, //经度
+          latitude: res.obj.latitude, //纬度
+          isOpen: res.obj.isOpen, // 开关
+          // expirDate: res.obj.expirDate,  //有效期
+          // rangeAction : res.obj.rangeAction // 有效范围
         }
-        this.params = Object.assign({}, this.params, params)
+        this.params = Object.assign({}, this.params, params);
+        if(this.params === 1){
+          this.params.isOpen = true
+        }else{
+          this.params.isOpen = false
+        }
         this.cooperationLevArr = [res.obj.businessLevOne, res.obj.businessLevTwo, res.obj.businessLevThree]
         this.cascaderArr = [res.obj.province, res.obj.city]
       })
@@ -326,6 +470,11 @@ export default {
       // }
       // this.addInfo()
       // this.sendData('发送')
+      if(this.params.isOpen){
+        this.params.isOpen = 1
+      }else{
+        this.params.isOpen = -1
+      }
       if (!this.params.name) {
         msg = '商户名不能为空'
       } else if (!this.params.contact) {
@@ -373,8 +522,13 @@ export default {
      * */
     submitInfo(params) {
       let that = this
+      if(this.params.isOpen){
+        this.params.isOpen = 1
+      }else{
+        this.params.isOpen = -1
+      }
       agentOrClient.editClienDetail(params).then(res => {
-        this.$toast.message(res.msg)
+        this.$toast.success(res.msg)
         setTimeout(() => {
           that.goback()
         }, 1000)
@@ -409,4 +563,5 @@ export default {
 }
 </script>
 <style scoped>
+
 </style>

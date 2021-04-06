@@ -43,6 +43,10 @@
         <div class="vma-list-li-left">联系地址</div>
         <div class="vma-list-li-right vm-ell">{{detail.provinceName}}→{{detail.cityName}}→{{detail.address}}</div>
       </div>
+      <div class="vm-list-li">
+        <div class="vma-list-li-left">定位开关</div>
+        <div class="vma-list-li-right vm-ell">{{detail.isOpen}}</div>
+      </div>
     </div>
     <div class="vm-btn agent-detail-btn">
       <mu-button color="primary" @click="submitView">重置密码</mu-button>
@@ -76,6 +80,13 @@ export default {
       }
       agentOrClient.getClienDetail(params).then(res => {
         this.detail = res.obj
+        if(this.detail.isOpen === 1){
+          this.detail.isOpen = '已开启'
+        }else if(this.detail.isOpen === -1){
+          this.detail.isOpen = '已关闭'
+        }else{
+          this.detail.isOpen = '未知状态'
+        }
       })
     },
     /**
