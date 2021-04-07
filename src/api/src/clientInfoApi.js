@@ -461,6 +461,17 @@ export default {
       params
     })
   },
+  /**
+   * 易生-查询进件状态
+   * @param {*} params
+   */
+  getYiSCode(params) {
+    return requestAxios({
+      url: '/batchFeed/yisheng/get_ys_feedstatus',
+      method: 'get',
+      params
+    })
+  },
 
   /**
    * 查询通道开关状态

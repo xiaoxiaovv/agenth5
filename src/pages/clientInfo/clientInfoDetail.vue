@@ -55,6 +55,16 @@
                 </div>
               </div>
               <div class="item">
+                <div class="subtitle">商户手持证件照</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.holdingCardId"
+                       @click="previewImage(detail.holdingCardId)">
+                    <img class="match-parent"
+                         :src="detail.holdingCardId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div class="item">
                 <div class="subtitle">姓名</div>
                 <div class="match-left-space align-right">{{detail.representativeName}}</div>
               </div>
@@ -127,6 +137,16 @@
                        @click="previewImage(detail.bankCardPositivePicId)">
                     <img class="match-parent"
                          :src="detail.bankCardPositivePicId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="subtitle">结算卡背面</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.bankPhotoId"
+                       @click="previewImage(detail.bankPhotoId)">
+                    <img class="match-parent"
+                         :src="detail.bankPhotoId | loadImage" />
                   </div>
                 </div>
               </div>
@@ -950,6 +970,56 @@
             </div>
           </div>
         </div>
+
+        <div class="demo-text"
+             v-if="active === 11">
+          <div class="client-info-detail__content box match-left-space pb-40"
+               v-show="PROCESS.YIS">
+            <div class="match-width box align-default">
+              <div class="title">易生通道</div>
+
+              <div class="item">
+                <div class="subtitle">费率</div>
+                <div class="match-left-space align-right">{{detail.ysWxRate}} %</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">经营许可证</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.businessCertPicId"
+                       @click="previewImage(detail.businessCertPicId)">
+                    <img class="match-parent"
+                         :src="detail.businessCertPicId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div v-if="yiSData"
+                   style="width:100%">
+                <div class="title">进件状态</div>
+                <div class="item">
+                  <div class="subtitle">商户编号</div>
+                  <div class="match-left-space align-right">{{yiSData.ysMchId}}</div>
+                </div>
+
+                <!--<div class="item">
+                  <div class="subtitle">费率</div>
+                  <div class="match-left-space align-right">{{cjData.chanpayTradeRate}}</div>
+                </div>-->
+                <div class="item">
+                  <div class="subtitle">进件状态</div>
+                  <div class="match-left-space align-right">{{entryStatus[yiSData.entryStatus]}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">进件结果</div>
+                  <div class="match-left-space align-right">{{yiSData.ysMsg}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">提交时间</div>
+                  <div class="match-left-space align-right">{{yiSData.commitTime}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </mu-container>
     </div>
 
@@ -989,7 +1059,8 @@ export default {
         LAL: false,
         SJPOS:false,
         KDB:false,
-        CJ:false
+        CJ:false,
+        YIS:false
       },
       isEdit: false,
       detail: {
@@ -1006,6 +1077,7 @@ export default {
       sjPosData:'',
       kdbData:'',
       cjData:'',
+      yiSData:'',
       active: 0,
       wxList: [],
       sellCheck: [],
@@ -1029,9 +1101,10 @@ export default {
         { index: 7, name: '富友', open: true },
         // { index: 8, name: '银联', open: true },
         // { index: 9, name: '拉卡拉', open: true }
-        { index: 10, name: '手机pos', open: true },
-        { index: 11, name: '开店宝', open: true },
-        { index: 12, name: '畅捷', open: true },
+        { index: 8, name: '手机pos', open: true },
+        { index: 9, name: '开店宝', open: true },
+        { index: 10, name: '畅捷', open: true },
+        { index: 11, name: '易生', open: true },
       ],
       fyEntryStatus: {
         '-1': '进件失败',
@@ -1194,6 +1267,10 @@ export default {
           // console.log('this.cjData11111111111',this.cjData)
           // this.cjMsgHandle(this.cjData)
           // console.log('开店宝进件info==================',res)
+        })
+      }else if (item.channel === 13) { // 畅捷
+        clientInfoApi.getYiSCode({ id: item.id }).then(res => {
+          this.yiSData = res.obj
         })
       }
 
@@ -1451,6 +1528,7 @@ export default {
       this.tabList[8].open = res.SJPOS
       this.tabList[9].open = res.KDB
       this.tabList[10].open = res.CJ
+      this.tabList[11].open = res.YIS
 
     })
     this.wxList.forEach(item => {
