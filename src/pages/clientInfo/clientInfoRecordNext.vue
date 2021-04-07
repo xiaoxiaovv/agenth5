@@ -140,6 +140,18 @@
         </div>
         <div class="item">
           <div class="subtitle">
+            <span class="star">*</span>结算账户类型
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(1)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="kdbAccountTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
             <span class="star">*</span>开户人名称/企业开户名称
           </div>
           <div class="match-left-space align-right">
@@ -326,6 +338,35 @@
 
     </div>
 
+    <!--简单树-->
+    <mu-bottom-sheet :open.sync="openSimpleTree">
+      <div class="action-sheet box align-default">
+        <div class="title box align-hor-bet plr-30">
+          <div @click="simpleTreeBack">返回</div>
+          <!-- <div class="confirm">
+            <div  @click="onActionSheetConfirm(2)">确定</div>
+            <div v-else @click="onNextStep">取消</div>
+          </div> -->
+        </div>
+      </div>
+
+      <div v-if="simpleTreeStatus === 1">
+        <div class="action-sheet__header align-left box plr-30">请选择结算账户类型</div>
+        <div class="action-sheet__content">
+          <div class="match-width"
+               v-for="(item, index) in kdbAccountTypeList"
+               :key="index">
+            <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.kdbAccountType)?'active':'']"
+                 @click="simpleTreeSelect(item)">
+              <div>{{item.name}}</div>
+              <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+              <!-- <div class="pass" v-else></div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mu-bottom-sheet>
     <!-- 图片预览 -->
     <vmaImagePreview :dialog="previewDialog"></vmaImagePreview>
     <mu-dialog title="提示"
@@ -360,6 +401,19 @@ export default {
   mixins: [indexMixins],
   data() {
     return {
+      kdbAccountTypeText:'请选择结算账户类型',
+      simpleTreeStatus: '',
+      kdbAccountTypeList: [
+        {
+          value: 1,
+          name: '对私结算'
+        },
+        {
+          value: 2,
+          name: '对公结算'
+        }
+      ],
+      openSimpleTree:false, //简单选择树
       openAlert: false,
       loading: false,
       detail: {
@@ -412,6 +466,28 @@ export default {
   },
 
   methods: {
+    setSimpleTreeText(detailData){
+      if(detailData.kdbAccountType){
+        this.kdbAccountTypeText = this.kdbAccountTypeList[Number(detailData.kdbAccountType)-1].name;
+      }
+    },
+    //唤醒简单树
+    callSimpleTree(status){
+      this.openSimpleTree = true;
+      this.simpleTreeStatus = status;
+    },
+    //simpleTree 选中
+    simpleTreeSelect(item){
+      if(this.simpleTreeStatus === 1){
+        this.detail.kdbAccountType = item.value;
+        this.kdbAccountTypeText = item.name;
+      }
+      this.openSimpleTree = false;
+
+    },
+    simpleTreeBack(){
+      this.openSimpleTree = false;
+    },
     // 返回
     onBack() {
       // TODO
@@ -731,6 +807,7 @@ export default {
       clientInfoApi.getMchInfo({ id }).then(res => {
         // res.obj.accountHolder = res.obj.accountHolder || res.obj.representativeName
         this.detail = Object.assign({}, this.detail, res.obj)
+        this.setSimpleTreeText(this.detail)
       })
     },
 

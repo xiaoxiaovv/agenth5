@@ -41,6 +41,18 @@
                            :required="checkboxObj.yiS"
                            @change="changeYiSAddress"></VmaCascaderTree>
         </div>
+        <!--<div class="item">
+          <div class="subtitle">
+            <span class="star"  v-show="checkboxObj.yiS">*</span>结算账户类型
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(4)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="kdbAccountTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>-->
         <div class="item"
              v-if="from!=='share'">
           <div class="subtitle">
@@ -1052,7 +1064,7 @@
           </div>
         </div>
 
-        <div v-if="simpleTreeStatus === 4">
+       <!-- <div v-if="simpleTreeStatus === 4">
           <div class="action-sheet__header align-left box plr-30">请选择结算账户类型</div>
           <div class="action-sheet__content">
             <div class="match-width"
@@ -1061,12 +1073,12 @@
               <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.kdbAccountType)?'active':'']"
                    @click="simpleTreeSelect(item)">
                 <div>{{item.name}}</div>
-                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
-                <!-- <div class="pass" v-else></div> -->
+                &lt;!&ndash; <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> &ndash;&gt;
+                &lt;!&ndash; <div class="pass" v-else></div> &ndash;&gt;
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
 
         <div v-if="simpleTreeStatus === 5">
           <div class="action-sheet__header align-left box plr-30">请选择到账周期类型</div>
@@ -1480,6 +1492,7 @@ export default {
         ysDjkRateMin :  '',  //信用卡手续费最低值 0
         ysAgreementId:  '',  // 易生协议图片id
         ysRegistryId:  '',  // 易生注册登记表图片id
+        ysLiquidationId: '', //清算授权书id
         ysIsService :  '',  //是否开通D0秒到服务  0否1是
         ysYloneAreaCode:  '',  //银联标准一级区域编码
         ysYltwoAreaCode:  '',  //银联标准二级区域编码
@@ -1664,7 +1677,11 @@ export default {
       this.openAlert = false
       Object.assign(this.detail,{userId:this.yiSUserId, messageCode:this.yiSMsgCode})
       clientInfoApi.sendYiSMsgCode(this.detail).then(res=>{
-        Object.assign(this.detail,{ysRegistryId:res.obj.ysRegistryId,ysAgreementId:res.obj.ysAgreementId})
+        Object.assign(this.detail,{
+          ysRegistryId:res.obj.ysRegistryId,
+          ysAgreementId:res.obj.ysAgreementId,
+          ysLiquidationId:res.obj.ysLiquidationId
+        })
         this.submitMchIfo(this.detail);
         },
         err => {
@@ -2607,7 +2624,7 @@ export default {
       // 拉卡拉通道必填字段
       let lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
       // 开店宝通道必填字段
-      let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxTradeRate', 'kdbWxSettlementCycle', 'kdbSex', 'kdbAccountType']
+      let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxTradeRate', 'kdbWxSettlementCycle', 'kdbSex']
       // 手机pos必填字段
       /*posDrawFee 手机pos提现费
       posTradeRate手机pos交易费率
@@ -2641,7 +2658,7 @@ export default {
         lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
         cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName']
         sjPosRequireData = ['bankPhotoId','holdingCardId']
-        kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbAccountType', 'kdbRegistryId', 'kdbAgreementId']
+        kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbRegistryId', 'kdbAgreementId']
         yiSRequireData = ['ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
       }
 
