@@ -112,7 +112,7 @@
         </div>
         <mu-form-item class="submit-btn">
           <mu-button color="primary"
-                     @click="submitView(1)">确定</mu-button>
+                     @click="submitView(1)">提交</mu-button>
         </mu-form-item>
       </mu-form>
       <!--
@@ -180,7 +180,7 @@ export default {
       fxUserId: '', // 上级用户id
       detail: {},
       params: {
-        // isOpen:true,
+        isOpen:false,
         companyId: afterLoginInfoLocal.getJSON().companyId,
         managerId: afterLoginInfoLocal.getJSON().userId,
         status: '1' // 正常状态
@@ -395,7 +395,7 @@ export default {
           // rangeAction : res.obj.rangeAction // 有效范围
         }
         this.params = Object.assign({}, this.params, params);
-        if(this.params === 1){
+        if(this.params.isOpen === 1){
           this.params.isOpen = true
         }else{
           this.params.isOpen = false

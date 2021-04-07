@@ -44,6 +44,10 @@
         <div class="vma-list-li-right vm-ell">{{detail.provinceName}}→{{detail.cityName}}→{{detail.address}}</div>
       </div>
       <div class="vm-list-li">
+        <div class="vma-list-li-left">定位信息</div>
+        <div class="vma-list-li-right vm-ell">{{detail.location}}</div>
+      </div>
+      <div class="vm-list-li">
         <div class="vma-list-li-left">定位开关</div>
         <div class="vma-list-li-right vm-ell">{{detail.isOpen}}</div>
       </div>
@@ -86,6 +90,11 @@ export default {
           this.detail.isOpen = '已关闭'
         }else{
           this.detail.isOpen = '未知状态'
+        }
+        if(this.detail.latitude && this.detail.longitude){
+          this.detail.location = '已设定'
+        }else{
+          this.detail.location = '未设定'
         }
       })
     },

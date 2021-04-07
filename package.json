@@ -17,6 +17,7 @@
     "install-all": "npm i -S image-conversion compress_image --registry=http://nexus.oaknt.com:18081/repository/oak_npm_group/  && cnpm install"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "axios": "^0.18.0",
     "compress_image": "^1.0.6",
     "echarts": "^4.2.1",

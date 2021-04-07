@@ -140,7 +140,7 @@
         </div>
         <div class="item">
           <div class="subtitle">
-            <span class="star">*</span>开户名称
+            <span class="star">*</span>开户人名称/企业开户名称
           </div>
           <div class="match-left-space align-right">
             <div class="input align-right">
