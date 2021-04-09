@@ -83,10 +83,12 @@ import { isProd } from '../../config';
                :esc-press-close="false"
                :overlay-close="false"
                :open.sync="openAlert">
-<!--      <p class="fs-14 mb-12">请输入登录密码</p>-->
+<!--      <p class=" mb-12" style="font-size: 0.4rem">请输入登录密码</p>-->
       <input
+        style="border: 1px solid #dddddd;"
+        autocomplete=“off”
         type="password"
-        placeholder="请输入密码"
+        placeholder="请输入登录密码"
         v-model="password" />
       <mu-button slot="actions"
                  flat

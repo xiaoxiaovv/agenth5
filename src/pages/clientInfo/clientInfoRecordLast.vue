@@ -2533,8 +2533,8 @@ export default {
       // 1  组织机构代码照片
     },
     //提交进件接口
-    submitMchIfo(data) {
-      clientInfoApi.submitMchIfo(data).then(
+    submitMchIfo() {
+      clientInfoApi.submitMchIfo(this.detail).then(
         res => {
           if (res.code === 200) {
             this.$toast.success('提交成功')
