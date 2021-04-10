@@ -786,6 +786,7 @@ export default {
             if (type === 'bank') { // 获取银行卡照片
               if (Number(this.detail.businessType) === 1) { // 对公账户
                 this.$set(this.detail, 'openingAccountLicensePicId', photoId)
+                // todo 临时用
                 this.$set(this.detail, 'bankCardPositivePicId', photoId)  //临时解决方案，添加企业开户证的时候，给个人银行卡正面字段也赋上相同的值，后台取了这个字段作为企业开户证字段
                 this.getOpenAccountInfo(photoId)
               } else {

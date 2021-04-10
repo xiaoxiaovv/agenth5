@@ -97,13 +97,26 @@
           <div class="vm-list-ul vm-bg-white vmalis-fontweight-400">
             <div class="vm-list-li">
               <div class="vma-list-li-left">定位开关</div>
-              <div class="vma-list-li-right vm-ell"><mu-switch v-model="params.isOpen"></mu-switch></div>
+              <div class="vma-list-li-right vm-ell"><mu-switch v-model="isOpenBtn"></mu-switch></div>
 
             </div>
+            <mu-form-item label=""
+
+                         >
+              <mu-text-field v-model.trim="shopAddress"
+                             autocomplete="off"
+                             underline-color="#F0F0F0"
+                             prefix="定位"
+                             placeholder="请输入商铺地址"></mu-text-field>
+            </mu-form-item>
             <div class="vm-list-li">
+              <div class="vma-list-li-left"></div>
+              <div class="vma-list-li-right vm-ell"><span @click="geolocationFn" class="vm-small-btn">自动定位</span></div>
+            </div>
+           <!-- <div class="vm-list-li">
               <div class="vma-list-li-left">定位</div>
               <div class="vma-list-li-right vm-ell"><span @click="showLocationModule" class="vm-small-btn">重新定位</span></div>
-            </div>
+            </div>-->
 
           </div>
           <!-- <mu-form-item label="" prop="payProrata" :rules="payProrataRules">
@@ -135,6 +148,7 @@
       </div>
 <!--      <div v-if="simpleTreeStatus === 1">-->
       <div >
+<!--        该模块暂时没用-->
         <div class="action-sheet__header align-left box plr-30"><input style="width: 90%;height: 30px;font-size: 0.45rem" v-model="shopAddress" type="text" value="" placeholder="请输入商铺地址"></div>
         <!--<div class="action-sheet__content">
 &lt;!&ndash;          <div><input v-model="shopAddress" type="text" value="11111111111111111" placeholder="请输入商铺地址"></div>&ndash;&gt;
@@ -170,6 +184,7 @@ export default {
   components: { VmaCascaderTree },
   data() {
     return {
+      isOpenBtn:false, //是否开启定位
       geocoder: null,
       geolocation:null,
       shopAddress:'',
@@ -303,6 +318,8 @@ export default {
       // var  that = this;
       this.geolocation.getCurrentPosition((status, result) => {
         if (status == 'complete') {
+          /*this.params.autoGetlongitude = result.position.lng
+          this.params.autoGetlatitude = result.position.lat*/
           // this.longitude = result.position.lng
           // this.latitude = result.position.lat
           console.log('获取坐标================',result.position.lng+','+result.position.lat)
@@ -310,6 +327,7 @@ export default {
             if (status === 'complete'&&result.regeocode) {
               let address = result.regeocode.formattedAddress;
               this.shopAddress = address
+
               console.log('经纬度转地址==================',address)
               // alert('经纬度转地址'+address)
             }else{
@@ -322,28 +340,165 @@ export default {
           // }
 
         } else {
-          this.$toast.error('定位失败', result.message)
+          this.$toast.error('定位失败,'+result.message)
         }
       })
     },
-
-
     //根据中文地址转为坐标
     geoCode() {
+      // let that = this;
       // let address  = document.getElementById('address').value;
+
       this.geocoder.getLocation(this.shopAddress, (status, result)=> {
         if (status === 'complete'&&result.geocodes.length) {
           let lngLat = result.geocodes[0].location
           this.params.longitude = lngLat.lng
           this.params.latitude = lngLat.lat
-          this.$toast.success('点击确定提交')
+          this.addAndEditSubmit()
+          // this.$toast.success('点击确定提交')
           // document.getElementById('lnglat').value = lnglat;
         }else{
+          //定位失败逻辑处理
+          if(this.shopAddress){
+            this.$toast.error('根据地址查询位置失败')
+          }else if(!this.params.longitude && !this.params.latitude && !this.shopAddress){
+          //  没有填地址，也没有历史定位记录则需要抛错
+            this.$toast.error('根据地址查询位置失败')
+          }else if(this.params.longitude && this.params.latitude && !this.shopAddress){
+          //  有历史地址，但是没写中文地址，不抛错，直接提交
+            this.addAndEditSubmit()
+          }else{
+            this.$toast.error('定位功能异常，请联系管理员')
+          }
+          /*console.log('77777777777777777::'+this.isOpenBtn )
+          console.log('77777777777777777::'+this.params.longitude )
+          console.log('77777777777777777::'+this.params.latitude )
+          console.log('77777777777777777::'+this.shopAddress )*/
           // log.error('根据地址查询位置失败');
-          this.$toast.error('根据地址查询位置失败')
+          /*if(this.isOpenBtn && !this.params.longitude && !this.params.latitude && this.shopAddress){
+            this.$toast.error('根据地址查询位置失败')
+          }else if(!this.isOpenBtn){
+            this.addAndEditSubmit()
+          }else{
+            this.$toast.error('定位功能异常')
+          }*/
+
         }
       });
     },
+
+    /**
+     * 提交审核
+     */
+    submitView(status) {
+      let msg = ''
+      //  else if (!this.params.payProrata) {
+      //   if (!this.isEdit) {
+      //     msg = '请填写手续费率'
+      //   }
+      // }
+      // this.addInfo()
+      // this.sendData('发送')
+      /*if(this.params.isOpen){
+        this.params.isOpen = 1
+      }else{
+        this.params.isOpen = -1
+      }*/
+      if (!this.params.name) {
+        msg = '商户名不能为空'
+      } else if (!this.params.contact) {
+        msg = '请填写联系人'
+      } else if (!this.params.phone) {
+        msg = '请填写手机号'
+      } else if (!(/^1\d{10}$/.test(this.params.phone))) {
+        msg = '请填写正确手机号'
+      } else if (!this.params.businessLevOne) {
+        msg = '请选择经营类目'
+      } else if (!this.params.province) {
+        msg = '请选择省市'
+      } else if (!this.params.email) {
+        msg = '请填写邮箱'
+      } else if (!(/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(this.params.email))) {
+        msg = '请填写正确邮箱'
+      } else if (!this.params.address) {
+        msg = '请填写地址'
+      }
+      if (msg) {
+        this.$toast.message(msg)
+      } else {
+        if(this.isOpenBtn){
+          this.geoCode()
+        }else{
+          this.addAndEditSubmit()
+        }
+
+        /*let params = Object.assign({}, this.params)
+        // params.payProrata = params.payProrata / 100
+        if (this.isEdit) {
+          delete params.phone
+          // delete params.payProrata
+          delete params.status
+          delete params.companyId
+          delete params.managerId
+        }*/
+        //定位修改
+        /*if (this.$route.query.id) {
+          this.submitInfo(params)
+        } else {
+          // params.status = status
+          if (this.from === 'react-native') {
+            params.fxUserId = this.fxUserId
+          }
+          this.addInfo(params)
+        }*/
+      }
+    },
+    //添加和修改提交
+    addAndEditSubmit(){
+      if(this.isOpenBtn){
+        this.params.isOpen = 1
+      }else{
+        this.params.isOpen = -1
+      }
+      let params = Object.assign({}, this.params)
+      // params.payProrata = params.payProrata / 100
+      if (this.isEdit) {
+        delete params.phone
+        // delete params.payProrata
+        delete params.status
+        delete params.companyId
+        delete params.managerId
+      }
+      if (this.$route.query.id) {
+        this.submitInfo(params)
+      } else {
+        // params.status = status
+        if (this.from === 'react-native') {
+          params.fxUserId = this.fxUserId
+        }
+        this.addInfo(params)
+      }
+    },
+    /**
+     * 提交修改
+     * */
+    submitInfo(params) {
+      let that = this
+      if(this.isOpenBtn){
+        this.params.isOpen = 1
+      }else{
+        this.params.isOpen = -1
+      }
+      agentOrClient.editClienDetail(params).then(res => {
+        this.$toast.success(res.msg)
+        setTimeout(() => {
+          that.goback()
+        }, 1000)
+      })
+    },
+
+
+
     loginByTokenToGetInfo() {
       loginApi.getUserInfoByToken().then(res => {
         afterLoginInfoLocal.setJSON(res.obj) // 存储登录后信息
@@ -396,9 +551,9 @@ export default {
         }
         this.params = Object.assign({}, this.params, params);
         if(this.params.isOpen === 1){
-          this.params.isOpen = true
+          this.isOpenBtn = true
         }else{
-          this.params.isOpen = false
+          this.isOpenBtn = false
         }
         this.cooperationLevArr = [res.obj.businessLevOne, res.obj.businessLevTwo, res.obj.businessLevThree]
         this.cascaderArr = [res.obj.province, res.obj.city]
@@ -458,82 +613,7 @@ export default {
         throw Error('postMessage接口还未注入')
       }
     },
-    /**
-     * 提交审核
-     */
-    submitView(status) {
-      let msg = ''
-      //  else if (!this.params.payProrata) {
-      //   if (!this.isEdit) {
-      //     msg = '请填写手续费率'
-      //   }
-      // }
-      // this.addInfo()
-      // this.sendData('发送')
-      if(this.params.isOpen){
-        this.params.isOpen = 1
-      }else{
-        this.params.isOpen = -1
-      }
-      if (!this.params.name) {
-        msg = '商户名不能为空'
-      } else if (!this.params.contact) {
-        msg = '请填写联系人'
-      } else if (!this.params.phone) {
-        msg = '请填写手机号'
-      } else if (!(/^1\d{10}$/.test(this.params.phone))) {
-        msg = '请填写正确手机号'
-      } else if (!this.params.businessLevOne) {
-        msg = '请选择经营类目'
-      } else if (!this.params.province) {
-        msg = '请选择省市'
-      } else if (!this.params.email) {
-        msg = '请填写邮箱'
-      } else if (!(/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(this.params.email))) {
-        msg = '请填写正确邮箱'
-      } else if (!this.params.address) {
-        msg = '请填写地址'
-      }
-      if (msg) {
-        this.$toast.message(msg)
-      } else {
-        let params = Object.assign({}, this.params)
-        // params.payProrata = params.payProrata / 100
-        if (this.isEdit) {
-          delete params.phone
-          // delete params.payProrata
-          delete params.status
-          delete params.companyId
-          delete params.managerId
-        }
-        if (this.$route.query.id) {
-          this.submitInfo(params)
-        } else {
-          // params.status = status
-          if (this.from === 'react-native') {
-            params.fxUserId = this.fxUserId
-          }
-          this.addInfo(params)
-        }
-      }
-    },
-    /**
-     * 提交修改
-     * */
-    submitInfo(params) {
-      let that = this
-      if(this.params.isOpen){
-        this.params.isOpen = 1
-      }else{
-        this.params.isOpen = -1
-      }
-      agentOrClient.editClienDetail(params).then(res => {
-        this.$toast.success(res.msg)
-        setTimeout(() => {
-          that.goback()
-        }, 1000)
-      })
-    },
+
     /**
      * 新增代理
      * */
