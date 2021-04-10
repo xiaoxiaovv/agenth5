@@ -190,6 +190,7 @@ export default {
   },
   created() {
     let userInfo = afterLoginInfoLocal.getJSON()
+    // console.log('conpanyid111111111111111:',userInfo)
     this.levelAlias = userInfo.levelAlias
     this.companyId = userInfo.companyId
     this.userType = userInfo.userType

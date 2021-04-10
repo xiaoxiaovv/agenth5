@@ -329,5 +329,15 @@ export default {
       method: 'get',
       params
     })
+  },
+  // 获取高德秘钥
+   getGaoDeKey (serviceId) {
+    return request({
+      url: '/auth/gaode_map_config',
+      method: 'get',
+      params: {
+        serviceId
+      }
+    })
   }
 }

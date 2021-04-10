@@ -307,6 +307,15 @@ export default {
 
   },
   methods: {
+    getGaoDeKey(){
+      let userInfo = afterLoginInfoLocal.getJSON()
+      agentOrClient.getGaoDeKey(userInfo.serviceId).then(res => {
+        this.$toast.success(res.msg)
+        setTimeout(() => {
+          that.goback()
+        }, 1000)
+      })
+    },
     simpleTreeBack(){
       this.openSimpleTree = false;
     },
