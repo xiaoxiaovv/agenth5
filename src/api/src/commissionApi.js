@@ -82,6 +82,9 @@ export default {
       jsonHeader: true
     })
   },
+  /**
+   *  查询佣金提现卡
+   */
   commissionGetBankCard (companyId) {
     return requestAxios({
       url: '/auth/user/find_band',

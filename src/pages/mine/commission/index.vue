@@ -52,7 +52,7 @@ import { isProd } from '../../config';
     </div>
 
     <!-- 数据列表 -->
-    <div class="commission-index__content match-left-space ">
+    <div class="commission-index__content match-left-space " >
       <mu-paper class="match-parent box pl-30 pr-20"
                 :z-depth="1">
         <mu-container ref="container"
@@ -105,7 +105,7 @@ import { isProd } from '../../config';
         </mu-container>
       </mu-paper>
     </div>
-    <div class="commission-index__out-login center-flex">
+    <div class="commission-index__out-login center-flex" >
       <p @click="toApply">申请提现</p>
     </div>
     <!-- 补脚 -->
@@ -141,7 +141,8 @@ export default {
   components: { VmaNoData },
   data() {
     return {
-      isEdit: false,
+      hasCommissionAuth: false, //是否拥有提现权限
+      // isEdit: false,
       // tabList: ['全部', '签约', '未签约', '待审核', '驳回'],
       tabList: [
         /*{
@@ -182,18 +183,18 @@ export default {
       canCommission: '', //未提现佣金
     }
   },
-  beforeRouteEnter(to, from, next) {
+  /*beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.refresh()
+      // vm.refresh()
     })
-  },
+  },*/
   mounted() {
     // TODO
     // console.log('============================111')
     let userInfo = afterLoginInfoLocal.getJSON()
     this.companyId = userInfo.companyId
     this.commissionGetBankCard();
-    this.findCommissionCurrentMonth()
+
     // this.commissionApplyAllList()
     // this.getMerchantList()
   },
@@ -204,6 +205,11 @@ export default {
     // 获取佣金提现卡
     commissionGetBankCard() {
       commissionApi.commissionGetBankCard(this.companyId).then(res => {
+          this.hasCommissionAuth = true //该接口成功则证明有分佣提现权限
+          //需要权限的逻辑--开始
+          this.refresh()  //该方法只可以手动调用一次！！！！！
+          this.findCommissionCurrentMonth()
+        //需要权限的逻辑--结束
         if(res.obj && res.obj.cardNo === null){
           this.cardNotExit = true
 
@@ -211,7 +217,13 @@ export default {
 
         }
 
-      })
+      },
+      errRes => {
+        if(errRes.code === 403){
+          this.hasCommissionAuth = false
+        }
+      }
+      )
     },
     toAddBankCard(){
       this.$router.push({
@@ -219,6 +231,13 @@ export default {
       })
     },
     toApply(){
+      if(this.hasCommissionAuth){
+
+      }else{
+        this.$toast.error('您尚未拥有该权限')
+        return
+      }
+
       if(this.cardNotExit){
         this.openAlert = true
         return
@@ -267,7 +286,7 @@ export default {
               })
             }*/
 
-            this.dataList = [...this.dataList, ...res.obj]
+            this.dataList = [...this.dataList, ...res.obj.content]
             console.log('this.dataList', this.dataList)
             if (this.dataList.length < res.obj.totalElements) {
               this.isLoadedAll = false
