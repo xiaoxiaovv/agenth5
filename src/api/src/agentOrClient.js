@@ -332,11 +332,11 @@ export default {
   },
   // 获取高德秘钥
    getGaoDeKey (serviceId) {
-    return request({
+    return requestAxios({
       url: '/auth/gaode_map_config',
       method: 'get',
       params: {
-        serviceId
+        companyId:serviceId
       }
     })
   }

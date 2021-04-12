@@ -1295,6 +1295,7 @@ import indexMixins from './src/mixins'
 // import PROCESS from '@/constants'
 import { getProcess } from '@/constants'
 import { NativeAppRouter } from '../../utils/src/webviewBridgeUtils'
+import { afterLoginInfoLocal} from '@/storage'
 
 
 export default {
@@ -3068,9 +3069,14 @@ export default {
           this.getLklMccList() // 拉卡拉经营类目
         }
         if(this.PROCESS.KDB){
-          this.getKdbMccList() // 开店宝经营类目
-          //  开店宝地址树
-          this.getKdbProviceAndCity();
+          let userInfo = afterLoginInfoLocal.getJSON()
+          // todo 罗鹏的服务器不请求开店宝数据
+          if(userInfo.serviceId === "1335752481467498496"){
+          }else{
+            this.getKdbMccList() // 开店宝经营类目
+            //  开店宝地址树
+            this.getKdbProviceAndCity();
+          }
         }
         if(this.PROCESS.CJ){
           this.getCjMccList() // 畅捷经营类目

@@ -101,15 +101,14 @@
 
             </div>
             <mu-form-item label=""
-
-                         >
+                          v-show="isOpenBtn">
               <mu-text-field v-model.trim="shopAddress"
                              autocomplete="off"
                              underline-color="#F0F0F0"
                              prefix="定位"
                              placeholder="请输入商铺地址"></mu-text-field>
             </mu-form-item>
-            <div class="vm-list-li">
+            <div class="vm-list-li" v-show="isOpenBtn">
               <div class="vma-list-li-left"></div>
               <div class="vma-list-li-right vm-ell"><span @click="geolocationFn" class="vm-small-btn">自动定位</span></div>
             </div>
@@ -184,6 +183,7 @@ export default {
   components: { VmaCascaderTree },
   data() {
     return {
+      gdWebKey:'',
       isOpenBtn:false, //是否开启定位
       geocoder: null,
       geolocation:null,
@@ -251,33 +251,7 @@ export default {
     }
   },
   created() {
-    AMapLoader.load({
-      "key": "ec2655d926a9b2662c416608d087fff6",              // 申请好的Web端开发者Key，首次调用 load 时必填
-      "version": "1.4.15",   // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-      "plugins": ['AMap.Geocoder', 'AMap.Geolocation'],           // 需要使用的的插件列表，如比例尺'AMap.Scale'等
-      "AMapUI": {             // 是否加载 AMapUI，缺省不加载
-        "version": '1.1',   // AMapUI 缺省 1.1
-        "plugins":[],       // 需要加载的 AMapUI ui插件
-      },
-      "Loca":{                // 是否加载 Loca， 缺省不加载
-        "version": '1.3.2'  // Loca 版本，缺省 1.3.2
-      },
-    }).then((AMap)=>{
-      // map = new AMap.Map('container');
-      this.geocoder = new AMap.Geocoder({
-        city: "", //城市设为北京，默认：“全国”
-      });
-      this.geolocation = new AMap.Geolocation({
-        enableHighAccuracy: true, //是否使用高精度定位，默认:true
-        timeout: 10000, //超过10秒后停止定位，默认：5s
-        // position: 'RB', //定位按钮的停靠位置
-        // buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-        // zoomToAccuracy: true //定位成功后是否自动调整地图视野到定位点
-      })
-    }).catch(e => {
-      console.log(e);
-    })
-
+    this.getGaoDeKey()
     this.id = this.$route.query.id
     if (this.$route.query.token) {
       sessionStorage.token = this.$route.query.token
@@ -307,13 +281,40 @@ export default {
 
   },
   methods: {
+    AMapLoader(){
+      AMapLoader.load({
+        // "key": "ec2655d926a9b2662c416608d087fff6",              // 申请好的Web端开发者Key，首次调用 load 时必填
+        "key":this.gdWebKey,
+        "version": "1.4.15",   // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
+        "plugins": ['AMap.Geocoder', 'AMap.Geolocation'],           // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+        "AMapUI": {             // 是否加载 AMapUI，缺省不加载
+          "version": '1.1',   // AMapUI 缺省 1.1
+          "plugins":[],       // 需要加载的 AMapUI ui插件
+        },
+        "Loca":{                // 是否加载 Loca， 缺省不加载
+          "version": '1.3.2'  // Loca 版本，缺省 1.3.2
+        },
+      }).then((AMap)=>{
+        // map = new AMap.Map('container');
+        this.geocoder = new AMap.Geocoder({
+          city: "", //城市设为北京，默认：“全国”
+        });
+        this.geolocation = new AMap.Geolocation({
+          enableHighAccuracy: true, //是否使用高精度定位，默认:true
+          timeout: 10000, //超过10秒后停止定位，默认：5s
+          // position: 'RB', //定位按钮的停靠位置
+          // buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          // zoomToAccuracy: true //定位成功后是否自动调整地图视野到定位点
+        })
+      }).catch(e => {
+        console.log(e);
+      })
+    },
     getGaoDeKey(){
       let userInfo = afterLoginInfoLocal.getJSON()
       agentOrClient.getGaoDeKey(userInfo.serviceId).then(res => {
-        this.$toast.success(res.msg)
-        setTimeout(() => {
-          that.goback()
-        }, 1000)
+        this.gdWebKey = res.obj.gdWebSideKey;
+        this.AMapLoader();
       })
     },
     simpleTreeBack(){
@@ -369,15 +370,15 @@ export default {
         }else{
           //定位失败逻辑处理
           if(this.shopAddress){
-            this.$toast.error('根据地址查询位置失败')
+            this.$toast.error('根据地址查询位置失败,'+result)
           }else if(!this.params.longitude && !this.params.latitude && !this.shopAddress){
           //  没有填地址，也没有历史定位记录则需要抛错
-            this.$toast.error('根据地址查询位置失败')
+            this.$toast.error('根据地址查询位置失败,'+result)
           }else if(this.params.longitude && this.params.latitude && !this.shopAddress){
           //  有历史地址，但是没写中文地址，不抛错，直接提交
             this.addAndEditSubmit()
           }else{
-            this.$toast.error('定位功能异常，请联系管理员')
+            this.$toast.error('定位功能异常，请联系管理员,'+result)
           }
           /*console.log('77777777777777777::'+this.isOpenBtn )
           console.log('77777777777777777::'+this.params.longitude )
