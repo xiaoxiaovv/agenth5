@@ -37,6 +37,7 @@ import { isProd } from '../../config';
                    v-model="applyAmount" />
           </div>
         </div>
+
       </div>
       </div>
       </div>
@@ -71,11 +72,75 @@ import { isProd } from '../../config';
           <span @click="toCommissionAddBankCardPage" class="bank-cark-btn">修改卡信息</span>
         </div>
       </div>
-
+      <div class="mt-50 explain">
+        <p class="title">温馨提示：</p>
+        <div class="align-hor-bet">
+          <p class="explain_ml">分润税点</p>
+          <p>{{commissionConfigData.rateCash}}%</p>
+        </div>
+        <div class="align-hor-bet">
+          <p class="explain_ml">到账时间</p>
+          <p>T+1</p>
+        </div>
+        <div class="align-hor-bet">
+          <p class="explain_ml">提现金额不得低于</p>
+          <p>{{commissionConfigData.minCashAmount}} (元)</p>
+        </div>
+        <div class="align-hor-bet">
+          <p class="explain_ml">提现时间</p>
+          <p>{{commissionConfigData.cashOutStartTime}} - {{commissionConfigData.cashOutEndTime}}</p>
+        </div>
+      </div>
     </div>
+
+
+
+
+    <!--<div class="commission-apply__content   align-default">
+      <div class="mt-20 bank-info-box">
+        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
+          <div class="vm-list-li">
+            <div class="vma-list-li-left">开户人</div>
+            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.bankAccount}}</div>
+          </div>
+        </div>
+        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
+          <div class="vm-list-li">
+            <div class="vma-list-li-left">分润税点</div>
+            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.bankName}}</div>
+          </div>
+        </div>
+        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
+          <div class="vm-list-li">
+            <div class="vma-list-li-left">到账时间</div>
+            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.cardNo | cardFilter}}</div>
+          </div>
+        </div>
+        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
+          <div class="vm-list-li">
+            <div class="vma-list-li-left">提现金额不得低于</div>
+            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.cardNo | cardFilter}}</div>
+          </div>
+        </div>
+        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
+          <div class="vm-list-li">
+            <div class="vma-list-li-left">提现时间</div>
+            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.cardNo | cardFilter}}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>-->
     <div class="commission-apply__out-login center-flex">
       <p @click="commissionApplySubmit">提交申请</p>
     </div>
+
+   <!-- <div class="mt-30 explain">
+      <p>说明：分润税点8%，</p>
+      <p class="explain_ml">到账时间 T+1，</p>
+      <p class="explain_ml">提现金额不得低于13元，</p>
+      <p class="explain_ml">提现时间：9:00 - 17:00</p>
+    </div>-->
 
     <mu-dialog title="提示"
                width="600"
@@ -119,6 +184,15 @@ export default {
 
   data() {
     return {
+      commissionConfigData:{
+        "cashOutStartTime": "",
+        "cashOutEndTime": "",
+        "rateCash": "",
+        "minCashAmount": "",
+        "bankName": "",
+        "cardNo": "",
+        "openBank": ""
+      },
       applyAmount:'',
       openAlert:false,
       password:'',
@@ -136,6 +210,9 @@ export default {
       vm.refresh()
     })
   },*/
+  created() {
+    this.getCommissionConfig()
+  },
   mounted() {
     // TODO
     let userInfo = afterLoginInfoLocal.getJSON()
@@ -144,9 +221,23 @@ export default {
     this.findCommissionCurrentMonth()
     console.log('============================111')
 
+
     // this.getMerchantList()
   },
   methods: {
+    getCommissionConfig(){
+      commissionApi.getCommissionConfig().then(
+        res => {
+          // this.loading = false
+          if (res.code === 200) {
+            this.commissionConfigData = {...res.obj}
+            this.commissionConfigData.cashOutStartTime = this.commissionConfigData.cashOutStartTime.substring(0,5)
+            this.commissionConfigData.cashOutEndTime = this.commissionConfigData.cashOutEndTime.substring(0,5)
+            this.commissionConfigData.rateCash = this.commissionConfigData.rateCash*100
+          }
+        }
+      )
+    },
     findCommissionCurrentMonth(){
       commissionApi.findCommissionCurrentMonth().then(
         res => {

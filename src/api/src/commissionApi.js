@@ -93,6 +93,14 @@ export default {
         companyId
       }
     })
+  },
+  // 佣金提现参数查询
+   getCommissionConfig () {
+    return requestAxios({
+      url: '/pay/pay_config/find_cash_out_config',
+      method: 'get'
+      // params: params
+    })
   }
 }
 

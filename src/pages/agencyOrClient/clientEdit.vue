@@ -1,5 +1,5 @@
 <template>
-  <div class="vm-bg-white">
+  <div class="vm-bg-white" v-loading="loading">
     <div class="vm-page-header">
       <div class="vm-page-header-container">
         <div class="vm-head">
@@ -96,8 +96,8 @@
 
           <div class="vm-list-ul vm-bg-white vmalis-fontweight-400">
             <div class="vm-list-li">
-              <div class="vma-list-li-left">定位开关</div>
-              <div class="vma-list-li-right vm-ell"><mu-switch v-model="isOpenBtn"></mu-switch></div>
+              <div class="vma-list-li-left">定位开关<span v-show="!this.id">（已开启）</span></div>
+              <div class="vma-list-li-right vm-ell"><mu-switch v-model="isOpenBtn" :disabled="!id"></mu-switch></div>
 
             </div>
             <mu-form-item label=""
@@ -183,6 +183,7 @@ export default {
   components: { VmaCascaderTree },
   data() {
     return {
+      loading: false,
       gdWebKey:'',
       isOpenBtn:false, //是否开启定位
       geocoder: null,
@@ -253,6 +254,7 @@ export default {
   created() {
     this.getGaoDeKey()
     this.id = this.$route.query.id
+    this.isOpenBtn = true
     if (this.$route.query.token) {
       sessionStorage.token = this.$route.query.token
       setTimeout(() => {
@@ -325,8 +327,10 @@ export default {
     },
     //获取坐标转为中文地址
     geolocationFn(){
+      this.loading = true
       // var  that = this;
       this.geolocation.getCurrentPosition((status, result) => {
+        this.loading = false
         if (status == 'complete') {
           /*this.params.autoGetlongitude = result.position.lng
           this.params.autoGetlatitude = result.position.lat*/
