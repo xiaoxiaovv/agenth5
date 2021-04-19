@@ -96,8 +96,8 @@
 
           <div class="vm-list-ul vm-bg-white vmalis-fontweight-400">
             <div class="vm-list-li">
-              <div class="vma-list-li-left">定位开关<span v-show="!this.id">（已开启）</span></div>
-              <div class="vma-list-li-right vm-ell"><mu-switch v-model="isOpenBtn" :disabled="!id"></mu-switch></div>
+              <div class="vma-list-li-left">定位开关<span v-show="!id">（已开启）</span></div>
+              <div class="vma-list-li-right vm-ell"><mu-switch v-model="isOpenBtn" :disabled="locationDisabledFlag"></mu-switch></div>
 
             </div>
             <mu-form-item label=""
@@ -183,6 +183,7 @@ export default {
   components: { VmaCascaderTree },
   data() {
     return {
+      locationDisabledFlag: true,
       loading: false,
       gdWebKey:'',
       isOpenBtn:false, //是否开启定位
@@ -252,9 +253,15 @@ export default {
     }
   },
   created() {
+    let userType = afterLoginInfoLocal.getJSON().userType
     this.getGaoDeKey()
     this.id = this.$route.query.id
     this.isOpenBtn = true
+    if ((userType === 1 && this.id) || (userType === 2 && this.id)) {
+      this.locationDisabledFlag = false
+    }  else {
+      this.locationDisabledFlag = true
+    }
     if (this.$route.query.token) {
       sessionStorage.token = this.$route.query.token
       setTimeout(() => {
