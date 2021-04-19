@@ -1,20 +1,17 @@
-import { registerRequestAxios } from '@/utils'
+import { requestAxios } from '@/utils'
 import qs from 'qs'
 
 export default {
 
   /**
-   * 提交注册信息
+   * register
    * @param {*} params
    */
   register(params) {
-    params.channel = 'guanJia';
-    return registerRequestAxios({
-      url: `/add`,
-      method: 'GET',
-      params: params
+    return requestAxios({
+      url: `/api/supervision/api/regedit`,
+      method: 'POST',
+      data: params
     })
-  },
-
-
+  }
 }

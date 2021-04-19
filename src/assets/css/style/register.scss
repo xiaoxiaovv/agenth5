@@ -1,0 +1,24 @@
+.register-body{
+  .mu-text-field-input{
+    text-align: left !important;
+  }
+  .auth-code-box{
+    position: relative;
+  }
+  .auth-code-input {
+    width: 60% ;
+    //height: 20px;
+  }
+  .auth-code-btn {
+    position: absolute;
+    top: 20%;
+    left: 65%;
+    width: 30% !important;
+    height: 0.9rem !important;
+    padding: 4px 0px !important;
+    border-radius: 3px !important;
+    //margin-bottom: 0 !important;
+
+    //height: 20px;
+  }
+}

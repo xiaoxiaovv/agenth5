@@ -1,87 +1,297 @@
 <template>
-  <div class="vm-bg-white">
-    <div class="login-body">
-      <div class="login-pic">
-        <img src="@/assets/images/login/login_pic.png"/>
+  <div class="vm-bg-white" v-loading="loading">
+    <div class="vm-page-header">
+      <div class="vm-page-header-container">
+        <div class="vm-head">
+          <div class="vm-head-icon"><span class="icon iconfont  iconreturn"
+                                          @click="goback"></span></div>
+          <div class="vm-head-title vm-ell">
+            <template v-if="id">{{detail.name}}</template>
+            <template v-else>注册</template>
+          </div>
+          <div class="vm-head-btn"><span style="display: none">编辑</span></div>
+        </div>
       </div>
-      <!--<div class="vm-font-48">登录</div>-->
-      <mu-form ref="form" :model="params" class="mu-demo-form">
-        <mu-form-item label="手机号" prop="phone" :rules="usernameRules">
-          <div class="login-icons icon iconfont iconlogin1" style="z-index: 2;"></div>
-          <mu-text-field v-model="params.phone" prop="phone" icon="" autocomplete="off"></mu-text-field>
-        </mu-form-item>
-        <mu-form-item>
-          <mu-button color="primary" @click="register">注册</mu-button>
-          <mu-button color="primary" @click="back">返回</mu-button>
+    </div>
+    <div class="vm-height-10px vm-bg-gray"></div>
+    <div class="vm-form-mu register-body">
+      <mu-form ref="form"
+               :model="params">
+        <div class="vm-bg-white">
+
+          <mu-form-item label=""
+                        prop="contact"
+                        :rules="contactRules">
+            <mu-text-field v-model.trim="params.contact"
+                           autocomplete="off"
+                           underline-color="#F0F0F0"
+                           placeholder="请输入姓名"></mu-text-field>
+          </mu-form-item>
+          <mu-form-item label=""
+                        prop="mobile"
+                        :rules="mobileRules"
+                        v-if="!this.$route.query.id">
+            <mu-text-field v-model.trim="params.mobile"
+                           autocomplete="off"
+                           underline-color="#F0F0F0"
+                           placeholder="请输入手机号"></mu-text-field>
+          </mu-form-item>
+          <div class="auth-code-box">
+          <mu-form-item label=""
+                        :rules="msgCaptchaRules"
+                        prop="msgCaptchaRules">
+
+            <mu-text-field class="auth-code-input"  v-model.trim="params.msgCaptcha"
+                           autocomplete="off"
+
+                           underline-color="#F0F0F0"
+
+                           placeholder="请输入短信验证码"></mu-text-field>
+
+          </mu-form-item>
+
+            <mu-button class="auth-code-btn" color="primary"
+                       :disabled="getAuthCodeBtnDisabled"
+                       @click="getAuthCode">
+              {{authCodeBtnText}}
+            </mu-button>
+          </div>
+          <mu-form-item label=""
+                        :rules="passwordRules"
+                        prop="password">
+            <mu-text-field v-model.trim="params.password"
+                           :action-icon="visibility ? 'visibility_off' : 'visibility'"
+                           :action-click="() => (visibility = !visibility)"
+                           placeholder="请输入密码"
+                           :type="visibility ? 'text' : 'password'">
+            </mu-text-field>
+          </mu-form-item>
+          <mu-form-item label=""
+                        :rules="passwordSureRules"
+                        prop="passwordSure">
+            <mu-text-field v-model.trim="params.passwordSure"
+                           :action-icon="visibility ? 'visibility_off' : 'visibility'"
+                           :action-click="() => (visibility = !visibility)"
+                           placeholder="确认密码"
+                           :type="visibility ? 'text' : 'password'">
+            </mu-text-field>
+          </mu-form-item>
+          <mu-form-item label=""
+                        prop="inviteCode"
+                        :rules="inviteCodeRules">
+            <mu-text-field v-model.trim="params.inviteCode"
+                           autocomplete="off"
+                           underline-color="#F0F0F0"
+                           placeholder="请输入邀请码"></mu-text-field>
+          </mu-form-item>
+        </div>
+        <mu-form-item class="submit-btn">
+          <mu-button color="primary"
+                     @click="submitView(1)">提交</mu-button>
         </mu-form-item>
       </mu-form>
+      <!--
+      <div class="vm-btn agent-detail-btn">
+        <mu-button color="primary" @click="submitView(1)">确定</mu-button>
+      </div>
+      -->
     </div>
+    <!--简单树-->
+    <mu-bottom-sheet :open.sync="openSimpleTree">
+      <!--<div class="action-sheet box align-default">
+        <div class="title box align-hor-bet plr-30">
+          <div @click="simpleTreeBack">返回</div>
+
+        </div>
+      </div>
+      &lt;!&ndash;      <div v-if="simpleTreeStatus === 1">&ndash;&gt;
+      <div >
+        <div class="vm-btn agent-detail-btn mb-50">
+          <mu-button color="primary" @click="geoCode">保存位置</mu-button>
+        </div>
+      </div>-->
+
+    </mu-bottom-sheet>
   </div>
 </template>
 
 <script>
 import { registerApi } from '@/api'
-import { loginInfoLocal, afterLoginInfoLocal } from '@/storage'
-import * as types from '@/router/types'
-import Toast from "muse-ui-toast";
-import MessageBox from "muse-ui-message";
-
+import { afterLoginInfoLocal, fromReactNativeLocal } from '@/storage'
+import VmaCascaderTree from '@/components/common/vmaCascaderTree'
+import typeJson from '@/assets/merchant/merchantType.json'
 
 export default {
+  components: { VmaCascaderTree },
   data() {
     return {
-      usernameRules: [
-        {validate: (val) => !!val, message: '请输入手机号'}
-      ],
+      getAuthCodeBtnDisabled: false,
+      timeCount: 60,
+      authCodeBtnText:'获取验证码',
+      visibility:false,
+      loading: false,
+
+
+      geocoder: null,
+      geolocation:null,
+      shopAddress:'',
+      openSimpleTree:false,
+      isEdit: false,
+      id: '',
+      from: '', // 上级父级来源
+      fxUserId: '', // 上级用户id
+      detail: {},
       params: {
-        phone: ''
-      }
+        passwordSure:'',
+        inviteCode: '',
+        password:'',
+        isOpen:false,
+        companyId: afterLoginInfoLocal.getJSON().companyId,
+        managerId: afterLoginInfoLocal.getJSON().userId,
+        status: '1' // 正常状态
+      },
+      contactRules: [
+        { validate: (val) => !!val, message: '' }
+      ],
+      mobileRules: [
+        { validate: (val) => !!val, message: '' },
+        { validate: (val) => !!(/^1\d{10}$/.test(val)), message: '' }
+      ],
+      msgCaptchaRules: [
+        { validate: (val) => !!val, message: '' }
+      ],
+      passwordRules: [
+        { validate: (val) => !!val, message: '' }
+      ],
+      passwordSureRules: [
+        { validate: (val) => !!val, message: '' },
+      ],
+      inviteCodeRules: [
+        { validate: (val) => !!val, message: '' },
+      ]
     }
   },
+  watch: {
+
+  },
   created() {
-    /*let loginInfo = loginInfoLocal.getJSON()
-    if (loginInfo.phone) {
-      this.turnToLogin(loginInfo)
-    }*/
+
+    this.id = this.$route.query.id
+
+    if (this.$route.query.token) {
+      sessionStorage.token = this.$route.query.token
+      setTimeout(() => {
+        this.loginByTokenToGetInfo()
+      })
+    }
+    if (this.$route.query.from) {
+      this.from = this.$route.query.from
+      fromReactNativeLocal.set(this.from)
+      console.log('RN来源', fromReactNativeLocal.get())
+      console.log('RN来源', this.from)
+    }
+    if (this.$route.query.fxUserId) {
+      this.fxUserId = this.$route.query.fxUserId
+    }
+
+  },
+  mounted() {
+    // let that = this;
+
   },
   methods: {
-    back() {
+    getAuthCode(){
+      this.getAuthCodeBtnDisabled = true
+      let timer = null
+      if(timer){
+        clearInterval(timer)
+      }
+      let that = this;
+      this.authCodeBtnText = '已发送'+this.timeCount+'s'
+      // this.timeCount = 59
+      setInterval(function (){
+        if(that.timeCount == 1){
+          clearInterval(timer)
+          this.getAuthCodeBtnDisabled = false
+        }else {
+          that.timeCount--
+          that.authCodeBtnText = '已发送'+that.timeCount+'s'
+        }
+
+      },1000)
+    },
+    simpleTreeBack(){
+      this.openSimpleTree = false;
+    },
+    showLocationModule(){
+      this.openSimpleTree = true;
+    },
+
+
+
+    /**
+     * 提交审核
+     */
+    submitView(status) {
+      let msg = ''
+     if (!this.params.contact) {
+        msg = '请填写联系人'
+      } else if (!this.params.mobile) {
+        msg = '请填写手机号'
+      } else if (!(/^1\d{10}$/.test(this.params.mobile))) {
+        msg = '请填写正确手机号'
+      } else if (!this.params.msgCaptcha) {
+        msg = '请填写验证码'
+      } else if (!this.params.password) {
+        msg = '请填写密码'
+      } else if (!this.params.passwordSure) {
+       msg = '请填写确认密码'
+     } else if (this.params.password !== this.params.passwordSure) {
+        msg = '两次密码不一致'
+      } else if (!this.params.inviteCode) {
+       msg = '请填写邀请码'
+     }
+      if (msg) {
+        this.$toast.message(msg)
+      } else {
+          this.registerSubmit()
+      }
+    },
+    //提交
+    registerSubmit(){
+      let params = Object.assign({}, this.params)
+      params.inviterId = 1186094988932800513;
+      params.serviceId = 1186094988932800555;
+      registerApi.register(params);
+    },
+    // 发送数据
+    sendData(data) {
+      this.$toast.message('发送数据:')
+      if (window.postMessage) {
+        // this.$toast.message('注入1：')
+        // this.$toast.message('注入：'+data)
+        // this.$toast.message('111--'+window.postMessage)
+        window.postMessage(JSON.stringify(`${JSON.stringify(data)}`), '*')
+        // this.$toast.message('222--'+window.postMessage)
+      } else {
+        this.$toast.message('postMessage接口还未注入')
+        throw Error('postMessage接口还未注入')
+      }
+    },
+
+
+    /**
+     * 返回上一页
+     */
+    goback() {
       this.$router.back(-1)
     },
-    register() {
-      this.$refs.form.validate().then((result) => {
-        if (result) {
-          let params = Object.assign({}, this.params)
-          this.turnToRegister(params)
-        }
-      })
-    },
-    turnToRegister(params) {
-      registerApi.register(params).then(res => {
-        MessageBox.alert('注册中……服务专员将会在24小时内联系您')
-       /* if (res.obj.userType === 1 || res.obj.userType === 2 || res.obj.userType === 3 || res.obj.userType === 4) {
-          loginInfoLocal.setJSON(params) // 存储账号和密码
-          let levelAlias = Object.assign({}, res.obj.levelAlias)
-          if (levelAlias.status) {
-            levelAlias.oemName = levelAlias.oemName || '服务商'
-            levelAlias.firstName = levelAlias.firstName || '一级代理商'
-            levelAlias.secondName = levelAlias.secondName || '二级代理商'
-            levelAlias.thirdName = levelAlias.thirdName || '三级代理商'
-          } else {
-            levelAlias.oemName = '服务商'
-            levelAlias.firstName = '一级代理商'
-            levelAlias.secondName = '二级代理商'
-            levelAlias.thirdName = '三级代理商'
-          }
-          res.obj.levelAlias = levelAlias
-          afterLoginInfoLocal.setJSON(res.obj) // 存储登录后信息
-          sessionStorage.token = res.obj.token // 存储token
-          this.$router.push({name: types.HOME})
-        } else {
-          this.$toast.error('该代理商用户不存在')
-        }*/
-      })
+    editDetail() {
+      // this.$router.push({name: types.AGENCY_EDIT, query: {id: this.$route.query.id}})
     }
   }
 }
 </script>
+<style scoped>
+
+</style>
