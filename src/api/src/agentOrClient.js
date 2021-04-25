@@ -239,16 +239,15 @@ export default {
     })
   },
   /**
-   * 获取--商户详情--新增
-   * @param {*} params
+   * 新增商户
+   * @param {*} paramst
    */
-  addClienDetail(params) {
+  addClient(params) {
     return requestAxios({
-      url: '/merchant/merchant/save_rewrite',
+      url: '/api/supervision/api/dataregeditmerchant',
       method: 'post',
-      data: qs.stringify(
-        params
-      )
+      data: params ,
+      jsonHeader:true
     })
   },
   /**
@@ -268,7 +267,7 @@ export default {
    */
   getProvice(params) {
     return requestAxios({
-      url: `/common/province/tree`,
+      url: `/api/supervision/api/public/cityTree`,
       method: 'GET',
       params: params,
       jsonHeader: true

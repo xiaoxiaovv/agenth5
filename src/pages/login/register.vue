@@ -21,11 +21,11 @@
 
           <mu-form-item label=""
                         prop="contact"
-                        :rules="contactRules">
-            <mu-text-field v-model.trim="params.contact"
+                        :rules="realNameRules">
+            <mu-text-field v-model.trim="params.realName"
                            autocomplete="off"
                            underline-color="#F0F0F0"
-                           placeholder="请输入姓名"></mu-text-field>
+                           placeholder="请输入身份证姓名"></mu-text-field>
           </mu-form-item>
           <mu-form-item label=""
                         prop="mobile"
@@ -142,13 +142,14 @@ export default {
       fxUserId: '', // 上级用户id
       detail: {},
       params: {
-        passwordSure:'',
+
+       /* passwordSure:'',
         inviteCode: '',
         password:'',
         isOpen:false,
         companyId: afterLoginInfoLocal.getJSON().companyId,
         managerId: afterLoginInfoLocal.getJSON().userId,
-        status: '1' // 正常状态
+        status: '1' // 正常状态*/
       },
       contactRules: [
         { validate: (val) => !!val, message: '' }
@@ -219,6 +220,7 @@ export default {
         }
 
       },1000)
+      registerApi.getAuthCode(this.params.mobile)
     },
     simpleTreeBack(){
       this.openSimpleTree = false;
@@ -233,9 +235,10 @@ export default {
      * 提交审核
      */
     submitView(status) {
+
       let msg = ''
-     if (!this.params.contact) {
-        msg = '请填写联系人'
+     if (!this.params.realName) {
+        msg = '请填写身份证姓名'
       } else if (!this.params.mobile) {
         msg = '请填写手机号'
       } else if (!(/^1\d{10}$/.test(this.params.mobile))) {
@@ -259,10 +262,23 @@ export default {
     },
     //提交
     registerSubmit(){
+
+      /*let params = {
+        "inviteCode": "A7A7A7A",
+        "inviterId": "1186094988932800513",
+        "mobile": "14122345678",
+        "msgCaptcha": "A7A7A7A",
+        "password": "string",
+        "serviceId": "1186094988932800555"
+      }*/
       let params = Object.assign({}, this.params)
-      params.inviterId = 1186094988932800513;
-      params.serviceId = 1186094988932800555;
-      registerApi.register(params);
+      params.inviterId = '1186094988932800513';
+      params.serviceId = '1186094988932800555';
+      registerApi.register(params).then(
+        res=>{
+          this.$toast.message('注册成功')
+        }
+      );
     },
     // 发送数据
     sendData(data) {

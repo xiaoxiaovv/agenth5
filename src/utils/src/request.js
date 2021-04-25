@@ -22,8 +22,9 @@ const instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use((config) => {
   if (sessionStorage.token) {
-    config.headers['authorized'] = sessionStorage.token
+    config.headers['token'] = sessionStorage.token
   }
+  config.headers['token'] = '952f40e984a546ccbd03881a77055a9c'
   if (config.jsonHeader) {
     config.headers['Content-type'] = 'application/json; charset=utf-8'
   } else {
@@ -47,7 +48,7 @@ instance.interceptors.response.use(response => {
     sessionStorage.token = response.headers.authorized
   }
   const res = response.data
-  if (res.code !== 200) {
+  if (res.code !== 0) {
     if (res.code === 401 || res.code === 422) {
       MessageBox.alert('您尚未登录', '前往登录').then(res => {
         sessionStorage.clear()
