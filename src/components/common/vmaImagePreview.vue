@@ -39,7 +39,7 @@ export default {
 
     // 生成图片地址
     createImgUrl(id) {
-      if(id.indexOf('data:image/png;base64')===0){
+      if(id.indexOf('data:image')===0){
         this.isSign = true
         return id
 

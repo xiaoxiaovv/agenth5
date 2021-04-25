@@ -36,9 +36,9 @@ export default {
    * 获取资源图片
    * @param {*} id
    */
-  getPic(id) {
+  getImgById(id) {
     return requestAxios({
-      url: `/fms/upload/resource/thumbnail/${id}`,
+      url: `/api/supervision/api/sys/oss/fileBase64/${id}`,
       method: 'get'
     })
   },
@@ -50,9 +50,9 @@ export default {
   uploadImage(file) {
     let formData = new FormData()
     formData.append('module', 'image')
-    formData.append('files', file)
+    formData.append('file', file)
     return requestAxios({
-      url: `/fms/upload/files_upload/file/user`,
+      url: `/api/supervision/api/sys/oss/upload`,
       method: 'post',
       data: formData,
       header: {
@@ -237,7 +237,7 @@ export default {
   // 提交列表信息
   submitMchIfo(data) {
     return requestAxios({
-      url: `/merchant/mch_info/set`,
+      url: `/api/supervision/dataincominginfo`,
       method: 'post',
       data,
       jsonHeader: true
@@ -507,5 +507,6 @@ export default {
       jsonHeader: true
     })
   },
+
 
 }

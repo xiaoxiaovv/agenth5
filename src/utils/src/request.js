@@ -8,7 +8,8 @@ import * as configInfo from '@/config/version.js'
 // export const url = window.location.protocol+"//"+window.location.host
 // export const url = 'http://pay-adm.vmajy.com'
 // export const url = 'http://51ytpay.com/'
-export const url = window.serverUrl || window.location.protocol + '//' + window.location.host
+export const url = 'http://test.fx.mamipay.com'
+// export const url = window.serverUrl || window.location.protocol + '//' + window.location.host
 
 const instance = axios.create({
   baseURL: url,
@@ -24,7 +25,7 @@ instance.interceptors.request.use((config) => {
   if (sessionStorage.token) {
     config.headers['token'] = sessionStorage.token
   }
-  config.headers['token'] = '952f40e984a546ccbd03881a77055a9c'
+  config.headers['token'] = "004b6126ced04069acb21bf5a766a3d7"
   if (config.jsonHeader) {
     config.headers['Content-type'] = 'application/json; charset=utf-8'
   } else {

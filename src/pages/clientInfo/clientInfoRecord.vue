@@ -38,7 +38,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.epresentativePhotoId"
-                   :src="detail.epresentativePhotoId | previewLoadImage"
+                   :src="detail.epresentativePhotoSrc"
                    @click="previewImage(detail.epresentativePhotoId)" />
             </div>
             <p class="img_intro">身份证正面照</p>
@@ -54,7 +54,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.epresentativePhotoId2"
-                   :src="detail.epresentativePhotoId2 | previewLoadImage"
+                   :src="detail.epresentativePhoto2Src"
                    @click="previewImage(detail.epresentativePhotoId2)" />
             </div>
             <p class="img_intro">身份证反面照</p>
@@ -69,14 +69,16 @@
                  @click="deleteImg('inHand')"></i>
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
-              <img v-if="detail.holdingCardId"
-                   :src="detail.holdingCardId | previewLoadImage"
+              <img v-if="detail.holdingCardId "
+                   :src="detail.holdingCardSrc"
                    @click="previewImage(detail.holdingCardId)" />
             </div>
             <p class="img_intro">手持身份证半身照</p>
+            <!--<p class="img_intro">detail.holdingCardId{{detail.holdingCardId}}</p>
+            <p class="img_intro">detail[detail.holdingCardId]{{detail[detail.holdingCardId]}}</p>-->
           </div>
 
-          <div class="img_wp img_wp_width mt-10">
+          <!--<div class="img_wp img_wp_width mt-10">
             <div>
 
               <div @click="showSign" class="showSignBtn" :class="{signBackgroundColor:signBackgroundColor}"></div>
@@ -97,7 +99,7 @@
                    />
             </div>
             <p class="img_intro">进件签名</p>
-          </div>
+          </div>-->
 
         </div>
 
@@ -153,7 +155,7 @@
                    maxlength="11" />
           </div>
         </div>
-        <div class="item"
+       <!-- <div class="item"
              style="border:0;margin-top:15px;">
           <div class="subtitle">营业执照（小微商户请忽略）</div>
         </div>
@@ -252,7 +254,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
 
       <div class="match-width box align-center">
@@ -623,58 +625,7 @@ export default {
       }
       this.timeDialog.open = true
     },
-    /**
-     * type-删除目标
-     * 删除图片，清空相关的所有数据
-     */
-    deleteImg(type) {
-      console.log('删除图片，清空相关的所有数据')
-      // 身份证（正面）
-      if (type === 'face') {
-        console.log('身份证（正面）')
-        this.detail.epresentativePhotoId = ''
-        this.detail.representativeName = ''
-        this.detail.certificateNum = ''
-      }
-      // 身份证（背面）
-      if (type === 'back') {
-        this.detail.epresentativePhotoId2 = ''
-        this.detail.startCertificateTime = ''
-        this.detail.endCertificateTime = ''
-      }
-      // 身份证（手持）
-      if (type === 'inHand') {
-        this.detail.holdingCardId = ''
-      }
-      // 营业执照
-      if (type === 'license') {
-        this.detail.businessLicensePhotoId = ''
-        this.detail.license = ''
-        this.detail.businessLicenseName = ''
-        this.detail.businessType = '2'
-        this.detail.registerAddress = ''
-        this.detail.person = ''
-        this.detail.startBusinessTime = ''
-        this.detail.endBusinessTime = ''
-      }
-      // 营业执照
-      if (type === 'license') {
-        this.detail.businessLicensePhotoId = ''
-        this.detail.license = ''
-        this.detail.businessLicenseName = ''
-        this.detail.businessType = '2'
-        this.detail.registerAddress = ''
-        this.detail.person = ''
-        this.detail.startBusinessTime = ''
-        this.detail.endBusinessTime = ''
-      }
-      // 签名
-      if (type === 'sign') {
-        this.signBackgroundColor = false
-        this.detail.sign = ''
-        this.detail.signId = ''
-      }
-    },
+
     openAlertDialog() {
       this.openAlert = true
     },
@@ -885,7 +836,11 @@ export default {
           this.$toast.error('请填写正确的身份证号')
           return
         }
-        clientInfoApi.submitMchIfo(this.detail).then(res => {
+        let detail = Object.assign({},this.detail)
+        delete detail.epresentativePhotoSrc
+        delete detail.epresentativePhoto2Src
+        delete detail.holdingCardSrc
+        clientInfoApi.submitMchIfo(detail).then(res => {
           this.$router.push({
             name: CLIENT_INFO_RECORD_NEXT,
             query: {
@@ -1026,10 +981,10 @@ export default {
       if (file) {
         clientInfoApi.uploadImage(file).then(
           res => {
-            if (res.code === 200) {
+            if (res.code === 0) {
               this.$toast.success('图片上传成功')
               this.$refs[type].$refs.file = ''
-              let photoId = res.obj
+              let photoId = res.data.id
               // console.log(photoId)
               // 1 app
               // 2 公众号
@@ -1045,12 +1000,18 @@ export default {
                 this.$set(this.detail, 'supplementPhotoId', photoId)
               } else if (type === 'face') {
                 this.detail.epresentativePhotoId = photoId
+                clientInfoApi.getImgById(photoId).then(res=>{
+                  this.$set(this.detail, 'epresentativePhotoSrc', res.data)
+                })
                 this.getIdCard({
                   pathId: photoId,
                   type
                 })
               } else if (type === 'back') {
                 this.detail.epresentativePhotoId2 = photoId
+                clientInfoApi.getImgById(photoId).then(res=>{
+                  this.$set(this.detail, 'epresentativePhoto2Src', res.data)
+                })
                 this.getIdCard({
                   pathId: photoId,
                   type
@@ -1062,6 +1023,9 @@ export default {
                 })
               }else if(type === 'inHand'){
                 this.$set(this.detail, 'holdingCardId', photoId)
+                clientInfoApi.getImgById(photoId).then(res=>{
+                  this.$set(this.detail, 'holdingCardSrc', res.data)
+                })
               }
             } else {
               this.$toast.error(res.msg)
@@ -1075,7 +1039,60 @@ export default {
     },
     // 获取图片
     getImage(id) {
+      //该方法没有使用
       return id ? url + `/fms/upload/resource/thumbnail/${id}` : ''
+    },
+    /**
+     * type-删除目标
+     * 删除图片，清空相关的所有数据
+     */
+    deleteImg(type) {
+      console.log('删除图片，清空相关的所有数据')
+      // 身份证（正面）
+      if (type === 'face') {
+        console.log('身份证（正面）')
+        this.detail.epresentativePhotoId = ''
+        this.detail.representativeName = ''
+        this.detail.certificateNum = ''
+      }
+      // 身份证（背面）
+      if (type === 'back') {
+        this.detail.epresentativePhotoId2 = ''
+        this.detail.startCertificateTime = ''
+        this.detail.endCertificateTime = ''
+      }
+      // 身份证（手持）
+      if (type === 'inHand') {
+        this.detail.holdingCardId = ''
+      }
+      // 营业执照
+      if (type === 'license') {
+        this.detail.businessLicensePhotoId = ''
+        this.detail.license = ''
+        this.detail.businessLicenseName = ''
+        this.detail.businessType = '2'
+        this.detail.registerAddress = ''
+        this.detail.person = ''
+        this.detail.startBusinessTime = ''
+        this.detail.endBusinessTime = ''
+      }
+      // 营业执照
+      if (type === 'license') {
+        this.detail.businessLicensePhotoId = ''
+        this.detail.license = ''
+        this.detail.businessLicenseName = ''
+        this.detail.businessType = '2'
+        this.detail.registerAddress = ''
+        this.detail.person = ''
+        this.detail.startBusinessTime = ''
+        this.detail.endBusinessTime = ''
+      }
+      // 签名
+      if (type === 'sign') {
+        this.signBackgroundColor = false
+        this.detail.sign = ''
+        this.detail.signId = ''
+      }
     },
     // 身份证识别
     getIdCard(params) {
@@ -1133,6 +1150,15 @@ export default {
       clientInfoApi.getMchInfo({ id }).then(res => {
         res.obj.businessType = String(res.obj.businessType) || '2'
         this.detail = Object.assign({}, this.detail, res.obj)
+        clientInfoApi.getImgById(this.detail.epresentativePhotoId).then(res=>{
+          this.detail[epresentativePhotoId] = res.data;
+        })
+        clientInfoApi.getImgById(this.detail.epresentativePhotoId2).then(res=>{
+          this.detail[epresentativePhotoId2] = res.data;
+        })
+        clientInfoApi.getImgById(this.detail.holdingCardId).then(res=>{
+          this.detail[holdingCardId] = res.data;
+        })
         if(this.detail.signId){
           this.signBackgroundColor = true;
         }else{
@@ -1201,20 +1227,15 @@ export default {
 
   filters: {
     // 获取图片
-    loadImage(id) {
+    /*loadImage(id) {
+      // 没有地方调用该方法
       return id ? url + `/fms/upload/resource/thumbnail/${id}` : ''
-    },
-    previewLoadImage(id) {
+    },*/
+    async previewLoadImage(id) {
 
-      // console.log(888888,id)
-      return id ? url + `/fms/upload/resource/${id}` : ''
-      /*if(id.indexOf('data:image/png;base64')===0){
-        //兼容签名的
-        return id
-      }else{
-        return id ? url + `/fms/upload/resource/${id}` : ''
-      }
-*/
+      let base64 = await clientInfoApi.getImgById(id)
+      // console.log('base64=========================',base64)
+      return base64.data;
     },
     // app状态过滤
     appStatusFilter(index) {
