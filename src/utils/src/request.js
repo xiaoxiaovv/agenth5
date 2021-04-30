@@ -23,9 +23,10 @@ const instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use((config) => {
   if (sessionStorage.token) {
-    config.headers['token'] = sessionStorage.token
+    config.headers['token'] = sessionStorage.token || "f9094e8304194a7c9db9dcc832cb6e7f"
   }
-  config.headers['token'] = "004b6126ced04069acb21bf5a766a3d7"
+
+  config.headers['token'] = sessionStorage.token || "1eb310fc1c9f4f8781dc0be591c1981d"
   if (config.jsonHeader) {
     config.headers['Content-type'] = 'application/json; charset=utf-8'
   } else {

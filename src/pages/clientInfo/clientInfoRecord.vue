@@ -11,7 +11,7 @@
            @click="onBack"
            v-if="!outside"></div>
       <div v-else></div>
-      <div class="title">{{detail.merchantName}}</div>
+      <div class="title">{{fxUserInfo&&fxUserInfo.realName || ''}}</div>
       <div class="pass"></div>
     </div>
 
@@ -463,6 +463,7 @@ export default {
   mixins: [indexMixins],
   data() {
     return {
+      fxUserInfo:null,
       requiredData:[],
       signBackgroundColor:false,
       type: '', // 1-身份证有效期
@@ -574,29 +575,66 @@ export default {
   },
 
   created() {
+    //所有的回调都必须放到this.plusReadyFn里执行，这里异步回调得到app传进来的用户信息
+    // this.detail = JSON.parse(sessionStorage.getItem('detail'))
     console.log('进来', location.href)
-    if (this.$route.query.token) {
-      sessionStorage.token = this.$route.query.token
-      // sessionStorage.companyId = this.$route.query.companyId
-      sessionStorage.link = location.href
-      // sessionStorage.iframe = this.$route.query.iframe || false
-    }
-    // if (sessionStorage.iframe) {
-    //   this.iframe = sessionStorage.iframe
-    // }
-    if (this.$route.query.from) {
-      this.from = this.$route.query.from
-      sessionStorage.from = this.from
-      this.outside = true
-      fromReactNativeLocal.set(this.from)
-    }
+    document.addEventListener("plusready",this.plusReadyFn,false);
+
+
+
+  },
+  mounted() {
+    // console.log('---11', this.$route)
+    // this.detail.id = this.$route.query.id
+
+
+
+    // console.log('id 1', JSON.parse(clientInfoDetailIDLocal.get()))
+    /*if (this.detail.id) {
+      this.getMchInfo()
+      // this.sourceData = getCateGory()
+      // this.tmpSourceData = this.sourceData
+    } else {
+      this.$toast.error('详情数据丢失')
+    }*/
   },
   methods: {
+    plusReadyFn(){
+      this.fxUserInfo = plus.webview.getWebviewById("enterChannel").data
+      // alert(this.fxUserInfo.token)
+      sessionStorage.token = this.fxUserInfo.token;
+      this.detail.legalPersonPhone?this.detail.legalPersonPhone = this.detail.legalPersonPhone :this.detail.legalPersonPhone = this.fxUserInfo.mobile
+      if (this.$route.query.token) {
+        sessionStorage.token = this.$route.query.token
+        // sessionStorage.companyId = this.$route.query.companyId
+        sessionStorage.link = location.href
+        // sessionStorage.iframe = this.$route.query.iframe || false
+      }
+      // if (sessionStorage.iframe) {
+      //   this.iframe = sessionStorage.iframe
+      // }
+      if (this.$route.query.from) {
+        this.from = this.$route.query.from
+        sessionStorage.from = this.from
+        this.outside = true
+        fromReactNativeLocal.set(this.from)
+      }
+      if(sessionStorage.fromNextPage){
+        //从上一页返回的将不再请求进件信息接口
+        this.detail = JSON.parse(sessionStorage.getItem('detail'))
+
+        // Object.assign(this.detail,JSON.parse(sessionStorage.getItem('detail')))
+      }else{
+        this.getMchInfo()
+      }
+
+      // alert(JSON.stringify(plus.webview.getWebviewById("mendMerchant").data))
+    },
     getSignStr(signStr){
       // this.$set(this.detail,signStr)
       this.detail.sign = signStr
       this.signBackgroundColor = true
-      console.log('12222222222222222',this.sign)
+      // console.log('12222222222222222',this.sign)
       this.openSignDialog = false
     },
     //签名
@@ -836,18 +874,23 @@ export default {
           this.$toast.error('请填写正确的身份证号')
           return
         }
-        let detail = Object.assign({},this.detail)
-        delete detail.epresentativePhotoSrc
+        // let detail = Object.assign({},this.detail)
+        console.log('this.detail--------------------------->',this.detail)
+        sessionStorage.setItem('detail',JSON.stringify(this.detail));
+        this.$router.push({
+          name: CLIENT_INFO_RECORD_NEXT
+        })
+        /*delete detail.epresentativePhotoSrc
         delete detail.epresentativePhoto2Src
-        delete detail.holdingCardSrc
-        clientInfoApi.submitMchIfo(detail).then(res => {
+        delete detail.holdingCardSrc*/
+        /*clientInfoApi.submitMchIfo(detail).then(res => {
           this.$router.push({
             name: CLIENT_INFO_RECORD_NEXT,
             query: {
               id: this.detail.id
             }
           })
-        })
+        })*/
       } else {
         this.$toast.error('有内容未填入')
       }
@@ -981,6 +1024,7 @@ export default {
       if (file) {
         clientInfoApi.uploadImage(file).then(
           res => {
+            // alert(123)
             if (res.code === 0) {
               this.$toast.success('图片上传成功')
               this.$refs[type].$refs.file = ''
@@ -1018,9 +1062,9 @@ export default {
                 })
               } else if (type === 'storePhoto') {
                 this.detail.businessLicensePhotoId = photoId
-                this.getLicense({
+               /* this.getLicense({
                   pathId: photoId
-                })
+                })*/
               }else if(type === 'inHand'){
                 this.$set(this.detail, 'holdingCardId', photoId)
                 clientInfoApi.getImgById(photoId).then(res=>{
@@ -1065,7 +1109,8 @@ export default {
       if (type === 'inHand') {
         this.detail.holdingCardId = ''
       }
-      // 营业执照
+
+     /* // 营业执照
       if (type === 'license') {
         this.detail.businessLicensePhotoId = ''
         this.detail.license = ''
@@ -1075,18 +1120,7 @@ export default {
         this.detail.person = ''
         this.detail.startBusinessTime = ''
         this.detail.endBusinessTime = ''
-      }
-      // 营业执照
-      if (type === 'license') {
-        this.detail.businessLicensePhotoId = ''
-        this.detail.license = ''
-        this.detail.businessLicenseName = ''
-        this.detail.businessType = '2'
-        this.detail.registerAddress = ''
-        this.detail.person = ''
-        this.detail.startBusinessTime = ''
-        this.detail.endBusinessTime = ''
-      }
+      }*/
       // 签名
       if (type === 'sign') {
         this.signBackgroundColor = false
@@ -1099,21 +1133,21 @@ export default {
       clientInfoApi.getIdCard(params).then(res => {
         if (params.type === 'face') {
           let obj = {}
-          obj.representativeName = res.obj.name
-          obj.certificateNum = res.obj.idNum
+          obj.representativeName = res.data.name
+          obj.certificateNum = res.data.idNum
           this.detail = Object.assign({}, this.detail, obj)
         } else if (params.type === 'back') {
           let obj = {}
-          // obj.startCertificateTime = res.obj.startDate
-          // obj.endCertificateTime = res.obj.endDate
+          // obj.startCertificateTime = res.data.startDate
+          // obj.endCertificateTime = res.data.endDate
 
-          if (res.obj.startDate && res.obj.startDate.indexOf('-') !== -1) {
-            obj.startCertificateTime = res.obj.startDate
+          if (res.data.startDate && res.data.startDate.indexOf('-') !== -1) {
+            obj.startCertificateTime = res.data.startDate
           } else {
             obj.startCertificateTime = ''
           }
-          if (res.obj.endDate && res.obj.endDate.indexOf('-') !== -1) {
-            obj.endCertificateTime = res.obj.endDate
+          if (res.data.endDate && res.data.endDate.indexOf('-') !== -1) {
+            obj.endCertificateTime = res.data.endDate
           } else {
             obj.endCertificateTime = ''
           }
@@ -1123,34 +1157,49 @@ export default {
     },
     // 营业执照
 
-    getLicense(params) {
+    /*getLicense(params) {
       clientInfoApi.getLicense(params).then(res => {
         let obj = {}
-        obj.registerAddress = res.obj.address
-        obj.businessType = res.obj.type === '企业' ? '1' : '2'
-        obj.businessLicenseName = res.obj.name
-        obj.license = res.obj.regNum
-        obj.person = res.obj.person
-        if (res.obj.establishDate && res.obj.establishDate.indexOf('-') !== -1) {
-          obj.startBusinessTime = res.obj.establishDate
+        obj.registerAddress = res.data.address
+        obj.businessType = res.data.type === '企业' ? '1' : '2'
+        obj.businessLicenseName = res.data.name
+        obj.license = res.data.regNum
+        obj.person = res.data.person
+        if (res.data.establishDate && res.data.establishDate.indexOf('-') !== -1) {
+          obj.startBusinessTime = res.data.establishDate
         } else {
           obj.startBusinessTime = ''
         }
-        if (res.obj.validPeriod && res.obj.validPeriod.indexOf('-') !== -1) {
-          obj.endBusinessTime = res.obj.validPeriod
+        if (res.data.validPeriod && res.data.validPeriod.indexOf('-') !== -1) {
+          obj.endBusinessTime = res.data.validPeriod
         } else {
           obj.endBusinessTime = ''
         }
-        obj.businessType = res.obj.businessType
+        obj.businessType = res.data.businessType
         this.detail = Object.assign({}, this.detail, obj)
       })
-    },
+    },*/
     // 获取列表详情
-    getMchInfo(id) {
-      clientInfoApi.getMchInfo({ id }).then(res => {
-        res.obj.businessType = String(res.obj.businessType) || '2'
-        this.detail = Object.assign({}, this.detail, res.obj)
-        clientInfoApi.getImgById(this.detail.epresentativePhotoId).then(res=>{
+    getMchInfo() {
+      // let that = this;
+      clientInfoApi.getMchInfo().then(res => {
+        // res.data.businessType = String(res.data.businessType) || '2'
+        if(!res.data){
+          return
+        }
+        this.detail = Object.assign({}, this.detail, res.data)
+        this.detail.legalPersonPhone ? this.detail.legalPersonPhone = this.detail.legalPersonPhone : this.detail.legalPersonPhone = this.fxUserInfo.mobile
+        for(let key in this.detail){
+          if(key.includes('PhotoId') || key.includes('PicId') || key.includes('CardId')){
+            let tempName = key.replace(/Id/,'')+'Src'
+
+            clientInfoApi.getImgById(this.detail[key]).then(res=>{
+              console.log('this.detail=======================---------',this.detail)
+              this.$set(this.detail,tempName,res.data)
+            })
+          }
+        }
+        /*clientInfoApi.getImgById(this.detail.epresentativePhotoId).then(res=>{
           this.detail[epresentativePhotoId] = res.data;
         })
         clientInfoApi.getImgById(this.detail.epresentativePhotoId2).then(res=>{
@@ -1158,7 +1207,7 @@ export default {
         })
         clientInfoApi.getImgById(this.detail.holdingCardId).then(res=>{
           this.detail[holdingCardId] = res.data;
-        })
+        })*/
         if(this.detail.signId){
           this.signBackgroundColor = true;
         }else{
@@ -1166,15 +1215,18 @@ export default {
           this.requiredData.push('sign')
         }
         console.log('this.detail', this.detail)
+      },
+      error => {
+        this.$toast.error('详情数据丢失')
       })
     },
 
     // 初始化detail对象
-    initDetail() {
+   /* initDetail() {
       this.detail = JSON.parse(clientInfoDetailLocal.get())
       this.merchantName = JSON.parse(clientInfoDetailMerchantNameLocal.get())
       this.merchantName = this.merchantName.merchantName
-    },
+    },*/
     // 转化app status
     transferAppStatus(status) {
       return status === 1 || status === '1' ? 0 : 1
@@ -1272,20 +1324,8 @@ export default {
       }
       return ''
     }
-  },
-
-  mounted() {
-    console.log('---11', this.$route)
-    this.detail.id = this.$route.query.id
-
-    console.log('id 1', JSON.parse(clientInfoDetailIDLocal.get()))
-    if (this.detail.id) {
-      this.getMchInfo(this.detail.id)
-      // this.sourceData = getCateGory()
-      // this.tmpSourceData = this.sourceData
-    } else {
-      this.$toast.error('详情数据丢失')
-    }
   }
+
+
 }
 </script>

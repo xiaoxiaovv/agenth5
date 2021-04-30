@@ -67,7 +67,7 @@ export default {
    */
   getIdCard(params) {
     return requestAxios({
-      url: `/batchFeed/cert/idCard`,
+      url: `/api/supervision/api/public/idCard`,
       method: 'get',
       params
     })
@@ -226,18 +226,17 @@ export default {
     })
   },
 
-  // 获取列表信息（已填写过的信息）
-  getMchInfo(params) {
+  // 获取列表信息 通过头 token 获取
+  getMchInfo() {
     return requestAxios({
-      url: `/merchant/mch_info/feedDetail`,
-      method: 'get',
-      params
+      url: `/api/supervision/api/dataincominginfo`,
+      method: 'get'
     })
   },
   // 提交列表信息
   submitMchIfo(data) {
     return requestAxios({
-      url: `/api/supervision/dataincominginfo`,
+      url: `/api/supervision/api/dataincominginfo`,
       method: 'post',
       data,
       jsonHeader: true
@@ -265,7 +264,7 @@ export default {
    */
   getBankCard(pathId) {
     return requestAxios({
-      url: `/batchFeed/cert/bankCard`,
+      url: `/api/supervision/api/public/bankCnaps`,
       method: 'get',
       params: {
         pathId
@@ -299,9 +298,9 @@ export default {
    * 获取银行省市树
    * @param {*} pathId
    */
-  getCodeList(pathId) {
+  getCodeList() {
     return requestAxios({
-      url: '/batchFeed/sxf/findBankAreaTree',
+      url: '/api/supervision/api/public/cityTreeForIncome',
       method: 'get'
     })
   },
@@ -311,9 +310,10 @@ export default {
    */
   getBranchCode(params) {
     return requestAxios({
-      url: '/batchFeed/sxf/findBankBranchCode',
-      method: 'get',
-      params
+      url: '/api/supervision/api/public/bankCnapsCode',
+      method: 'post',
+      data: params,
+      jsonHeader: true
     })
   },
   /**
@@ -322,9 +322,10 @@ export default {
   */
   getBranchCodeNew(params) {
     return requestAxios({
-      url: '/batchFeed/wx/get_bank_list_new',
-      method: 'get',
-      params
+      url: '/api/supervision/api/public/bankCnapsCode',
+      method: 'post',
+      data: params,
+      jsonHeader: true
     })
   },
   /**

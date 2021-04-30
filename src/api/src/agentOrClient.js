@@ -279,10 +279,8 @@ export default {
    */
   getProviceNew(params) {
     return requestAxios({
-      url: `/common/province/tree_new`,
-      method: 'GET',
-      params: params,
-      jsonHeader: true
+      url: `/api/supervision/api/public/cityTreeForIncome`,
+      method: 'GET'
     })
   },
   /**

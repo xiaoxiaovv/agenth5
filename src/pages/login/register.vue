@@ -177,13 +177,16 @@ export default {
   },
   created() {
 
-    this.id = this.$route.query.id
+    // this.id = this.$route.query.id
 
-    if (this.$route.query.token) {
-      sessionStorage.token = this.$route.query.token
-      setTimeout(() => {
+    if (this.$route.query.userInfoJsonStr) {
+      this.fxUserInfo = JSON.parse(decodeURI(this.$route.query.userInfoJsonStr));
+      //    todo 手动赋值
+      sessionStorage.token = this.fxUserInfo.token || ''
+      this.params.inviteCode = this.fxUserInfo.inviteCode
+      /*setTimeout(() => {
         this.loginByTokenToGetInfo()
-      })
+      })*/
     }
     if (this.$route.query.from) {
       this.from = this.$route.query.from
@@ -191,9 +194,9 @@ export default {
       console.log('RN来源', fromReactNativeLocal.get())
       console.log('RN来源', this.from)
     }
-    if (this.$route.query.fxUserId) {
+    /*if (this.$route.query.fxUserId) {
       this.fxUserId = this.$route.query.fxUserId
-    }
+    }*/
 
   },
   mounted() {
@@ -213,10 +216,14 @@ export default {
       setInterval(function (){
         if(that.timeCount == 1){
           clearInterval(timer)
-          this.getAuthCodeBtnDisabled = false
+          that.getAuthCodeBtnDisabled = false
+          that.authCodeBtnText = '获取验证码'
+          that.timeCount = 60
+          // console.log('that.timeCount1==================',that.timeCount)
         }else {
           that.timeCount--
           that.authCodeBtnText = '已发送'+that.timeCount+'s'
+          console.log('that.timeCount2==================',that.timeCount)
         }
 
       },1000)
@@ -272,8 +279,9 @@ export default {
         "serviceId": "1186094988932800555"
       }*/
       let params = Object.assign({}, this.params)
-      params.inviterId = '1186094988932800513';
-      params.serviceId = '1186094988932800555';
+      //    todo 手动赋值
+      params.inviterId = this.fxUserInfo.id || '1186094988932800513';
+      params.serviceId = this.fxUserInfo.serviceId || '1186094988932800555';
       registerApi.register(params).then(
         res=>{
           this.$toast.message('注册成功')

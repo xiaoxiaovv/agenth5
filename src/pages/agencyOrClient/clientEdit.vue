@@ -337,10 +337,10 @@ export default {
      * */
     addInfo(params) {
       let that = this
-      // params.serviceId = this.fxUserInfo.serviceId
-      // params.userId = this.fxUserInfo.id
-      params.serviceId = '1186094988932800555'
-      params.userId = '1186094988932800513'
+     /* params.serviceId = '1186094988932800555'
+      params.userId = '1385511860660371458'*/
+      params.serviceId = this.fxUserInfo.serviceId
+      params.userId = this.fxUserInfo.id
       agentOrClient.addClient(params).then(res => {
         this.$toast.message('操作成功')
        /* if (this.from === 'react-native') {

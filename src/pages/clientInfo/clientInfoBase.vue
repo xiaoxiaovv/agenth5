@@ -42,7 +42,7 @@
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
             <img v-if="detail.storeEntrancePicId"
-                 :src="detail.storeEntrancePicId | previewLoadImage"
+                 :src="detail.storeEntrancePicSrc"
                  @click="previewImage(detail.storeEntrancePicId)" />
           </div>
           <p class="img_intro">店内门头照</p>
@@ -63,13 +63,13 @@
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
             <img v-if="detail.indoorPicId"
-                 :src="detail.indoorPicId | previewLoadImage"
+                 :src="detail.indoorPicSrc"
                  @click="previewImage(detail.indoorPicId)" />
           </div>
           <p class="img_intro">店内环境照片</p>
         </div>
 
-        <div class="img_wp img_wp_width">
+        <div class="img_wp img_wp_width mt-10">
           <!-- <input class="file"
                  type="file"
                  ref="indoor"
@@ -86,7 +86,7 @@
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
             <img v-if="detail.cashierDeskPicId"
-                 :src="detail.cashierDeskPicId | previewLoadImage"
+                 :src="detail.cashierDeskPicSrc"
                  @click="previewImage(detail.cashierDeskPicId)" />
           </div>
           <p class="img_intro">收银台照片</p>
@@ -112,7 +112,7 @@
                  placeholder="请填写(具体到门牌号)" />
         </div>
       </div>
-      <div class="item">
+      <!--<div class="item">
         <div class="subtitle">
           <span class="star">*</span>联系人
         </div>
@@ -120,8 +120,8 @@
           <input v-model="detail.contact"
                  placeholder="请填写" />
         </div>
-      </div>
-      <div class="item">
+      </div>-->
+      <!--<div class="item">
         <div class="subtitle">
           <span class="star">*</span>手机号码
         </div>
@@ -130,8 +130,8 @@
                  v-model="detail.phone"
                  placeholder="请填写" />
         </div>
-      </div>
-      <div class="item">
+      </div>-->
+      <!--<div class="item">
         <div class="subtitle">
           <span class="star">*</span>常用邮箱
         </div>
@@ -139,8 +139,8 @@
           <input v-model="detail.email"
                  placeholder="请填写" />
         </div>
-      </div>
-      <div class="item">
+      </div>-->
+      <!--<div class="item">
         <div class="subtitle">
           <span class="star">*</span>客服电话
         </div>
@@ -149,8 +149,8 @@
                  v-model="detail.cusServiceTel"
                  placeholder="请填写" />
         </div>
-      </div>
-      <div class="item">
+      </div>-->
+      <!--<div class="item">
         <div class="subtitle">
           <span class="star">*</span>商户简称
         </div>
@@ -158,7 +158,7 @@
           <input v-model="detail.shortName"
                  placeholder="请填写" />
         </div>
-      </div>
+      </div>-->
       <div class="match-width box align-center">
         <div class="next box align-center"
              @click="openAlertDialog">
@@ -217,6 +217,21 @@ export default {
       open: false
     }
   },
+  created() {
+    // sessionStorage.fromNextPage = true;
+    //已注册的话需要展示从第一页获取的信息
+    this.detail = JSON.parse(sessionStorage.getItem('detail'))
+    this.cascaderArr = [this.detail.regProvCd, this.detail.regCityCd, this.detail.regDistCd]
+  },
+  mounted() {
+    // this.detail.id = this.$route.query.id
+    this.getProviceAndCity()
+    /*if (this.detail.id) {
+      this.getMchInfo(this.detail.id)
+    } else {
+      this.$toast.error('详情数据丢失')
+    }*/
+  },
   methods: {
     // 返回
     onBack() {
@@ -261,12 +276,12 @@ export default {
       return arr
     },
     /**
-     * 获取省市区
+     * 获取省市区三级
      */
     async getProviceAndCity() {
       let that = this
-      await agentOrClient.getProviceNew({ level: 3 }).then(res => {
-        that.cascaderTree = this.sortArr(res.obj)
+      await agentOrClient.getProviceNew().then(res => {
+        that.cascaderTree = this.sortArr(res.data)
       })
     },
     /**
@@ -289,17 +304,17 @@ export default {
       }
     },
     // 获取列表详情（提交过的数据）
-    getMchInfo(id) {
+    /*getMchInfo(id) {
       clientInfoApi.getMchInfo({ id }).then(res => {
-        this.cascaderArr = [res.obj.regProvCd, res.obj.regCityCd, res.obj.regDistCd]
-        this.detail = Object.assign({}, this.detail, res.obj);
-        /*this.detail.address = this.detail.address || this.detail.registerAddress;
+        this.cascaderArr = [res.data.regProvCd, res.data.regCityCd, res.data.regDistCd]
+        this.detail = Object.assign({}, this.detail, res.data);
+        /!*this.detail.address = this.detail.address || this.detail.registerAddress;
         this.detail.contact = this.detail.contact || this.detail.representativeName;
         this.detail.phone = this.detail.phone || this.detail.legalPersonPhone;
         this.detail.cusServiceTel = this.detail.cusServiceTel || this.detail.legalPersonPhone;
-        this.detail.shortName = this.detail.shortName || this.detail.merchantName;*/
+        this.detail.shortName = this.detail.shortName || this.detail.merchantName;*!/
       })
-    },
+    },*/
     onActionSheetClose() {
       this.open = false
     },
@@ -312,7 +327,7 @@ export default {
     },
     // 下一步
     onNext() {
-      let requiredData = ['storeEntrancePicId', 'indoorPicId', 'cashierDeskPicId', 'address', 'contact', 'phone', 'email', 'cusServiceTel', 'shortName', 'regProvCd', 'regCityCd']
+      let requiredData = ['storeEntrancePicId', 'indoorPicId', 'cashierDeskPicId', 'address',/* 'contact', 'phone', 'email', 'cusServiceTel', 'shortName',*/ 'regProvCd', 'regCityCd']
       let flag = true
       for (let i in this.detail) {
         if (this.detail.hasOwnProperty(i) && requiredData.indexOf(i) !== -1) {
@@ -323,7 +338,7 @@ export default {
         }
       }
       if (flag) {
-        if (!validPhone(this.detail.phone)) {
+       /* if (!validPhone(this.detail.phone)) {
           this.$toast.error('手机号码格式错误')
           return
         }
@@ -334,12 +349,16 @@ export default {
         if (!this.detail.cusServiceTel || !Number(this.detail.cusServiceTel)) {
           this.$toast.error('客服电话格式错误')
           return
-        }
+        }*/
 
         this.closeAlertDialog()
         // 跳转到详情
-        clientInfoApi.submitMchIfo(this.detail).then(res => {
-          if (res.code === 200) {
+        sessionStorage.setItem('detail',JSON.stringify(this.detail));
+        this.$router.push({
+          name: CLIENT_INFO_RECORD_LAST,
+        })
+       /* clientInfoApi.submitMchIfo(this.detail).then(res => {
+          if (res.code === 0) {
             this.$router.push({
               name: CLIENT_INFO_RECORD_LAST,
               query: {
@@ -351,7 +370,7 @@ export default {
           }
         }, (err) => {
           this.$toast.error(err.msg)
-        })
+        })*/
       } else {
         this.$toast.error('有内容未填入')
       }
@@ -360,16 +379,25 @@ export default {
     onFileChange(file, type) {
       if (file) {
         clientInfoApi.uploadImage(file).then(res => {
-          if (res.code === 200) {
+          if (res.code === 0) {
             this.$toast.success('图片上传成功')
             this.$refs[type].$refs.file.value = ''
-            let photoId = res.obj
+            let photoId = res.data.id
             if (type === 'out') { // 店内门头照
               this.$set(this.detail, 'storeEntrancePicId', photoId)
+              clientInfoApi.getImgById(photoId).then(res=>{
+                this.$set(this.detail, 'storeEntrancePicSrc', res.data)
+              })
             } else if (type === 'indoor') { // 店内环境照片
               this.$set(this.detail, 'indoorPicId', photoId)
+              clientInfoApi.getImgById(photoId).then(res=>{
+                this.$set(this.detail, 'indoorPicSrc', res.data)
+              })
             }else if (type === 'cashierDeskPicId') { // 店内环境照片
               this.$set(this.detail, 'cashierDeskPicId', photoId)
+              clientInfoApi.getImgById(photoId).then(res=>{
+                this.$set(this.detail, 'cashierDeskPicSrc', res.data)
+              })
             }
           } else {
             this.$toast.error(res.msg)
@@ -387,29 +415,21 @@ export default {
     //     this.isImagePreview = true
     //   }
     // },
-    createImgUrl(id) {
+   /* createImgUrl(id) {
       return id ? url + `/fms/upload/resource/${id}` : ''
-    }
+    }*/
   },
 
   filters: {
     // 获取图片
-    loadImage(id) {
+    /*loadImage(id) {
       return id ? url + `/fms/upload/resource/thumbnail/${id}` : ''
     },
     previewLoadImage(id) {
       return id ? url + `/fms/upload/resource/${id}` : ''
-    }
-  },
-
-  mounted() {
-    this.detail.id = this.$route.query.id
-    this.getProviceAndCity()
-    if (this.detail.id) {
-      this.getMchInfo(this.detail.id)
-    } else {
-      this.$toast.error('详情数据丢失')
-    }
+    }*/
   }
+
+
 }
 </script>
