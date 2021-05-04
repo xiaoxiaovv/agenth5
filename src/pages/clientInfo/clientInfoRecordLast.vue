@@ -1101,14 +1101,15 @@
 <!--易生验证码-->
       <mu-dialog title="提示"
                  width="600"
-                 max-width="80%"
+                 max-width="94%"
                  :esc-press-close="false"
                  :overlay-close="false"
                  :open.sync="openAlert">
         <!--      <p class="fs-14 mb-12">请输入登录密码</p>-->
         <input
           type="text"
-          placeholder="请输入易生手机验证码"
+          placeholder="请查看手机并在此处输入易生手机验证码"
+          style="border: 1px solid #dddddd;width: 104%"
           v-model="yiSMsgCode" />
         <mu-button slot="actions"
                    flat
@@ -1117,7 +1118,7 @@
         <mu-button slot="actions"
                    flat
                    color="primary"
-                   @click="sendYiSMsgCode">确定</mu-button>
+                   @click="sendYiSMsgCode">提交</mu-button>
       </mu-dialog>
       <!-- action-sheet -->
       <mu-bottom-sheet :open.sync="open">
