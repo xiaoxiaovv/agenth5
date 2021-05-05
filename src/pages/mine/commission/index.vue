@@ -7,16 +7,16 @@ import { isProd } from '../../config';
 <!--    <div class="commission-index__padding"></div>-->
 
     <!-- 导航栏 -->
-    <div class="commission-index__nav align-hor-bet box plr-40 ">
-<!--      <div class="pass"></div>-->
+    <!--<div class="commission-index__nav align-hor-bet box plr-40 ">
+
       <div class="icon iconfont iconreturn" @click="$router.back(-1)"></div>
       <div class="title">提现管理</div>
       <div class="search"
            @click="onSearch">
-        <!-- <img
-          class="match-parent iconfont iconsearch"/> -->
+        &lt;!&ndash; <img
+          class="match-parent iconfont iconsearch"/> &ndash;&gt;
       </div>
-    </div>
+    </div>-->
 
     <ul class="pandect-data align-hor-bet">
       <li class="">
@@ -108,6 +108,10 @@ import { isProd } from '../../config';
     <div class="commission-index__out-login center-flex" >
       <p @click="toApply">申请提现</p>
     </div>
+    <div class="commission-index__out-login center-flex  clearfix clear" >
+      <p @click="toApply"></p>
+    </div>
+
     <!-- 补脚 -->
 <!--    <div class="commission-index__footer"></div>-->
     <mu-dialog title="提示"

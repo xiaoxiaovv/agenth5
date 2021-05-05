@@ -2,18 +2,18 @@
   <div class="client-info-detail client-info-record frame-container box align-default">
 
     <!-- 补白 -->
-    <div class="client-info-detail__padding"
-         v-if="!outside"></div>
+    <!--<div class="client-info-detail__padding"
+         v-if="!outside"></div>-->
 
     <!-- 导航栏 -->
-    <div class="client-info-detail__nav box plr-30 align-hor-bet">
+ <!--   <div class="client-info-detail__nav box plr-30 align-hor-bet">
       <div class="icon iconfont iconreturn"
            @click="onBack"
            v-if="!outside"></div>
       <div v-else></div>
       <div class="title">{{fxUserInfo&&fxUserInfo.realName || ''}}</div>
       <div class="pass"></div>
-    </div>
+    </div>-->
 
 
     <!-- 信息主体 -->
@@ -607,7 +607,7 @@ export default {
       if (this.$route.query.token) {
         sessionStorage.token = this.$route.query.token
         // sessionStorage.companyId = this.$route.query.companyId
-        sessionStorage.link = location.href
+        // sessionStorage.link = location.href
         // sessionStorage.iframe = this.$route.query.iframe || false
       }
       // if (sessionStorage.iframe) {

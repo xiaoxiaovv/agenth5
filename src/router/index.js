@@ -44,7 +44,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   console.log(to)
-  if (to.path.indexOf('client_info_') !== -1 || to.path.indexOf('clientEdit') !== -1) {
+  if (to.path.indexOf('client_info_') !== -1 || to.path.indexOf('clientEdit') !== -1 || to.path.indexOf('commission') !== -1) {
     // clientEdit-新增商户
     console.log('进入进件')
     return next()

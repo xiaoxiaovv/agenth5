@@ -6,10 +6,10 @@
        data-mu-loading-overlay-color="rgba(0, 0, 0, .6)">
 
     <!-- 补白 -->
-    <div class="client-info-detail__padding"></div>
+<!--    <div class="client-info-detail__padding"></div>-->
 
     <!-- 导航栏 -->
-    <div class="client-info-detail__nav box plr-30 align-hor-bet">
+    <div class="client-info-detail__nav box plr-30 align-hor-bet mt-20">
       <div class="icon iconfont  iconreturn"
            @click="onBack">
       </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="text"
            @click="onBack">
-        上一步
+
       </div>
     </div>
 

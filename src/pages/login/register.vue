@@ -25,7 +25,7 @@
             <mu-text-field v-model.trim="params.realName"
                            autocomplete="off"
                            underline-color="#F0F0F0"
-                           placeholder="请输入身份证姓名"></mu-text-field>
+                           placeholder="请输入姓名(与身份证一致)"></mu-text-field>
           </mu-form-item>
           <mu-form-item label=""
                         prop="mobile"
@@ -213,7 +213,7 @@ export default {
       let that = this;
       this.authCodeBtnText = '已发送'+this.timeCount+'s'
       // this.timeCount = 59
-      setInterval(function (){
+      timer = setInterval(function (){
         if(that.timeCount == 1){
           clearInterval(timer)
           that.getAuthCodeBtnDisabled = false
@@ -245,7 +245,7 @@ export default {
 
       let msg = ''
      if (!this.params.realName) {
-        msg = '请填写身份证姓名'
+        msg = '请填写姓名(与身份证一致)'
       } else if (!this.params.mobile) {
         msg = '请填写手机号'
       } else if (!(/^1\d{10}$/.test(this.params.mobile))) {

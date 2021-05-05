@@ -26,7 +26,7 @@
                            icon="*"
                            underline-color="#F0F0F0"
                            prefix="姓名"
-                           placeholder="请输入身份证姓名"></mu-text-field>
+                           placeholder="请输入姓名(与身份证一致)"></mu-text-field>
           </mu-form-item>
           <!--<mu-form-item label=""
                         prop="phone"
