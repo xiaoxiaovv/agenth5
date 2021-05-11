@@ -4,7 +4,7 @@ import { isProd } from '../../config';
   <div class="commission-index frame-container box align-default">
 
     <!-- 补白 -->
-<!--    <div class="commission-index__padding"></div>-->
+    <div class="commission-index__padding"></div>
 
     <!-- 导航栏 -->
     <!--<div class="commission-index__nav align-hor-bet box plr-40 ">
@@ -19,10 +19,15 @@ import { isProd } from '../../config';
     </div>-->
 
     <ul class="pandect-data align-hor-bet">
-      <li class="">
+      <li class="left">
         <div>
-          <p class="pandect-data-price vm-ell">{{ allCommissionTotal || 0 }}</p>
-          <p class="pandect-data-name">总分润额（元）</p>
+          <p class="pandect-data-price vm-ell">{{ commissionTotal || '--' }}（元）</p>
+          <div class="pandect-data-name">
+            <span @click="getCommission(1)" :class="[currentCommission == 1 ? 'commissionActive' : '']">总分润额 </span>
+            <span @click="getCommission(2)" :class="['ml-30',currentCommission == 2 ? 'commissionActive' : '']">当日 </span>
+            <span @click="getCommission(3)" :class="['ml-30',currentCommission == 3 ? 'commissionActive' : '']">三日 </span>
+            <span @click="getCommission(4)" :class="['ml-30',currentCommission == 4 ? 'commissionActive' : '']">当月</span>
+          </div>
         </div>
       </li>
       <!--<li class="fl" >
@@ -31,10 +36,10 @@ import { isProd } from '../../config';
           <p class="pandect-data-name">已提现（元）</p>
         </div>
       </li>-->
-      <li class="" >
+      <li class="right" >
         <div>
-          <p class="pandect-data-price vm-ell">{{ canCommission || 0 }}</p>
-          <p class="pandect-data-name">未提现（元）</p>
+          <p class="pandect-data-price vm-ell">{{ canCommission || '--' }}（元）</p>
+          <p class="pandect-data-name">未提现</p>
         </div>
       </li>
     </ul>
@@ -145,7 +150,8 @@ export default {
   components: { VmaNoData },
   data() {
     return {
-      hasCommissionAuth: false, //是否拥有提现权限
+      currentCommission: 1,
+
       // isEdit: false,
       // tabList: ['全部', '签约', '未签约', '待审核', '驳回'],
       tabList: [
@@ -183,7 +189,7 @@ export default {
       pageSize: 10,
       isLoading: false,
       status: '', // 签约状态
-      allCommissionTotal: '', //佣金总额
+      commissionTotal: '--', //佣金总额
       canCommission: '', //未提现佣金
     }
   },
@@ -192,40 +198,49 @@ export default {
       // vm.refresh()
     })
   },*/
+  created() {
+    //所有的请求都应该在this.plusReadyFn这个回调里获取到token之后再发送请求
+    document.addEventListener("plusready",this.plusReadyFn,false);
+  },
   mounted() {
     // TODO
     // console.log('============================111')
-    let userInfo = afterLoginInfoLocal.getJSON()
-    this.companyId = userInfo.companyId
-    this.commissionGetBankCard();
+    // let userInfo = afterLoginInfoLocal.getJSON()
+    // this.companyId = userInfo.companyId
+
 
     // this.commissionApplyAllList()
     // this.getMerchantList()
   },
   methods: {
+    plusReadyFn(){
+      // alert('plusReady')
+      this.fxUserInfo = plus.webview.getWebviewById("cashOut").data
+      // alert(this.fxUserInfo.token)
+      sessionStorage.token = this.fxUserInfo.token;
+      sessionStorage.serviceId = this.fxUserInfo.serviceId;
+      this.commissionGetBankCard();
+      this.getCommTotal(1)
+    },
     closeAlertDialog() {
       this.openAlert = false
     },
-    // 获取佣金提现卡
+    // 获取佣金提现卡，用于判断是否存在卡
     commissionGetBankCard() {
-      commissionApi.commissionGetBankCard(this.companyId).then(res => {
-          this.hasCommissionAuth = true //该接口成功则证明有分佣提现权限
+      commissionApi.commissionGetBankCard().then(res => {
+
           //需要权限的逻辑--开始
           this.refresh()  //该方法只可以手动调用一次！！！！！
-          this.findCommissionCurrentMonth()
+          this.getCommTotal()
         //需要权限的逻辑--结束
-        if(res.obj && res.obj.cardNo === null){
+        if(res.data && res.data.accNo === null){
           this.cardNotExit = true
 
         }else{
-
+          sessionStorage.commissionBankCardId = res.data.id;
+          this.cardNotExit = false
         }
 
-      },
-      errRes => {
-        if(errRes.code === 403){
-          this.hasCommissionAuth = false
-        }
       }
       )
     },
@@ -235,13 +250,6 @@ export default {
       })
     },
     toApply(){
-      if(this.hasCommissionAuth){
-
-      }else{
-        this.$toast.error('您尚未拥有该权限')
-        return
-      }
-
       if(this.cardNotExit){
         this.openAlert = true
         return
@@ -261,14 +269,14 @@ export default {
         res => {
           this.loading = false
           this.isLoading = false
-          if (res.code === 200) {
+          if (res.code === 0) {
            /* for(let i=0;i<10;i++){
               this.dataList.push({
                 "accountNum": "",
                 "accountType": 0,
                 "actPayAmount": 0,
                 "actPayUser": "",
-                "allCommissionTotal": 0,
+                "commissionTotal": 0,
                 "applyAmount": 60,
                 "canCommission":6,
                 "cashOutAmount": 0,
@@ -290,9 +298,9 @@ export default {
               })
             }*/
 
-            this.dataList = [...this.dataList, ...res.obj.content]
+            this.dataList = [...this.dataList, ...res.data.content]
             console.log('this.dataList', this.dataList)
-            if (this.dataList.length < res.obj.totalElements) {
+            if (this.dataList.length < res.data.totalElements) {
               this.isLoadedAll = false
             } else {
               this.isLoadedAll = true
@@ -319,14 +327,14 @@ export default {
         res => {
           this.loading = false
           this.isLoading = false
-          if (res.code === 200) {
+          if (res.code === 0) {
             /*for(let i=0;i<10;i++){
               this.dataList.push({
                 "accountNum": "",
                 "accountType": 0,
                 "actPayAmount": 0,
                 "actPayUser": "",
-                "allCommissionTotal": 0,
+                "commissionTotal": 0,
                 "applyAmount": 50,
                 "canCommission":5,
                 "cashOutAmount": 0,
@@ -347,9 +355,9 @@ export default {
                 "validCode": ""
               })
             }*/
-            this.dataList = [...this.dataList, ...res.obj.content]
+            this.dataList = [...this.dataList, ...res.data.content]
             console.log('this.dataList', this.dataList)
-            if (this.dataList.length < res.obj.totalElements) {
+            if (this.dataList.length < res.data.totalElements) {
               this.isLoadedAll = false
             } else {
               this.isLoadedAll = true
@@ -369,23 +377,68 @@ export default {
         }
       )
     },
-    findCommissionCurrentMonth(){
-      commissionApi.findCommissionCurrentMonth().then(
+    getCommission(type){
+
+      if(type == 1){
+        // 总佣金
+        this.getCommTotal(type)
+      }else if(type == 2 || type == 3){
+      //  当天 || 3天
+        let dayNum = null;
+        if(type == 2){
+          dayNum = 1;
+        }else if(type == 3){
+          dayNum = 3;
+        }
+        commissionApi.getCommDayNum(dayNum).then(res=>{
+
+          if(res.code == 0) {
+            this.currentCommission = type;
+            if (res.data) {
+              this.commissionTotal = res.data.userCommission
+            } else {
+              this.commissionTotal = '0'
+            }
+          }
+        })
+
+      }else if(type == 4){
+      //  当月
+        commissionApi.getCommMonth().then(res=>{
+
+          if(res.code == 0){
+            this.currentCommission = type;
+            if(res.data){
+              this.commissionTotal = res.data.userCommission
+            }else{
+              this.commissionTotal = '0'
+            }
+          }
+        })
+
+      }
+
+    },
+    getCommTotal(type){
+      commissionApi.getCommTotal().then(
         res => {
           this.loading = false
-          if (res.code === 200) {
-            this.allCommissionTotal = res.obj.allCommissionTotal
-            this.canCommission = res.obj.canCommission
+          if(res.code == 0){
+            this.currentCommission = type;
+            if(res.data){
+              this.commissionTotal = res.data.userCommission
+            }else{
+              this.commissionTotal = '0'
+            }
+          }
+         /* if (res.code === 0) {
+            this.commissionTotal = res.data.userCommission
+            this.canCommission = res.data.canCommission
           } else {
             if (res && res.msg) {
               this.$toast.error(res.msg)
             }
-          }
-        },
-        err => {
-          if (err && err.msg) {
-            this.$toast.error(err.msg)
-          }
+          }*/
         }
       )
     },
@@ -444,10 +497,10 @@ export default {
           clientInfoApi.getMerchantList(this.pageNumber, this.pageSize, this.status).then(
             res => {
               this.loading = false
-              if (res.code === 200) {
-                this.dataList = [...this.dataList, ...res.obj.content]
+              if (res.code === 0) {
+                this.dataList = [...this.dataList, ...res.data.content]
                 console.log('this.dataList', this.dataList)
-                if (this.dataList.length < res.obj.totalElements) {
+                if (this.dataList.length < res.data.totalElements) {
                   this.isLoadedAll = false
                 } else {
                   this.isLoadedAll = true

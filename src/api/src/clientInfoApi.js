@@ -259,7 +259,7 @@ export default {
     })
   },
   /**
-   * 银行卡识别
+   * 银行卡识别,后台通过另一个接口获取了支行联行号（多消耗一个购买的api资源，不需要联行号时请使用后边的api）  /api/supervision/api/public/bankCard这个接口只查询卡号行名信息，不查询支行联行号信息
    * @param {*} pathId
    */
   getBankCard(pathId) {

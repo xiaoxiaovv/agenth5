@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-        <div class="item">
+       <!-- <div class="item">
           <div class="subtitle">
             <span class="star">*</span>开户支行所在省行政
           </div>
@@ -87,6 +87,17 @@
               <div class="icon iconfont iconenter ml-10"></div>
             </div>
           </div>
+        </div>-->
+        <div class="item">
+          <div class="subtitle">
+            <span class="star">*</span>开户账号
+          </div>
+          <div class="match-left-space align-right">
+            <div class="input align-right">
+              <input placeholder="请输入内容"
+                     v-model="detail.accNo" />
+            </div>
+          </div>
         </div>
         <div class="item">
           <div class="subtitle">
@@ -95,29 +106,19 @@
           <div class="match-left-space align-right">
             <div class="input align-right">
               <input placeholder="请输入内容"
-                     v-model="detail.bankAccount" />
+                     v-model="detail.realName" />
             </div>
           </div>
         </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star">*</span>开户账号
-          </div>
-          <div class="match-left-space align-right">
-            <div class="input align-right">
-              <input placeholder="请输入内容"
-                     v-model="detail.cardNo" />
-            </div>
-          </div>
-        </div>
-        <!--<div class="item">
+
+      <!--  <div class="item">
           <div class="subtitle">
             <span class="star">*</span>开户预留手机号
           </div>
           <div class="match-left-space align-right">
             <div class="input align-right">
               <input placeholder="请输入内容"
-                     v-model="detail.bankPhone" />
+                     v-model="detail.mobile" />
             </div>
           </div>
         </div>-->
@@ -128,157 +129,8 @@
           提交
         </div>
       </div>
-      <!--<div class="match-width box align-center">
-        <div class="next box align-center"
-             @click="commissionGetBankCard">
-          获取
-        </div>
-      </div>-->
 
-      <!-- action-sheet 编码 -->
-      <mu-bottom-sheet :open.sync="open">
-        <div class="action-sheet box align-default">
 
-          <div class="title box align-hor-bet plr-30">
-            <div @click="onActionSheetClose">
-              返回
-            </div>
-            <div class="confirm"
-                 @click="onActionSheetConfirm">
-              确定
-            </div>
-          </div>
-          <div class="input-wrap plr-60">
-            <i class="iconfont iconsearch pre-icon"></i>
-            <input v-model="keyword"
-                   class="input"
-                   :placeholder="codeType === 'branch'?'例：浦发银行北京富丰路支行':'请输入关键字搜索'"
-                   @keyup.enter="handleSearch" />
-          </div>
-          <div class="max-sheet-height">
-            <!-- 银行编码 -->
-            <div class="match-width"
-                 v-for="(item, index) in searchResultList"
-                 :key="index"
-                 v-if="codeType === 'bank'">
-              <div :class="['item align-hor-bet plr-30 ptb-30', item.bnkCode==curBnkCode?'active':'']"
-                   @click="changeItem(item)">
-                <div class="flex-1">
-                  <div>{{item.bnkName}}</div>
-                  <div>{{item.bnkCode}}</div>
-                </div>
-                <div v-if="item.bnkCode==curBnkCode"
-                     class="icon iconfont iconcheck">
-                </div>
-                <div class="pass"
-                     v-else></div>
-              </div>
-            </div>
-            <!-- 省编码 -->
-            <div class="match-width"
-                 v-for="(item, index) in searchResultList"
-                 :key="index"
-                 v-if="codeType === 'province'">
-              <div :class="['item align-hor-bet plr-30 ptb-30', item.provinceCode==curProvinceCode?'active':'']"
-                   @click="changeItem(item)"
-                   style="height:auto;">
-                <div class="flex-1">
-                  <div>{{item.provinceName}}</div>
-                  <!-- <div>{{item.provinceCode}}</div> -->
-                </div>
-                <div v-if="item.provinceCode==curProvinceCode"
-                     class="icon iconfont iconcheck">
-                </div>
-                <div class="pass"
-                     v-else></div>
-              </div>
-            </div>
-            <!-- 市编码 -->
-            <div class="match-width"
-                 v-for="(item, index) in searchResultList"
-                 :key="index"
-                 v-if="codeType === 'city'">
-              <div :class="['item align-hor-bet plr-30 ptb-30', item.cityCode==curCityCode?'active':'']"
-                   @click="changeItem(item)"
-                   style="height:auto;">
-                <div class="flex-1">
-                  <div>{{item.cityName}}</div>
-                  <!-- <div>{{item.cityCode}}</div> -->
-                </div>
-                <div v-if="item.cityCode==curCityCode"
-                     class="icon iconfont iconcheck">
-                </div>
-                <div class="pass"
-                     v-else></div>
-              </div>
-            </div>
-            <!-- 支行编码 -->
-            <div class="match-width"
-                 v-for="(item, index) in searchResultList"
-                 :key="index"
-                 v-if="codeType === 'branch'">
-              <div :class="['item align-hor-bet plr-30 ptb-30', item.lbnkNo==curBranchCode?'active':'']"
-                   @click="changeItem(item)"
-                   style="height:auto;">
-                <div class="flex-1">
-                  <div>{{item.lbnkNm}}</div>
-                  <div>{{item.lbnkNo}}</div>
-                </div>
-                <div v-if="item.lbnkNo==curBranchCode"
-                     class="icon iconfont iconcheck">
-                </div>
-                <div class="pass"
-                     v-else></div>
-              </div>
-            </div>
-          </div>
-          <!-- 补脚 -->
-          <div class="action-sheet__padding"></div>
-
-        </div>
-      </mu-bottom-sheet>
-
-      <!-- action-sheet -->
-      <mu-bottom-sheet :open.sync="openMenu">
-        <div class="action-sheet box align-default menu">
-
-          <div class="item align-center"
-               @click="onTakePhoto(1)">
-            拍照
-          </div>
-
-          <div class="item align-center"
-               @click="onTakePhoto(2)">
-            从手机相册选择
-          </div>
-
-          <div class="item align-center cancel"
-               @click="onActionMenuShow(2)">
-            取消
-          </div>
-
-          <!-- 补脚 -->
-          <div class="action-sheet__padding"></div>
-
-        </div>
-      </mu-bottom-sheet>
-      <!-- 隐藏获取图片 -->
-      <div class="file">
-        <input type="file"
-               ref="fileCamera"
-               capture="camera"
-               accept="image/*"
-               @change="onFileChange" />
-        <div class="cover"></div>
-      </div>
-      <!-- 隐藏获取图片 -->
-      <div class="file">
-        <input type="file"
-               ref="file"
-               accept="image/*"
-               @change="onFileChange" />
-        <div class="cover"></div>
-      </div>
 
     </div>
 
@@ -323,22 +175,9 @@ export default {
       openAlert: false,
       loading: false,
       detail: {
-        commissionProvName: '',
-        commissionProvCode: '',
-        commissionCityName: '',
-        commissionCityCode: '',
-        openBank: '',
-        openBankCode: '',
-        bankAccount: '', //户名
-        bankName: '',
-        cardNo: '',
-        companyId: '',
-
-
-        bankCardPositivePicId: '',
-        bnkCd: '',
-        bankPhotoId:'',
-        bankPhone: ''
+        "accNo": "",
+        "bankName": "",
+        "realName": "",
       },
       open: false,
       status: 0,
@@ -394,12 +233,7 @@ export default {
     closeAlertDialog() {
       this.openAlert = false
     },
-    getProvinceList () {
-      clientInfoApi.getCodeList().then(res => {
-        this.provinceCodeList = res.obj
-        this.searchResultList = res.obj
-      })
-    },
+
     // 唤醒action-sheet
     callActionSheet(type) {
       this.codeType = type
@@ -580,7 +414,7 @@ export default {
     },
     // 提交
     commissionAddBankCard() {
-      let requiredData = ['bankName', 'commissionProvCode', 'commissionCityCode', 'openBankCode', 'bankAccount', 'cardNo']
+      let requiredData = ['bankName', 'accNo', 'realName']
 
       let flag = true
       for (let i in this.detail) {
@@ -592,141 +426,44 @@ export default {
         }
       }
       if (flag) {
-        commissionApi.commissionAddBankCard(this.detail).then(res => {
-          if(res.code === 200){
-            this.openAlert = true
-
-          }else{
-            if(res.msg)
-            this.$toast.error(res.msg)
-          }
-          /*this.$router.push({
-            name: CLIENT_INFO_BASE,
-            query: {
-              id: this.detail.id
+        if(sessionStorage.commissionBankCardId){
+        //  走修改接口
+          this.detail.id = sessionStorage.commissionBankCardId
+          commissionApi.commissionEditBankCard(this.detail).then(res => {
+            if(res.code === 0){
+              this.$toast.success('提交成功')
             }
-          })*/
-        })
+          })
+        }else{
+          //走新增接口
+          commissionApi.commissionAddBankCard(this.detail).then(res => {
+            if(res.code === 0){
+              this.$toast.success('提交成功')
+            }
+          })
+        }
+
+        //根据卡号查联行号
+        /*commissionApi.getBankCardInfoByCardNo(this.detail.accNo).then(res=>{
+          this.detail.bankName = res.data.bank
+
+          res.bankcode
+
+        })*/
+
+
       } else {
         this.$toast.error('有内容未填入')
       }
-    },
-
-
-
-    // 获取对公账户
-    getOpenAccountInfo(pathId) {
-      clientInfoApi.getOpenBankCard(pathId).then(res => {
-        this.detail.bankAccount = res.obj.name || ''
-        this.detail.cardNo = res.obj.bankNo || ''
-      })
-    },
-    // 获取银行卡信息
-    getBankInfo(pathId) {
-      this.loading = true
-      clientInfoApi.getBankCard(pathId).then(res => {
-        this.detail.bnkCd = res.obj.bnkCd || '' // 开户行总行行(银行编码)
-        this.detail.bankName = res.obj.bankInfo || ''
-        if (!res.obj.bankAreaBO) {
-          this.detail.commissionProvCode = '' // 开户支行所在省编码
-          this.detail.commissionProvName = ''
-
-          this.detail.commissionCityCode = '' // 开户支行所在市编码
-          this.detail.commissionCityName = ''
-        } else {
-          this.detail.commissionProvCode = res.obj.bankAreaBO.provinceCode || '' // 开户支行所在省编码
-          this.curProvinceCode = res.obj.bankAreaBO.provinceCode || ''
-          this.detail.commissionProvName = res.obj.bankAreaBO.provinceName || ''
-          if (res.obj.bankAreaBO.cityCode && res.obj.bankAreaBO.cityName) {
-            this.detail.commissionCityCode = res.obj.bankAreaBO.cityCode // 开户支行所在市编码
-            this.detail.commissionCityName = res.obj.bankAreaBO.cityName
-          } else {
-            this.detail.commissionCityCode = '' // 开户支行所在市编码
-            this.detail.commissionCityName = ''
-          }
-        }
-
-        this.detail.openBankCode = '' // 开户支行行号编码
-        this.detail.openBank = '' // 开户支行行号编码
-        this.detail.cardNo = res.obj.cardNo
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-    // 文件改变
-    onFileChange(file, type) {
-      if (file) {
-        clientInfoApi.uploadImage(file).then(res => {
-          if (res.code === 200) {
-            this.$toast.success('图片上传成功')
-            this.$refs[type].$refs.file.value = ''
-            let photoId = res.obj
-            if (type === 'bank') { // 获取银行卡照片
-              if (Number(this.detail.businessType) === 1) { // 对公账户
-                this.$set(this.detail, 'openingAccountLicensePicId', photoId)
-                this.getOpenAccountInfo(photoId)
-              } else {
-                this.$set(this.detail, 'bankCardPositivePicId', photoId)
-                this.getBankInfo(photoId)
-              }
-            }else if (type === 'back') { // 获取银行卡背面照片
-              this.$set(this.detail, 'bankPhotoId', photoId)
-            }
-          } else {
-            this.$toast.error(res.msg)
-          }
-        }, (err) => {
-          this.$toast.error(err.msg)
-        })
-      }
-    },
-    // 获取列表详情
-    getMchInfo(id) {
-      clientInfoApi.getMchInfo({ id }).then(res => {
-        // res.obj.bankAccount = res.obj.accountHolder || res.obj.representativeName
-        this.detail = Object.assign({}, this.detail, res.obj)
-      })
-    },
-
-    // 证件持有证件人类型
-    transferRepType(type) {
-      return type === 1 || type === '1' || !type ? 0 : 1
-    },
-    // 证件类型
-    transferCerType(type) {
-      return type === 1 || type === '1' || !type ? 0 : 1
     }
   },
 
   filters: {
-    // 获取图片
-    loadImage(id) {
-      return id ? url + `/fms/upload/resource/thumbnail/${id}` : ''
-    },
-    previewLoadImage(id) {
-      return id ? url + `/fms/upload/resource/${id}` : ''
-    },
-    // 证件持有人类型
-    representativeTypeFilter(type) {
-      return type === 1 ? '法人' : (type === 2 ? '经办人' : '')
-    },
-    // 证件类型
-    certificateFilter(type) {
-      return type === 1 ? '身份证' : (type === 2 ? '护照' : '')
-    }
+
   },
 
   mounted() {
-    let userInfo = afterLoginInfoLocal.getJSON()
-    this.detail.companyId = userInfo.companyId
-    this.getProvinceList()
-    /*this.detail.id = this.$route.query.id
-    if (this.detail.id) {
-      this.getMchInfo(this.detail.id)
-      this.getProvinceList()
-    } else {
-      this.$toast.error('详情数据丢失')
-    }*/
+
   }
 }
 </script>

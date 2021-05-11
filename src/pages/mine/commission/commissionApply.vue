@@ -53,7 +53,7 @@ import { isProd } from '../../config';
       <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
         <div class="vm-list-li">
           <div class="vma-list-li-left">开户人</div>
-          <div class="vma-list-li-right vm-ell">{{bankCarkInfo.bankAccount}}</div>
+          <div class="vma-list-li-right vm-ell">{{bankCarkInfo.realName}}</div>
         </div>
       </div>
       <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
@@ -65,7 +65,7 @@ import { isProd } from '../../config';
       <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
         <div class="vm-list-li">
           <div class="vma-list-li-left">账号</div>
-          <div class="vma-list-li-right vm-ell">{{bankCarkInfo.cardNo | cardFilter}}</div>
+          <div class="vma-list-li-right vm-ell">{{bankCarkInfo.accNo | cardFilter}}</div>
         </div>
       </div>
         <div class="bank-cark-btn-box mt-20">
@@ -226,11 +226,11 @@ export default {
   },
   methods: {
     getCommissionConfig(){
-      commissionApi.getCommissionConfig().then(
+      commissionApi.getCommissionConfig(sessionStorage.serviceId).then(
         res => {
           // this.loading = false
-          if (res.code === 200) {
-            this.commissionConfigData = {...res.obj}
+          if (res.code === 0) {
+            this.commissionConfigData = {...res.data}
             this.commissionConfigData.cashOutStartTime = this.commissionConfigData.cashOutStartTime.substring(0,5)
             this.commissionConfigData.cashOutEndTime = this.commissionConfigData.cashOutEndTime.substring(0,5)
             this.commissionConfigData.rateCash = this.commissionConfigData.rateCash*100
@@ -242,9 +242,9 @@ export default {
       commissionApi.findCommissionCurrentMonth().then(
         res => {
           this.loading = false
-          if (res.code === 200) {
-            // this.allCommissionTotal = res.obj.allCommissionTotal
-            this.canCommission = res.obj.canCommission
+          if (res.code === 0) {
+            // this.allCommissionTotal = res.data.allCommissionTotal
+            this.canCommission = res.data.canCommission
           } else {
             if (res && res.msg) {
               this.$toast.error(res.msg)
@@ -266,8 +266,13 @@ export default {
     },
     // 获取佣金提现卡
     commissionGetBankCard() {
-      commissionApi.commissionGetBankCard(this.companyId).then(res => {
-        this.bankCarkInfo = res.obj
+      commissionApi.commissionGetBankCard().then(res => {
+        if(res.data && res.data.accNo === null){
+
+        }else{
+          sessionStorage.commissionBankCardId = res.data.id;
+          this.bankCarkInfo = res.data
+        }
       })
     },
     toCommissionAddBankCardPage(){
@@ -278,10 +283,10 @@ export default {
     commissionApplyAuth(){
       this.openAlert = false
   commissionApi.commissionApplyAuth(this.password).then(res=>{
-    if(res.code === 200){
+    if(res.code === 0){
       this.accountType = '3';
-      commissionApi.commissionApplyCommit(res.obj, this.accountType, this.applyAmount).then(res=>{
-        if(res.code === 200){
+      commissionApi.commissionApplyCommit(res.data, this.accountType, this.applyAmount).then(res=>{
+        if(res.code === 0){
           this.$toast.success('提交成功')
         }else {
           if (res && res.msg) {
