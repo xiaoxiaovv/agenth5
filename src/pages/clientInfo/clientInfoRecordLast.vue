@@ -2689,8 +2689,8 @@ export default {
           this.$toast.error('有内容未填入')
           return
         }
-        if (this.from !== 'share' && Number(this.detail.sxfRate) <= 0) {
-          this.$toast.error('费率必须大于0')
+        if (this.from !== 'share' && Number(this.detail.sxfRate) < 0.3) {
+          this.$toast.error('费率必须大于0.3')
           return
         }
         if (this.from !== 'share' && Number(this.detail.sxfRate) >= 1) {
@@ -2730,8 +2730,8 @@ export default {
           this.$toast.error('费率必须小于1')
           return
         }
-        if (this.from !== 'share' && (Number(this.detail.leAliRate) <= 0 || Number(this.detail.leWxRate) <= 0)) {
-          this.$toast.error('费率必须大于0')
+        if (this.from !== 'share' && (Number(this.detail.leAliRate) < 0.3 || Number(this.detail.leWxRate) < 0.3)) {
+          this.$toast.error('费率必须大于0.3')
           return
         }
       }
@@ -2741,8 +2741,8 @@ export default {
           this.$toast.error('有内容未填入')
           return
         }
-        if (this.from !== 'share' && Number(this.detail.ysRate) <= 0) {
-          this.$toast.error('费率必须大于0')
+        if (this.from !== 'share' && Number(this.detail.ysRate) < 0.3) {
+          this.$toast.error('费率必须大于0.3')
           return
         }
         if (this.from !== 'share' && Number(this.detail.ysRate) >= 1) {
@@ -2756,8 +2756,8 @@ export default {
           this.$toast.error('有内容未填入')
           return
         }
-        if (this.from !== 'share' && Number(this.detail.chRate) <= 0) {
-          this.$toast.error('费率必须大于0')
+        if (this.from !== 'share' && Number(this.detail.chRate) < 0.3) {
+          this.$toast.error('费率必须大于0.3')
           return
         }
         if (Number(this.detail.chRate) >= 1) {
@@ -2774,8 +2774,8 @@ export default {
           this.$toast.error('有内容未填入')
           return
         }
-        if (this.from !== 'share' && Number(this.detail.kdbWxTradeRate) <= 0) {
-          this.$toast.error('费率必须大于0')
+        if (this.from !== 'share' && Number(this.detail.kdbWxTradeRate) < 0.3) {
+          this.$toast.error('费率必须大于0.3')
           return
         }
         if (Number(this.detail.kdbWxTradeRate) >= 1) {
@@ -2790,8 +2790,8 @@ export default {
           this.$toast.error('有内容未填入')
           return
         }
-        if (this.from !== 'share' && Number(this.detail.chanpayTradeRate) <= 0) {
-          this.$toast.error('费率必须大于0')
+        if (this.from !== 'share' && Number(this.detail.chanpayTradeRate) < 0.3) {
+          this.$toast.error('费率必须大于0.3')
           return
         }
         if (Number(this.detail.chanpayTradeRate) >= 1) {
@@ -2806,8 +2806,8 @@ export default {
           this.$toast.error('有内容未填入')
           return
         }
-        if (this.from !== 'share' && Number(this.detail.ysWxRate) <= 0) {
-          this.$toast.error('费率必须大于0')
+        if (this.from !== 'share' && Number(this.detail.ysWxRate) < 0.3) {
+          this.$toast.error('费率必须大于0.3')
           return
         }
         if (Number(this.detail.ysWxRate) >= 1) {
@@ -2820,6 +2820,10 @@ export default {
         this.detail.importNums.push('6')
         if (!fyRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
+          return
+        }
+        if (Number(this.detail.fuiouAliRate ) < 0.3 || Number(this.detail.fuiouWxRate) < 0.3) {
+          this.$toast.error('费率不能低于0.3')
           return
         }
       }
@@ -2837,6 +2841,15 @@ export default {
           this.$toast.error('有内容未填入')
           return
         }
+        if (Number(this.detail.posTradeRate ) < 0.52 || Number(this.detail.quickTradeRate) < 0.52) {
+          this.$toast.error('费率不能低于0.52')
+          return
+        }
+        if (Number(this.detail.posDrawFee ) < 1 || Number(this.detail.quickDrawFee) < 1) {
+          this.$toast.error('提现费不能低于1')
+          return
+        }
+
       }
       // this.detail.importNums = []
       if (this.from === 'share') {

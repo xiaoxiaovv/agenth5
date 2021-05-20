@@ -9,13 +9,15 @@ export default {
    * @param {*} pageSize
    * @param {*} status
    */
-  getMerchantList(pageNumber, pageSize, status) {
+  getMerchantList(pageNumber, pageSize, companyName, name , status) {
     return requestAxios({
       url: '/merchant/mch_info/find_by_fuwushang',
       method: 'get',
       params: {
         pageNumber,
         pageSize,
+        companyName,
+        name,
         status
       }
     })

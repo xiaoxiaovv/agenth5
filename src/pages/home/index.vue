@@ -23,9 +23,10 @@
                       ">总交易额 <i class="icon iconfont iconeye order-eye" @click="toOrder"></i></p>
                     </div>
                   </li>
+<!--                  v-if="userType=='2' || userType=='3' || userType=='4'"-->
                   <li class="fl" v-if="userType=='2' || userType=='3' || userType=='4'">
                     <div>
-                      <p class="pandect-data-price vm-ell">￥{{dataViews.commissionMoney || 0}}</p>
+                      <p class="pandect-data-price vm-ell">￥{{commissionMoneyData.allCommissionTotal || 0}}</p>
                       <p class="pandect-data-name">佣金总额</p>
                     </div>
                   </li>
@@ -176,6 +177,19 @@ export default {
      * 交易数据
      * @param {*} params
      */
+    commissionMoney() {
+      let params = {
+        companyId: this.companyId
+      }
+      homeApi.commissionMoney(params).then(res => {
+        this.commissionMoneyData = res.obj
+        console.log(this.commissionMoneyData)
+      })
+    },
+    /**
+     * 交易数据
+     * @param {*} params
+     */
     getDataTransaction() {
       let params = {
         companyId: this.companyId
@@ -197,6 +211,7 @@ export default {
     this.getDataViews()
     this.getRunAccountNewDataView()
     this.getDataTransaction()
+    this.commissionMoney();
   }
 }
 </script>

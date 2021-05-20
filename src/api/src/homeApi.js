@@ -45,5 +45,18 @@ export default {
       method: 'GET',
       params: params
     })
+  },
+  /**
+   * 分润设置
+   * @param {*} params
+   */
+  commissionMoney(params) {
+    return requestAxios({
+      url: `/auth/current/running_account/date_transaction_app`,
+      method: 'GET',
+      params: params
+    })
   }
 }
+
+

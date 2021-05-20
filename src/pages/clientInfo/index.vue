@@ -16,20 +16,33 @@ import { isProd } from '../../config';
           class="match-parent iconfont iconsearch"/> -->
       </div>
     </div>
+    <mu-container >
+      <mu-text-field label="" class="fl ml-10" style="width: 20%" v-model="agentName" placeholder="代理名称"></mu-text-field>
+      <mu-text-field label="" class="fl ml-10"  style="width: 20%" v-model="merchantShopName" placeholder="商户名"></mu-text-field>
+      <mu-select label="" class="fl ml-10" style="width: 28%"   v-model="selectStatusValue" placeholder="进件状态" @change="selectStatusChange">
+        <mu-option v-for="option in statusOptions" :key="option" :label="option"  :value="option"></mu-option>
+      </mu-select>
+      <div class="client-info__searchBox">
+        <span class="mu-info-text-color mt-40" @click="onSearch">查询</span>
+        <span class="mu-info-text-color ml-20" @click="resetSearch">重置</span>
+      </div>
 
+
+    </mu-container>
     <!-- 选项卡 -->
-    <div class="client-info__tabs box align-bottom">
-      <div v-for="(item, index) in tabList"
+   <!-- <div class="client-info__tabs box align-bottom">
+
+      &lt;!&ndash;<div v-for="(item, index) in tabList"
            :key="index"
            :class="['item', 'box', 'match-left-space', 'align-ver-bottom', index == current ? 'active' : '' ]"
            @click="onTabItemClick(index, item.status)">
         <div>{{item.name}}</div>
         <div class="bar mt-20"></div>
-      </div>
-    </div>
+      </div>&ndash;&gt;
+    </div>-->
 
     <!-- 数据列表 -->
-    <div class="client-info__content match-left-space mt-20">
+    <div class="client-info__content match-left-space " style="margin-top: -20px">
       <mu-paper class="match-parent box pl-30 pr-20"
                 :z-depth="1">
         <mu-container ref="container"
@@ -103,6 +116,13 @@ export default {
   components: { VmaNoData },
   data() {
     return {
+      merchantShopName:'',
+      agentName:'',
+      statusOptions:[
+        '全部', '未开通', '待审核', '签约成功', '签约失败'
+      ],
+      selectStatusValue:'',
+
       isEdit: false,
       // tabList: ['全部', '签约', '未签约', '待审核', '驳回'],
       tabList: [
@@ -147,6 +167,7 @@ export default {
     })
   },
   methods: {
+
     // 选项卡切换
     onTabItemClick(index, status) {
       console.log('选项卡切换')
@@ -167,7 +188,7 @@ export default {
       // 获取商户数据
       this.getMerchantList()
     },
-    // 加载更多
+    // 加载更多 上滑
     load() {
       console.log('加载更多')
       this.pageNumber++
@@ -199,6 +220,49 @@ export default {
       //   id
       // }
     },
+    // 搜索
+    onSearch() {
+      // TODO
+      this.pageNumber = 1
+      this.dataList = [];
+      this.getMerchantList()
+      console.log('search')
+    },
+    resetSearch(){
+      this.merchantShopName = '';
+      this.agentName = '';
+      this.selectStatusValue = '';
+      this.selectStatus = '';
+      this.pageNumber = 1
+      this.dataList = [];
+      this.getMerchantList()
+    },
+    selectStatusChange(val){
+      let that = this;
+      console.log(val)
+      switch (val){
+        case '全部':
+          that.selectStatus = '';
+          break;
+        case '未开通':
+          that.selectStatus = '1';
+          break;
+        case '待审核':
+          that.selectStatus = '2';
+          break;
+        case '签约成功':
+          that.selectStatus = '3';
+          break;
+        case '签约失败':
+          that.selectStatus = '4';
+          break;
+        default:
+          break
+      }
+      this.dataList = []
+      this.pageNumber = 1
+      this.getMerchantList()
+    },
     // 获取商户数据
     getMerchantList() {
       let loginInfo = afterLoginInfoLocal.get()
@@ -207,7 +271,7 @@ export default {
         if (loginInfo && loginInfo.companyId) {
           this.loading = true
           this.refreshing = false
-          clientInfoApi.getMerchantList(this.pageNumber, this.pageSize, this.status).then(
+          clientInfoApi.getMerchantList(this.pageNumber, this.pageSize, this.agentName, this.merchantShopName , this.selectStatus).then(
             res => {
               this.loading = false
               if (res.code === 200) {
@@ -256,11 +320,7 @@ export default {
         this.$toast.error('登录失败')
       }
     },
-    // 搜索
-    onSearch() {
-      // TODO
-      console.log('search')
-    },
+
     // 数据项
     onDataListItemClick(data) {
       console.log('数据项', data)

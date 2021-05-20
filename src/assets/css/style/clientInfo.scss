@@ -2,6 +2,7 @@
 
 // 进件页
 .client-info {
+
   @include match-width();
 
   &__padding {
@@ -29,7 +30,11 @@
       @include size(31, 31);
     }
   }
+  &__searchBox{
+    margin-top: 12px;
+    font-size: 16px;
 
+  }
   &__tabs {
     @include match-width();
     @include height(80);
