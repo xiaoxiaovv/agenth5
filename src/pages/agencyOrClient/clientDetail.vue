@@ -27,7 +27,7 @@
         <div class="vma-list-li-left">归属业务员</div>
         <div class="vma-list-li-right vm-ell">{{detail.managerName}}</div>
       </div>
-      <div class="vm-list-li">
+      <div class="vm-list-li" v-if="userType && userType==1">
         <div class="vma-list-li-left">手机号</div>
         <div class="vma-list-li-right vm-ell">{{detail.phone}}</div>
       </div>
@@ -65,6 +65,7 @@ import { afterLoginInfoLocal } from '@/storage'
 export default {
   data() {
     return {
+      userType: afterLoginInfoLocal.getJSON().userType,
       detail: {},
       levelAlias: {
         firstName: afterLoginInfoLocal.getJSON().levelAlias.firstName

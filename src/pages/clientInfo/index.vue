@@ -63,7 +63,7 @@ import { isProd } from '../../config';
                   <div class="title">
                     {{item.merchantName}}
                   </div>
-                  <div class="subtile mt-6">
+                  <div class="subtile mt-6" v-if="userType && userType==1">
                     {{item.phone}}
                   </div>
                 </div>
@@ -116,6 +116,7 @@ export default {
   components: { VmaNoData },
   data() {
     return {
+      userType: afterLoginInfoLocal.getJSON().userType,//1是服务商 2是一级代理
       merchantShopName:'',
       agentName:'',
       statusOptions:[

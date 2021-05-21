@@ -15,7 +15,7 @@
         <div class="vma-list-li-left">联系人</div>
         <div class="vma-list-li-right vm-ell">{{detail.contact}}</div>
       </div>
-      <div class="vm-list-li">
+      <div class="vm-list-li" v-if="userType && userType==1">
         <div class="vma-list-li-left">联系电话</div>
         <div class="vma-list-li-right vm-ell">{{detail.phone}}</div>
       </div>
@@ -67,9 +67,11 @@
 <script>
 import { agentOrClient } from '@/api'
 import * as types from '@/router/types'
+import { afterLoginInfoLocal } from '@/storage'
 export default {
   data() {
     return {
+      userType: afterLoginInfoLocal.getJSON().userType,
       detail: {},
       isDirect: 0,
       tabType: null

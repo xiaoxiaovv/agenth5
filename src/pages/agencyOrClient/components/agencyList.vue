@@ -8,7 +8,7 @@
             class="vm-item between-flex">
           <div class="item-left">
             <p class="item-left-1">{{item.name}}</p>
-            <p class="item-left-2">{{item.phone}}</p>
+            <p class="item-left-2" v-if="userType && userType==1">{{item.phone}}</p>
           </div>
           <div class="item-right center-flex vm-font-color-9">
             <p>
@@ -33,7 +33,7 @@ import * as types from '@/router/types'
 // import { isShowFooterMixin, scrollerMixin } from '@/mixins'
 // import { backgroundImg } from '@/utils'
 // import homeBgStyle from '@/assets/images/pages/home_bg.png'
-
+import { afterLoginInfoLocal } from '@/storage'
 export default {
   props: {
     list: {
@@ -50,9 +50,11 @@ export default {
   components: {},
   data() {
     return {
+      userType: 0,//1是服务商 2是一级代理
     }
   },
   created() {
+    this.userType = afterLoginInfoLocal.getJSON().userType
     this.getList()
   },
   methods: {
