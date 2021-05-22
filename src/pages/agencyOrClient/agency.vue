@@ -186,13 +186,13 @@ export default {
     this.levelAlias = afterLoginInfoLocal.getJSON().levelAlias
     console.log('this.levelalias======================',this.levelAlias)
     this.setBtnList()
-
+    this.tabList = this.clientTabList
     // this.getListApi()
   },
   methods: {
     setBtnList() {
       if (this.clientParams.userType === 1) { // 服务商
-        this.active = '一级代理'
+        this.active = '商户'
         this.btnList = [
           { name: '一级代理', color: 'primary', textColor: 'white', aliasName: this.levelAlias.firstName },
           { name: '二级代理', color: 'white', textColor: 'primary', aliasName: this.levelAlias.secondName },
@@ -200,14 +200,14 @@ export default {
           { name: '商户', color: 'white', textColor: 'primary' }
         ]
       } else if (this.clientParams.userType === 2) { // 一级代理商
-        this.active = '二级代理'
+        this.active = '商户'
         this.btnList = [
           { name: '二级代理', color: 'primary', textColor: 'white', aliasName: this.levelAlias.secondName },
           { name: '三级代理', color: 'white', textColor: 'primary', aliasName: this.levelAlias.thirdName },
           { name: '商户', color: 'white', textColor: 'primary' }
         ]
       } else if (this.clientParams.userType === 3) { // 二级代理商
-        this.active = '三级代理'
+        this.active = '商户'
         this.btnList = [
           { name: '三级代理', color: 'primary', textColor: 'white', aliasName: this.levelAlias.thirdName },
           { name: '商户', color: 'white', textColor: 'primary' }
