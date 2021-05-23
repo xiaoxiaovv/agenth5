@@ -114,6 +114,7 @@ export default {
   mixins: [isShowFooterMixin, echartResizeMixin, indexMixins],
   data() {
     return {
+      commissionMoneyData:{},
       isActive: 1,
       companyId: '',
       userType: '',
