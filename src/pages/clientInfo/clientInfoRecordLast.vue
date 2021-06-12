@@ -14,6 +14,80 @@
 
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
+      <!--敏付-->
+      <div class="match-width box align-default"
+           v-if="PROCESS.MF">
+        <div class="title">
+          <mu-checkbox v-model="checkboxObj.mf"
+                       label="敏付通道"></mu-checkbox>
+        </div>
+        <div class="item">
+          <VmaCascaderTree v-model="mfCascaderArr"
+                           class="client-info"
+                           :dataTree="mfMaccTree"
+                           :placeholder="'请选择类目'"
+                           :modalLabel="'选择类目'"
+                           :required="checkboxObj.mf"
+                           label="经营类目"
+                           @change="changeMfMenu"></VmaCascaderTree>
+        </div>
+        <div class="item">
+          <VmaCascaderTree class="client-info"
+                           v-model="mfAddressArr"
+                           :dataTree="mfAddressTree"
+                           :label="'商户营业地区补充'"
+                           :placeholder="'请选择省市'"
+                           :modalLabel="'选择省市'"
+                           :required="checkboxObj.mf"
+                           @change="changeMfAddress"></VmaCascaderTree>
+        </div>
+
+
+        <div class="item">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.mf">*</span>费率
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(6)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="mfTradeRateText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.mf">*</span>管理员姓名
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.mfUsrOprNm" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.mf">*</span>管理员手机号
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.mfUsrOprMbl" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.mf">*</span>管理员邮箱
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.mfUsrOprEmail" />
+          </div>
+        </div>
+
+
+      </div>
       <!--易生通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.YIS">
@@ -64,6 +138,7 @@
                    v-model="detail.ysWxRate" />%
           </div>
         </div>
+
         <div class="item">
           <div class="subtitle">
             <span class="star" v-show="checkboxObj.yiS">*</span>到账周期
@@ -77,6 +152,11 @@
           </div>
         </div>
       </div>
+
+
+
+
+
 
 
       <!--畅捷-->
@@ -1095,6 +1175,22 @@
             </div>
           </div>
         </div>
+<!--敏付费率模板-->
+        <div v-if="simpleTreeStatus === 6">
+          <div class="action-sheet__header align-left box plr-30">请选择费率</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in mfprdVersList"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.opnPrdVers === detail.opnPrdVers)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.wxRate}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
 
       </mu-bottom-sheet>
 
@@ -1297,6 +1393,7 @@ import indexMixins from './src/mixins'
 import { getProcess } from '@/constants'
 import { NativeAppRouter } from '../../utils/src/webviewBridgeUtils'
 import { afterLoginInfoLocal} from '@/storage'
+import { validPhone, emailValid } from '@/utils'
 
 
 export default {
@@ -1323,7 +1420,8 @@ export default {
         SJPOS:false,
         KDB:false,
         CJ:false, //畅捷
-        YIS:false
+        YIS:false,
+        MF:false
 
       },
       checkboxObj: {
@@ -1338,7 +1436,8 @@ export default {
         sjPos: false,
         kdb:false,
         cj:false, //畅捷
-        yiS:false
+        yiS:false,
+        mf:false
       },
       openAlert: false,
       openSimpleTree:false, //简单选择树
@@ -1396,6 +1495,7 @@ export default {
         }
 
       ],//结算周期类型列表
+      mfprdVersList: [],//敏付费率模板
       kdbsexList: [
         {
           value: 1,
@@ -1420,6 +1520,7 @@ export default {
       kdbSettlementCycleTypeText:'请选择到账周期类型',
       kdbAccountTypeText:'请选择结算账户类型',
       yiSSettlementCycleTypeText:'请选择到账周期类型',
+      mfTradeRateText:'请选择费率',
       yiSMsgCode:'',
       yiSUserId:'', //获取验证码的接口返回的
       detail: {
@@ -1468,6 +1569,24 @@ export default {
         kdbSingleServiceFeeUpLimit:'',  //
         kdbServiceRate:'',
       //  开店宝手动赋值字段--结束
+        //  敏付
+        mfMccCodeClass: '', //一级经营类目    反显用
+        mfMccCode:'',  //二级经营类目id
+        mfMccName:'',  //二级经营类目name
+        productVerCode:'',  //费率模板
+        mfTradeRate:'',
+        mfProvinceCode:'',
+        mfProvinceName:'',
+        mfCityCode:'',
+        mfCityName:'',
+        mfDistrictCode:'',
+        mfDistrictName:'',
+        mfUsrOprNm:'',  //敏付商户管理员姓名
+        mfUsrOprMbl:'', // 敏付商户管理员手机号码
+        mfUsrOprEmail:'', // 敏付商户管理员邮箱
+
+
+
       //  畅捷
         mccCodeClass: '', //一级经营类目    反显用
         mccCode:'',  //二级经营类目id
@@ -1522,6 +1641,8 @@ export default {
       cjAddressTree: [],
       yiSMaccTree:[],
       yiSAddressTree: [],
+      mfMaccTree:[], //敏付
+      mfAddressTree: [],
 
 
       // 经营类目返显用
@@ -1533,10 +1654,12 @@ export default {
       lklCascaderArr: [], // (拉卡拉)经营行业
       kdbCascaderArr: [], // (开店宝)经营行业 v-module
       kdbAddressArr: [], // (开店宝)经营地址反显
-      cjAddressArr: [],
+      cjAddressArr: [], //经营地址反显
       cjCascaderArr: [], // (畅捷)经营行业 v-module
       yiSAddressArr: [],
       yiSCascaderArr: [], // (畅捷)经营行业 v-module
+      mfAddressArr: [], //经营地址反显
+      mfCascaderArr: [], // 经营行业 v-module
 
       rate: {},
       open: false,
@@ -1671,7 +1794,81 @@ export default {
     },
 
   },
+  mounted() {
+    // this.init();
+    this.detail.id = this.$route.query.id
+    if (this.detail.id) {
+      this.getZfbMccList().finally(() => {
+        this.getMchInfo(this.detail.id).then(res => {
+          this.getProviceAndCity()
+          this.getBusiness()
+          this.getProductDesc()
+          this.getMerchantAreaList()
+        })
+      }) // 支付宝经营行业
+
+      getProcess().then(res => {
+        this.PROCESS = res
+        if(this.PROCESS.SXF){
+          this.getMccCdList() // 随行付经营类目
+        }
+        if(this.PROCESS.LS){
+          this.getLsMccList() // 乐刷经营类目
+        }
+        if(this.PROCESS.YS){
+          this.getYsMccList() // 威富通经营类目
+        }
+        if(this.PROCESS.CH){
+          this.getChMccList() // 传化经营类目
+        }
+        if(this.PROCESS.FY){
+          this.getFyMccList() // 富友经营类目
+          this.getFyRateList() // 获取富友交易费率列表
+        }
+        if(this.PROCESS.LKL){
+          this.getLklMccList() // 拉卡拉经营类目
+        }
+        if(this.PROCESS.KDB){
+          let userInfo = afterLoginInfoLocal.getJSON()
+          // todo 罗鹏的服务器不请求开店宝数据
+          if(userInfo.serviceId === "1335752481467498496"){
+          }else{
+            this.getKdbMccList() // 开店宝经营类目
+            //  开店宝地址树
+            this.getKdbProviceAndCity();
+          }
+        }
+        if(this.PROCESS.CJ){
+          this.getCjMccList() // 畅捷经营类目
+          //  畅捷地址树
+          this.getCjProviceAndCity();
+        }
+        if(this.PROCESS.MF){
+          this.getMfMccList() // 畅捷经营类目
+          //  畅捷地址树
+          this.getMfProviceAndCity();
+          // let userInfo = afterLoginInfoLocal.getJSON()
+          this.getMfprdVers();
+
+        }
+        if(this.PROCESS.YIS){
+          this.getYiSMccList() // 畅捷经营类目
+          //  畅捷地址树
+          this.getYiSProviceAndCity();
+        }
+      })
+
+    } else {
+      this.$toast.error('详情数据丢失')
+    }
+
+
+  },
   methods: {
+    init(){
+
+    },
+
     closeAlertDialog() {
       this.openAlert = false
     },
@@ -1731,6 +1928,21 @@ export default {
       if (val.length === 3) {
         this.detail.operationDistrictCode = val[2].id
         this.detail.operationDistrictName = val[2].name
+      }
+    },
+
+    //经营地址省市区选择  敏付
+    changeMfAddress(val) {
+      // id
+      this.detail.mfProvinceCode = val[0].id
+      this.detail.mfProvinceName = val[0].name
+      this.detail.mfCityCode = val[1].id
+      this.detail.mfCityName = val[1].name
+      this.detail.mfDistrictCode = ''
+      this.detail.mfDistrictName = ''
+      if (val.length === 3) {
+        this.detail.mfDistrictCode = val[2].id
+        this.detail.mfDistrictName = val[2].name
       }
     },
     //经营地址省市区选择  开店宝
@@ -1798,6 +2010,17 @@ export default {
         this.$set(this.detail, "mccName", item[1].name);
       }
     },
+    // 选择敏付经营类目
+    changeMfMenu(item) {
+      if (item.length) {
+        // console.log('选择开店宝经营类目8888888888:',item[0].id)
+        // console.log('选择开店宝经营类目999999999:',item[1].id)
+        this.$set(this.detail, "mfMccCodeClass", item[0].id);
+        this.$set(this.detail, "mfMccCode", item[1].id);
+        this.$set(this.detail, "mfMccName", item[1].name);
+      }
+    },
+
     // 选择拉卡拉经营类目
     changeLklMenu(item) {
       /*this.detail.lklMccCdName = item ? item.map(res => res.name).join('/') : '';
@@ -2082,12 +2305,21 @@ export default {
       if(detailData.kdbAccountType){
         this.kdbAccountTypeText = this.kdbAccountTypeList[Number(detailData.kdbAccountType)-1].name;
       }
+      if(detailData.mfTradeRate){
+        this.mfTradeRateText = detailData.mfTradeRate;
+      }
+
     },
     // 获取列表详情
     getMchInfo(id) {
       return clientInfoApi.getMchInfo({ id }).then(res => {
         console.log('getMchInfo=============================',res.obj)
         this.detail = Object.assign({}, this.detail, res.obj)
+
+        // 敏付赋值
+        this.detail.mfUsrOprNm = this.detail.representativeName
+        this.detail.mfUsrOprMbl = this.detail.legalPersonPhone
+        this.detail.mfUsrOprEmail = this.detail.email
 
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--开始
         this.detail.kdbJjkTradeRate = '0.55';  //
@@ -2114,10 +2346,12 @@ export default {
         this.cascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
         this.kdbAddressArr = [this.detail.kdbProvinceId, this.detail.kdbCityId, this.detail.kdbAreaId] //开店宝省市区
         this.cjAddressArr = [this.detail.operationProvinceCode, this.detail.operationCityCode, this.detail.operationDistrictCode] //畅捷省市区
+        this.mfAddressArr = [this.detail.mfProvinceCode, this.detail.mfCityCode, this.detail.mfDistrictCode] //敏付省市区
         this.yiSAddressArr = [this.detail.ysYloneAreaCode, this.detail.ysYltwoAreaCode, this.detail.ysYlthreeAreaCode] //易生省市区
         //todo 开店宝经营类目回显
         this.kdbCascaderArr = [this.detail.kdbBusinessId1, this.detail.kdbBusinessId] //开店宝
         this.cjCascaderArr = [this.detail.mccCodeClass, this.detail.mccCode] //畅捷
+        this.mfCascaderArr = [this.detail.mfMccCodeClass, this.detail.mfMccCode] //敏付
         this.yiSCascaderArr = [this.detail.ysYloneMccCode, this.detail.ysYltwoMccCode, this.detail.ysYlthreeMccCode] //易生
         this.lsCascaderArr = [this.detail.leFirstMccCode, this.detail.leSecondMccCode, this.detail.leMccCode]
         this.ysCascaderArr = [this.detail.ysFirstName, this.detail.ysSecondName, this.detail.industrId]
@@ -2294,6 +2528,48 @@ export default {
       })
     },
     /**
+     * 获取敏付省市区
+     */
+    async getMfProviceAndCity() {
+      let that = this
+      await clientInfoApi.getMfAddressList().then(res => {
+        // let resObj = res
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        that.mfAddressTree =  res.obj
+        // that.mfAddressTree = initProvinces(res.obj.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
+        // console.log('kaidianbaotree==========================',this.kdbAddressTree)
+      })
+    },
+    // 获取mf经营类目
+    getMfMccList() {
+      if (!this.PROCESS.MF) return
+      clientInfoApi.getMfMccList().then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        // res.obj = JSON.parse(res.obj)
+        this.mfMaccTree = res.obj
+        // this.mfMaccTree = this.sortTreeAttr(res.obj.data,'mf')
+      })
+    },
+    // 获取费率模板
+    getMfprdVers() {
+
+      clientInfoApi.getMfprdVers().then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        // res.obj = JSON.parse(res.obj)
+        this.mfprdVersList = res.obj
+        // this.mfMaccTree = this.sortTreeAttr(res.obj.data,'mf')
+      })
+    },
+    /**
      * 获取易生省市区
      */
     async getYiSProviceAndCity() {
@@ -2305,13 +2581,11 @@ export default {
           return
         }
         that.yiSAddressTree =  res.obj
-        // that.cjAddressTree = initProvinces(res.obj.data, 'areaId', 'areaName', 'cities', 'areaId', 'areaName', 'counties', 'areaId', 'areaName')
-        // console.log('kaidianbaotree==========================',this.kdbAddressTree)
+
       })
     },
     // 获取易生经营类目
     getYiSMccList() {
-      // if (!this.PROCESS.CJ) return
       clientInfoApi.getYiSMccList().then(res => {
         //请求失败也会返回200
         if(!res.obj){
@@ -2319,7 +2593,7 @@ export default {
         }
         // res.obj = JSON.parse(res.obj)
         this.yiSMaccTree = res.obj
-        // this.cjMaccTree = this.sortTreeAttr(res.obj.data,'cj')
+
       })
     },
     // 最大只到2级
@@ -2431,6 +2705,10 @@ export default {
       }else if(this.simpleTreeStatus === 5){
         this.detail.ysIsService = item.value
         this.yiSSettlementCycleTypeText = item.name;
+      }else if(this.simpleTreeStatus === 6){
+        this.detail.mfTradeRate = item.wxRate
+        this.detail.productVerCode = item.opnPrdVers
+        this.mfTradeRateText = item.wxRate;
       }
       this.openSimpleTree = false;
 
@@ -2637,6 +2915,12 @@ export default {
       let sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee']
       //畅捷通道必填字段
       let cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName', 'chanpayTradeRate']
+      //敏付通道必填字段
+     // 以下字段为登录敏付系统用，且必传
+     /* mfUsrOprNm:'',  //敏付商户管理员姓名
+        mfUsrOprMbl:'', // 敏付商户管理员手机号码
+        mfUsrOprEmail:'', // 敏付商户管理员邮箱*/
+      let mfRequireData = ['mfMccCode', 'mfMccName','mfDistrictCode', 'mfDistrictName', 'mfCityCode', 'mfCityName', 'mfProvinceCode', 'mfProvinceName', 'mfUsrOprNm', 'mfUsrOprMbl' ,'mfUsrOprEmail', 'productVerCode']
       let yiSRequireData = ['ysWxRate', 'ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
 
 
@@ -2659,6 +2943,12 @@ export default {
         // todo 是否需要处理share
         lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
         cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName']
+        //敏付通道必填字段
+        // 以下字段为登录敏付系统用，且必传
+        /* mfUsrOprNm:'',  //敏付商户管理员姓名
+           mfUsrOprMbl:'', // 敏付商户管理员手机号码
+           mfUsrOprEmail:'', // 敏付商户管理员邮箱*/
+        mfRequireData = ['mfMccCode', 'mfMccName','mfDistrictCode', 'mfDistrictName', 'mfCityCode', 'mfCityName', 'mfProvinceCode', 'mfProvinceName', 'mfUsrOprNm', 'mfUsrOprMbl' ,'mfUsrOprEmail']
         sjPosRequireData = ['bankPhotoId','holdingCardId']
         kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbRegistryId', 'kdbAgreementId']
         yiSRequireData = ['ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
@@ -2796,6 +3086,23 @@ export default {
         }
         if (Number(this.detail.chanpayTradeRate) >= 1) {
           this.$toast.error('费率不能超过1')
+          return
+        }
+      }
+      if (this.checkboxObj.mf && this.PROCESS.MF) {
+        this.detail.importNums.push('21')
+        //敏付
+        if (!mfRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
+          console.log('minfudetail=========',this.detail)
+          this.$toast.error('有内容未填入')
+          return
+        }
+        if (!validPhone(this.detail.mfUsrOprMbl)) {
+          this.$toast.error('手机号码格式错误')
+          return
+        }
+        if (!emailValid(this.detail.mfUsrOprEmail)) {
+          this.$toast.error('邮箱格式错误')
           return
         }
       }
@@ -3049,67 +3356,7 @@ export default {
     }
   },
 
-  mounted() {
-    this.detail.id = this.$route.query.id
-    if (this.detail.id) {
-      this.getZfbMccList().finally(() => {
-        this.getMchInfo(this.detail.id).then(res => {
-          this.getProviceAndCity()
-          this.getBusiness()
-          this.getProductDesc()
-          this.getMerchantAreaList()
-        })
-      }) // 支付宝经营行业
 
-      getProcess().then(res => {
-        this.PROCESS = res
-        if(this.PROCESS.SXF){
-          this.getMccCdList() // 随行付经营类目
-        }
-        if(this.PROCESS.LS){
-          this.getLsMccList() // 乐刷经营类目
-        }
-        if(this.PROCESS.YS){
-          this.getYsMccList() // 威富通经营类目
-        }
-        if(this.PROCESS.CH){
-          this.getChMccList() // 传化经营类目
-        }
-        if(this.PROCESS.FY){
-          this.getFyMccList() // 富友经营类目
-          this.getFyRateList() // 获取富友交易费率列表
-        }
-        if(this.PROCESS.LKL){
-          this.getLklMccList() // 拉卡拉经营类目
-        }
-        if(this.PROCESS.KDB){
-          let userInfo = afterLoginInfoLocal.getJSON()
-          // todo 罗鹏的服务器不请求开店宝数据
-          if(userInfo.serviceId === "1335752481467498496"){
-          }else{
-            this.getKdbMccList() // 开店宝经营类目
-            //  开店宝地址树
-            this.getKdbProviceAndCity();
-          }
-        }
-        if(this.PROCESS.CJ){
-          this.getCjMccList() // 畅捷经营类目
-          //  畅捷地址树
-          this.getCjProviceAndCity();
-        }
-        if(this.PROCESS.YIS){
-          this.getYiSMccList() // 畅捷经营类目
-          //  畅捷地址树
-          this.getYiSProviceAndCity();
-        }
-      })
-
-    } else {
-      this.$toast.error('详情数据丢失')
-    }
-
-
-  },
 
 }
 </script>

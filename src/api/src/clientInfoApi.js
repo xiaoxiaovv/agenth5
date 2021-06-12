@@ -205,6 +205,43 @@ export default {
       }
     })
   },
+
+  // 获取敏付MccCd树类目列表
+  getMfMccList() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/mf/findMccList`,
+      method: 'get',
+      params:{
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+  // 获取敏付区域列表
+  getMfAddressList() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId33333333333',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/mf/findAreaList`,
+      method: 'get',
+      params:{
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+
+  getMfprdVers() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/mf/getMfprdVers`,
+      method: 'get',
+      params:{
+        // serviceProviderId:serviceId
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+
+
   // 获取易生MccCd树类目列表
   getYiSMccList() {
     // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
