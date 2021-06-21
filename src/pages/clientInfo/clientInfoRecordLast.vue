@@ -86,6 +86,18 @@
           </div>
         </div>
 
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.mf">*</span>营业范围
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.businessScope" />
+          </div>
+        </div>
+
+
 
       </div>
       <!--易生通道-->
@@ -1584,7 +1596,7 @@ export default {
         mfUsrOprNm:'',  //敏付商户管理员姓名
         mfUsrOprMbl:'', // 敏付商户管理员手机号码
         mfUsrOprEmail:'', // 敏付商户管理员邮箱
-
+        businessScope:'',//敏付营业范围
 
 
       //  畅捷
@@ -2320,6 +2332,7 @@ export default {
         this.detail.mfUsrOprNm = this.detail.representativeName
         this.detail.mfUsrOprMbl = this.detail.legalPersonPhone
         this.detail.mfUsrOprEmail = this.detail.email
+        this.detail.businessScope = this.detail.mfMccName
 
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--开始
         this.detail.kdbJjkTradeRate = '0.55';  //
@@ -2920,7 +2933,7 @@ export default {
      /* mfUsrOprNm:'',  //敏付商户管理员姓名
         mfUsrOprMbl:'', // 敏付商户管理员手机号码
         mfUsrOprEmail:'', // 敏付商户管理员邮箱*/
-      let mfRequireData = ['mfMccCode', 'mfMccName','mfDistrictCode', 'mfDistrictName', 'mfCityCode', 'mfCityName', 'mfProvinceCode', 'mfProvinceName', 'mfUsrOprNm', 'mfUsrOprMbl' ,'mfUsrOprEmail', 'productVerCode']
+      let mfRequireData = ['mfMccCode', 'mfMccName','mfDistrictCode', 'mfDistrictName', 'mfCityCode', 'mfCityName', 'mfProvinceCode', 'mfProvinceName', 'mfUsrOprNm', 'mfUsrOprMbl' ,'mfUsrOprEmail', 'productVerCode','businessScope']
       let yiSRequireData = ['ysWxRate', 'ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
 
 
@@ -2948,7 +2961,7 @@ export default {
         /* mfUsrOprNm:'',  //敏付商户管理员姓名
            mfUsrOprMbl:'', // 敏付商户管理员手机号码
            mfUsrOprEmail:'', // 敏付商户管理员邮箱*/
-        mfRequireData = ['mfMccCode', 'mfMccName','mfDistrictCode', 'mfDistrictName', 'mfCityCode', 'mfCityName', 'mfProvinceCode', 'mfProvinceName', 'mfUsrOprNm', 'mfUsrOprMbl' ,'mfUsrOprEmail']
+        mfRequireData = ['mfMccCode', 'mfMccName','mfDistrictCode', 'mfDistrictName', 'mfCityCode', 'mfCityName', 'mfProvinceCode', 'mfProvinceName', 'mfUsrOprNm', 'mfUsrOprMbl' ,'mfUsrOprEmail','businessScope']
         sjPosRequireData = ['bankPhotoId','holdingCardId']
         kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbRegistryId', 'kdbAgreementId']
         yiSRequireData = ['ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
