@@ -1020,6 +1020,55 @@
             </div>
           </div>
         </div>
+        <div class="demo-text"
+             v-if="active === 12">
+          <div class="client-info-detail__content box match-left-space pb-40"
+               v-show="PROCESS.MF">
+            <div class="match-width box align-default">
+              <div class="title">敏付通道</div>
+
+              <div class="item">
+                <div class="subtitle">费率</div>
+                <div class="match-left-space align-right">{{detail.mfTradeRate}} %</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">经营许可证</div>
+                <div class="match-left-space align-right ellipsis">
+                  <div v-if="detail.businessCertPicId"
+                       @click="previewImage(detail.businessCertPicId)">
+                    <img class="match-parent"
+                         :src="detail.businessCertPicId | loadImage" />
+                  </div>
+                </div>
+              </div>
+              <div v-if="mfData"
+                   style="width:100%">
+                <div class="title">进件状态</div>
+                <div class="item">
+                  <div class="subtitle">商户编号</div>
+                  <div class="match-left-space align-right">{{mfData.mfMerchantNo}}</div>
+                </div>
+
+                <!--<div class="item">
+                  <div class="subtitle">费率</div>
+                  <div class="match-left-space align-right">{{cjData.chanpayTradeRate}}</div>
+                </div>-->
+                <div class="item">
+                  <div class="subtitle">进件状态</div>
+                  <div class="match-left-space align-right">{{entryStatus[mfData.entryStatus]}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">进件结果</div>
+                  <div class="match-left-space align-right">{{mfData.mfMsg}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">提交时间</div>
+                  <div class="match-left-space align-right">{{mfData.commitTime}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </mu-container>
     </div>
 
@@ -1060,7 +1109,8 @@ export default {
         SJPOS:false,
         KDB:false,
         CJ:false,
-        YIS:false
+        YIS:false,
+        MF:false,
       },
       isEdit: false,
       detail: {
@@ -1078,6 +1128,7 @@ export default {
       kdbData:'',
       cjData:'',
       yiSData:'',
+      mfData:'',
       active: 0,
       wxList: [],
       sellCheck: [],
@@ -1105,6 +1156,7 @@ export default {
         { index: 9, name: '开店宝', open: true },
         { index: 10, name: '畅捷', open: true },
         { index: 11, name: '易生', open: true },
+        { index: 12, name: '敏付', open: true },
       ],
       fyEntryStatus: {
         '-1': '进件失败',
@@ -1268,9 +1320,13 @@ export default {
           // this.cjMsgHandle(this.cjData)
           // console.log('开店宝进件info==================',res)
         })
-      }else if (item.channel === 13) { // 畅捷
+      }else if (item.channel === 13) { // 易生
         clientInfoApi.getYiSCode({ id: item.id }).then(res => {
           this.yiSData = res.obj
+        })
+      }else if (item.channel === 14) { // 敏付
+        clientInfoApi.getMFSCode({ id: item.id }).then(res => {
+          this.mfData = res.obj
         })
       }
 
@@ -1529,6 +1585,7 @@ export default {
       this.tabList[9].open = res.KDB
       this.tabList[10].open = res.CJ
       this.tabList[11].open = res.YIS
+      this.tabList[12].open = res.MF
 
     })
     this.wxList.forEach(item => {

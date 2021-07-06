@@ -511,6 +511,17 @@ export default {
       params
     })
   },
+  /**
+   * 敏付-查询进件状态
+   * @param {*} params
+   */
+  getMFSCode(params) {
+    return requestAxios({
+      url: '/batchFeed/mf/getMfFeedStatus',
+      method: 'get',
+      params
+    })
+  },
 
   /**
    * 查询通道开关状态
