@@ -89,7 +89,7 @@
         <div class="item">
           <div class="subtitle">
             <span class="star"
-                  v-show="checkboxObj.mf">*</span>营业范围
+                  v-show="checkboxObj.mf">*</span>营业营业营业营业范围
           </div>
           <div class="match-left-space align-right">
             <input placeholder="请输入"
@@ -1705,6 +1705,7 @@ export default {
     }
   },
   watch: {
+
     proImgList(val) {
       if (!val.length) {
         this.detail.pro = ''
@@ -1768,6 +1769,7 @@ export default {
       }
     },
     zfbCascaderArr(val) {
+
       if (val.length) {
         // this.detail.aliFirstLevel = val[0]
         // this.detail.aliSecondLevel = val[1]
@@ -1808,7 +1810,8 @@ export default {
   },
   mounted() {
     // this.init();
-    this.detail.id = this.$route.query.id
+
+    this.detail.id = this.$route.query.id;
     if (this.detail.id) {
       this.getZfbMccList().finally(() => {
         this.getMchInfo(this.detail.id).then(res => {
@@ -1820,6 +1823,8 @@ export default {
       }) // 支付宝经营行业
 
       getProcess().then(res => {
+
+
         this.PROCESS = res
         if(this.PROCESS.SXF){
           this.getMccCdList() // 随行付经营类目
@@ -1856,17 +1861,21 @@ export default {
           this.getCjProviceAndCity();
         }
         if(this.PROCESS.MF){
-          this.getMfMccList() // 畅捷经营类目
-          //  畅捷地址树
+          this.getMfMccList() // 敏付经营类目
+          //  敏付地址树
           this.getMfProviceAndCity();
           // let userInfo = afterLoginInfoLocal.getJSON()
           this.getMfprdVers();
 
         }
         if(this.PROCESS.YIS){
-          this.getYiSMccList() // 畅捷经营类目
-          //  畅捷地址树
+          this.getYiSMccList() // 易生经营类目
+          //  易生地址树
           this.getYiSProviceAndCity();
+        }
+        if(this.PROCESS.ZFB){
+        //调用你的方法
+          this.getZfbMccList();
         }
       })
 
@@ -1880,6 +1889,7 @@ export default {
     init(){
 
     },
+
 
     closeAlertDialog() {
       this.openAlert = false
@@ -2446,9 +2456,13 @@ export default {
     // 获取支付宝经营行业
     getZfbMccList() {
       if (!this.PROCESS.ZFB) {
+
+        console.log("支付宝信息2")
+
         return Promise.resolve()
       }
       return clientInfoApi.getZfbMccList().then(res => {
+        console.log("支付宝信息1")
         this.zfbMaccList = this.sortTreeAttr(res.obj)
       })
     },
@@ -3183,7 +3197,9 @@ export default {
       }else{
         this.submitMchIfo()
       }
-
+      if (this.checkboxObj.zfb && this.PROCESS.ZFB) {//支付宝提交校验
+        console.log("555555555555")
+      }
 
     },
     // 时间改变

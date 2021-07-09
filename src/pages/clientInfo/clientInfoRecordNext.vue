@@ -708,7 +708,7 @@ export default {
     },
     // 下一步
     onNext() {
-      let requiredData = ['bnkCdName', 'lbnkProv', 'lbnkCity', 'lbnkNo', 'accountHolder', 'accountNumber', 'bankPhone', 'bankPhotoId']
+      let requiredData = ['bnkCdName', 'lbnkProv', 'lbnkCity', 'lbnkNo', 'accountHolder', 'accountNumber', 'bankPhone', 'bankPhotoId','kdbAccountType']
       if (Number(this.detail.businessType) === 1) { // 个体
         requiredData.push('openingAccountLicensePicId')
       } else { // 企业

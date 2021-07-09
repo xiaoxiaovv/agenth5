@@ -429,6 +429,8 @@ export default {
         msg = '商户名不能为空'
       } else if (!this.params.contact) {
         msg = '请填写联系人'
+      } else if (!this.params.kdbAccountType) {
+        msg = '请填写结算类型'
       } else if (!this.params.phone) {
         msg = '请填写手机号'
       } else if (!(/^1\d{10}$/.test(this.params.phone))) {
