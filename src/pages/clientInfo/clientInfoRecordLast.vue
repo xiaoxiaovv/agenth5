@@ -14,6 +14,184 @@
 
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
+
+      <!--拉卡拉-->
+      <div class="match-width box align-default"
+           v-if="PROCESS.LKL">
+        <div class="title">
+          <mu-checkbox v-model="checkboxObj.lkl"
+                       label="拉卡拉通道"></mu-checkbox>
+        </div>
+
+        <div class="item">
+          <VmaCascaderTree v-model="lklCascaderArrCont"
+                           class="client-info"
+                           :dataTree="lklMaccTreeCont"
+                           :placeholder="'请选择类目'"
+                           :modalLabel="'选择类目'"
+                           :required="checkboxObj.lkl"
+                           label="经营类目"
+                           @change="changeLklcontMenu"></VmaCascaderTree>
+        </div>
+
+
+        <div class="item">
+          <VmaCascaderTree v-model="lklCascaderArr"
+                           class="client-info"
+                           :dataTree="lklMaccTree"
+                           :placeholder="'请选择内容'"
+                           :modalLabel="'选择内容'"
+                           :required="checkboxObj.lkl"
+                           label="经营内容"
+                           @change="changeLklMenu"></VmaCascaderTree>
+        </div>
+        <div class="item">
+          <VmaCascaderTree class="client-info"
+                           v-model="lklAddressArr"
+                           :dataTree="lklAddressTree"
+                           :label="'商户营业地区'"
+                           :placeholder="'请选择省市'"
+                           :modalLabel="'选择省市'"
+                           :required="checkboxObj.lkl"
+                           @change="changeLklAddress"></VmaCascaderTree>
+        </div>
+
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.lkl">*</span>商户详细地址
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入不包含省市区的地址"
+                   v-model="detail.lklMerRegAddr" />
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.lkl">*</span>费率
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(7)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="lklTradeRateText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+
+
+       <!-- <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.lkl">*</span>商户省级编码
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.leFirstMccCode" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.lkl">*</span>商户市级编码
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.leSecondMccCode " />
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.lkl">*</span>商户地区编码
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.leMccCode" />
+          </div>
+        </div>-->
+
+
+       <!-- <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.lkl">*</span>银联标准一级Mcc编码
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.lklOneMccCode" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.lkl">*</span>银联标准二级Mcc编码
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.lklTwoMccCode" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
+            <span class="star"
+                  v-show="checkboxObj.lkl">*</span>银联标准三级Mcc编码
+          </div>
+          <div class="match-left-space align-right">
+            <input placeholder="请输入"
+                   v-model="detail.lklThreeMccCode" />
+          </div>
+        </div>-->
+
+
+       <!-- <div class="item" v-if="posType">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.lkl">*</span>POS类型
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(9)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="lklPosTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>-->
+
+
+        <div class="item">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.lkl">*</span>POS类型
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(9)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="lklPosTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+
+
+
+        <div class="item">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.lkl">*</span>到账周期
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callSimpleTree(8)">
+            <div class="input ellipsis"
+                 style="text-align: right" v-text="lklSettlementCycleTypeText">
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+
       <!--敏付-->
       <div class="match-width box align-default"
            v-if="PROCESS.MF">
@@ -35,7 +213,7 @@
           <VmaCascaderTree class="client-info"
                            v-model="mfAddressArr"
                            :dataTree="mfAddressTree"
-                           :label="'商户营业地区补充'"
+                           :label="'商户营业地区'"
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
                            :required="checkboxObj.mf"
@@ -89,7 +267,7 @@
         <div class="item">
           <div class="subtitle">
             <span class="star"
-                  v-show="checkboxObj.mf">*</span>营业营业营业营业范围
+                  v-show="checkboxObj.mf">*</span>营业范围
           </div>
           <div class="match-left-space align-right">
             <input placeholder="请输入"
@@ -121,7 +299,7 @@
           <VmaCascaderTree class="client-info"
                            v-model="yiSAddressArr"
                            :dataTree="yiSAddressTree"
-                           :label="'商户营业地区补充'"
+                           :label="'商户营业地区'"
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
                            :required="checkboxObj.yiS"
@@ -192,7 +370,7 @@
           <VmaCascaderTree class="client-info"
                            v-model="cjAddressArr"
                            :dataTree="cjAddressTree"
-                           :label="'商户营业地区补充'"
+                           :label="'商户营业地区'"
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
                            :required="checkboxObj.cj"
@@ -232,7 +410,7 @@
           <VmaCascaderTree class="client-info"
                            v-model="kdbAddressArr"
                            :dataTree="kdbAddressTree"
-                           :label="'商户营业地区补充'"
+                           :label="'商户营业地区'"
                            :placeholder="'请选择省市'"
                            :modalLabel="'选择省市'"
                            :required="checkboxObj.kdb"
@@ -932,7 +1110,7 @@
         <div class="item">
           <div class="subtitle">
             <span class="star"
-                  v-show="checkboxObj.wx">*</span>商户营业地区补充
+                  v-show="checkboxObj.wx">*</span>商户营业地区
           </div>
           <div class="match-left-space align-right">
             <div class="input align-right"
@@ -1027,7 +1205,7 @@
         </div>
       </div>
 
-      <!--<div class="match-width box align-default"
+    <!--  <div class="match-width box align-default"
            v-if="PROCESS.LKL">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.lkl"
@@ -1203,6 +1381,65 @@
             </div>
           </div>
         </div>
+
+
+
+        <!--拉卡拉费率模板-->
+        <div v-if="simpleTreeStatus === 7">
+          <div class="action-sheet__header align-left box plr-30">请选择费率</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in lklProdRateArray"
+                 :key="index">
+              <div class="'item align-hor-bet plr-30 ptb-30'"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.verRate}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div v-if="simpleTreeStatus === 8">
+          <div class="action-sheet__header align-left box plr-30">请选择到账周期类型</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in lklSettlementCycleTypeList"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.name === detail.lklSettlementCycleTypeText)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.name}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="simpleTreeStatus === 9">
+          <div class="action-sheet__header align-left box plr-30">请选择POS类型</div>
+          <div class="action-sheet__content">
+            <div class="match-width"
+                 v-for="(item, index) in lklPosTypeList"
+                 :key="index">
+              <div :class="['item align-hor-bet plr-30 ptb-30', (item.name === detail.lklPosTypeText)?'active':'']"
+                   @click="simpleTreeSelect(item)">
+                <div>{{item.name}}</div>
+                <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+                <!-- <div class="pass" v-else></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
 
       </mu-bottom-sheet>
 
@@ -1507,7 +1744,21 @@ export default {
         }
 
       ],//结算周期类型列表
+      lklSettlementCycleTypeList: [
+        {
+          value: 0,
+          name: 'D0'
+        },
+        {
+          value: 1,
+          name: 'T1'
+        }
+      ],//结算周期类型列表
+      lklPosTypeList: [
+
+      ],
       mfprdVersList: [],//敏付费率模板
+      lklProdRateArray: [],//拉卡拉费率模板
       kdbsexList: [
         {
           value: 1,
@@ -1532,7 +1783,10 @@ export default {
       kdbSettlementCycleTypeText:'请选择到账周期类型',
       kdbAccountTypeText:'请选择结算账户类型',
       yiSSettlementCycleTypeText:'请选择到账周期类型',
+      lklSettlementCycleTypeText:'请选择到账周期类型',
+      lklPosTypeText:'请选择pos类型',
       mfTradeRateText:'请选择费率',
+      lklTradeRateText:'请选择费率',
       yiSMsgCode:'',
       yiSUserId:'', //获取验证码的接口返回的
       detail: {
@@ -1599,7 +1853,31 @@ export default {
         businessScope:'',//敏付营业范围
 
 
-      //  畅捷
+        //  拉卡拉参数配置
+        // lklMccCodeClass: '', //一级经营类目    反显用
+        lklMccCode:'',  //二级经营类目id
+        lklMccName:'',  //二级经营类目name
+        lklproductVerCode:'',  //费率模板
+        lklTradeRate:'',
+        verRate:'',
+        lklbusinessScope:'',//拉卡拉营业范围
+        lklMerRegDistCode:'',
+        lklMerRegCityCode:'',
+        lklMerRegProvCode:'',
+        lklMerRegAddr:'',
+        lklSettlePeriod:'',
+        lklMerBusiContent:'',
+        lklOneMccCode:'',
+        lklTwoMccCode:'',
+        lklThreeMccCode:'',
+        lklPosType:'',    //(拉卡拉)pos类型
+        lklposypeText:'请选择',
+        lklIsService :  '',  //是否开通D0秒到服务  0否1是
+        lklSettlementCycle:'',//结算周期
+
+
+
+        //  畅捷
         mccCodeClass: '', //一级经营类目    反显用
         mccCode:'',  //二级经营类目id
         mccName:'',  //二级经营类目name
@@ -1655,6 +1933,9 @@ export default {
       yiSAddressTree: [],
       mfMaccTree:[], //敏付
       mfAddressTree: [],
+      lklMaccTree:[], //拉卡拉经营内容
+      lklAddressTree: [],
+      lklMaccTreeCont:[], //拉卡拉经营类目
 
 
       // 经营类目返显用
@@ -1663,7 +1944,9 @@ export default {
       chCascaderArr: [], // (传化)经营类目
       zfbCascaderArr: [], // (支付宝)经营行业
       fyCascaderArr: [], // (富友)经营行业
-      lklCascaderArr: [], // (拉卡拉)经营行业
+      lklAddressArr: [], //经营地址反显
+      lklCascaderArr: [], // (拉卡拉)经营行业 v-module
+      lklCascaderArrCont: [], // (拉卡拉)经营行业 v-module
       kdbCascaderArr: [], // (开店宝)经营行业 v-module
       kdbAddressArr: [], // (开店宝)经营地址反显
       cjAddressArr: [], //经营地址反显
@@ -1738,6 +2021,8 @@ export default {
       }
     },
     lsCascaderArr(val) {
+
+
       if (val.length) {
         this.detail.leFirstMccCode = val[0]
         this.detail.leSecondMccCode = val[1]
@@ -1843,7 +2128,13 @@ export default {
           this.getFyRateList() // 获取富友交易费率列表
         }
         if(this.PROCESS.LKL){
-          this.getLklMccList() // 拉卡拉经营类目
+          this.getLklMccListCont() // 拉卡拉经营内容
+          this.getLklMccList('jieSuan') // 拉卡拉经营内容
+          this.getLklMccList('busiContJson') // 拉卡拉经营类目
+          this.getLklMccList('posType') // 拉卡拉经营类目
+          this.getLklProviceAndCity(); //  拉卡拉地址树
+          this.findProdRateArray(); //  拉卡拉费率模板
+
         }
         if(this.PROCESS.KDB){
           let userInfo = afterLoginInfoLocal.getJSON()
@@ -1967,9 +2258,23 @@ export default {
         this.detail.mfDistrictName = val[2].name
       }
     },
+
+
+    //经营地址省市区编码选择  拉卡拉
+    changeLklAddress(val) {
+      this.detail.lklMerRegProvCode = val[0].id
+      this.detail.lklMerRegCityCode = val[1].id
+      this.detail.lklMerRegDistCode = ''
+
+      if (val.length === 3) {
+        this.detail.lklMerRegDistCode = val[2].id
+      }
+    },
+
+
+
     //经营地址省市区选择  开店宝
     changeShopAddress(val) {
-      // id
       this.detail.kdbProvinceId = val[0].id
       this.detail.kdbCityId = val[1].id
       this.detail.kdbAreaId = ''
@@ -1996,7 +2301,6 @@ export default {
     },
     // 选择支付宝经营行业
     changeZfbMenu(item) {
-      console.log('选择支付宝经营行业i', item)
       if (item.length) {
         this.detail.aliFirstLevel = item[0].name
         this.detail.aliSecondLevel = item[1].name
@@ -2016,8 +2320,7 @@ export default {
     // 选择开店宝经营类目
     changeKdbMenu(item) {
       if (item.length) {
-        // console.log('选择开店宝经营类目8888888888:',item[0].id)
-        // console.log('选择开店宝经营类目999999999:',item[1].id)
+
         this.$set(this.detail, "kdbBusinessId1", item[0].id);
         this.$set(this.detail, "kdbBusinessId", item[1].id);
       }
@@ -2025,8 +2328,7 @@ export default {
     // 选择畅捷经营类目
     changeCjMenu(item) {
       if (item.length) {
-        // console.log('选择开店宝经营类目8888888888:',item[0].id)
-        // console.log('选择开店宝经营类目999999999:',item[1].id)
+
         this.$set(this.detail, "mccCodeClass", item[0].id);
         this.$set(this.detail, "mccCode", item[1].id);
         this.$set(this.detail, "mccName", item[1].name);
@@ -2035,8 +2337,7 @@ export default {
     // 选择敏付经营类目
     changeMfMenu(item) {
       if (item.length) {
-        // console.log('选择开店宝经营类目8888888888:',item[0].id)
-        // console.log('选择开店宝经营类目999999999:',item[1].id)
+
         this.$set(this.detail, "mfMccCodeClass", item[0].id);
         this.$set(this.detail, "mfMccCode", item[1].id);
         this.$set(this.detail, "mfMccName", item[1].name);
@@ -2044,22 +2345,37 @@ export default {
     },
 
     // 选择拉卡拉经营类目
-    changeLklMenu(item) {
-      /*this.detail.lklMccCdName = item ? item.map(res => res.name).join('/') : '';
-      this.detail.lakalaMccCode = item ? item[0].code:'';*/
+    changeLklcontMenu(item) {
+      if (item.length) {
+
+        this.$set(this.detail, "lklOneMccCode", item[0].id);
+        this.$set(this.detail, "lklTwoMccCode", item[1].id);
+        this.$set(this.detail, "lklThreeMccCode", item[2].id);
+        // this.$set(this.detail, "lklMccName", item[1].name);
+      }
     },
+
+
+
+    // 选择拉卡拉经营内容
+    changeLklMenu(item) {
+      if (item.length) {
+        this.$set(this.detail, "lklMerBusiContent", item[0].id);
+      }
+    },
+
+    // 选择拉卡拉经营类目
+   /* changeLklMenu(item) {
+      /!*this.detail.lklMccCdName = item ? item.map(res => res.name).join('/') : '';
+      this.detail.lakalaMccCode = item ? item[0].code:'';*!/
+    },*/
 // ===================================================================
     // 选择经营类目  易生
     changeYiSMenu(item) {
       if (item.length) {
-        this.detail.ysYloneMccCode = item[0].id
-        this.detail.ysYltwoMccCode = item[1].id
-        this.detail.ysYlthreeMccCode = item[2].id
-        // console.log('选择开店宝经营类目8888888888:',item[0].id)
-        // console.log('选择开店宝经营类目999999999:',item[1].id)
-        /*this.$set(this.detail, "mccCodeClass", item[0].id);
+       this.$set(this.detail, "mccCodeClass", item[0].id);
         this.$set(this.detail, "mccCode", item[1].id);
-        this.$set(this.detail, "mccName", item[1].name);*/
+        this.$set(this.detail, "mccName", item[1].name);
       }
     },
 
@@ -2169,6 +2485,7 @@ export default {
       this.detail.fuiouAreaName = ''
       this.detail.fuiouAreaId = ''
       // 拉卡拉
+      this.lklCascaderArrCont = []
       this.lklCascaderArr = []
       this.detail.lakalaMccCode = ''
       //  手机pos
@@ -2330,7 +2647,75 @@ export default {
       if(detailData.mfTradeRate){
         this.mfTradeRateText = detailData.mfTradeRate;
       }
+      if(detailData.verRate){
+        this.lklTradeRateText = detailData.verRate;
+      }
+      if(detailData.lklSettlementCycle===0 || detailData.lklSettlementCycle){
+        this.lklSettlementCycleTypeText = this.lklSettlementCycleTypeList[detailData.lklSettlementCycle].name;
+      }
+      if(detailData.lklPosType){
+        let type = 'posType';
+        clientInfoApi.getLklMccList(type).then(res => {
+          //请求失败也会返回200
+          if(!res.obj){
+            return
+          }
+          var newdata =  res.obj;
+          var data = [];
+          for(var i=0,l=newdata.length;i<l;i++){
+            for(var key in newdata[i]){
+              var d = {
+                'id':key,
+                'code':key,
+                'name':newdata[i][key]
 
+              }
+              data.push(d)
+            }
+          }
+            for(let i = 0;i<data.length;i++){
+              if(data[i].id == detailData.lklPosType){
+                this.lklPosTypeText = data[i].name
+                break
+              }
+            }
+        })
+      }
+      if(detailData.lklSettlePeriod){
+        let type = 'jieSuan';
+        clientInfoApi.getLklMccList(type).then(res => {
+          //请求失败也会返回200
+          if(!res.obj){
+            return
+          }
+          var newdata =  res.obj;
+          var data = [];
+          for(var i=0,l=newdata.length;i<l;i++){
+            for(var key in newdata[i]){
+              var d = {
+                'id':key,
+                'code':key,
+                'name':newdata[i][key]
+
+              }
+              data.push(d)
+            }
+          }
+          console.log('data==================',data)
+          console.log('detailData.lklSettlePeriod==================',detailData.lklSettlePeriod)
+            for(let i = 0;i<data.length;i++){
+              if(data[i].id == detailData.lklSettlePeriod){
+                this.lklSettlementCycleTypeText = data[i].name
+                break
+              }
+            }
+          // alert(this.lklMaccTree);
+          // this.lklMaccTree = this.sortTreeAttr(res.obj.data,'lkl')
+        })
+      }
+      if(detailData.lklTradeRate){
+      this.lklTradeRateText = detailData.lklTradeRate
+      };
     },
     // 获取列表详情
     getMchInfo(id) {
@@ -2343,6 +2728,28 @@ export default {
         this.detail.mfUsrOprMbl = this.detail.legalPersonPhone
         this.detail.mfUsrOprEmail = this.detail.email
         this.detail.businessScope = this.detail.mfMccName
+
+
+
+
+/*
+        // 拉卡拉赋值
+         this.detail.code = this.detail.lklMerRegProvCode
+
+        this.detail.lklMerRegAddr = this.detail.lklMerRegAddr
+
+        this.detail.leFirstMccCode = this.detail.lklMerRegAddr
+
+        this.detail.leSecondMccCode  = this.detail.lklMerRegCityCode
+
+        this.detail.leMccCode.code   =  this.detail.lklMerRegDistCode
+
+        this.detail.lklPosType.code   =  this.detail.lklPosType
+
+        this.detail.lklSettlementCycle.code   =  this.detail.lklSettlePeriod
+
+        this.detail.verRate   =  this.detail.lklTradeRate
+*/
 
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--开始
         this.detail.kdbJjkTradeRate = '0.55';  //
@@ -2371,10 +2778,20 @@ export default {
         this.cjAddressArr = [this.detail.operationProvinceCode, this.detail.operationCityCode, this.detail.operationDistrictCode] //畅捷省市区
         this.mfAddressArr = [this.detail.mfProvinceCode, this.detail.mfCityCode, this.detail.mfDistrictCode] //敏付省市区
         this.yiSAddressArr = [this.detail.ysYloneAreaCode, this.detail.ysYltwoAreaCode, this.detail.ysYlthreeAreaCode] //易生省市区
+        this.lklAddressArr = [this.detail.lklMerRegProvCode, this.detail.lklMerRegCityCode, this.detail.lklMerRegDistCode] //拉卡拉省市区
+
+
         //todo 开店宝经营类目回显
         this.kdbCascaderArr = [this.detail.kdbBusinessId1, this.detail.kdbBusinessId] //开店宝
         this.cjCascaderArr = [this.detail.mccCodeClass, this.detail.mccCode] //畅捷
         this.mfCascaderArr = [this.detail.mfMccCodeClass, this.detail.mfMccCode] //敏付
+        this.lklCascaderArrCont = [this.detail.lklOneMccCode, this.detail.lklTwoMccCode , this.detail.lklThreeMccCode] //拉卡拉经营类目
+        /*console.log('this.detail====================',this.detail)
+        console.log('this.detail.lklOneMccCode====================',this.detail.lklOneMccCode)
+        console.log('this.detail.lklTwoMccCode====================',this.detail.lklTwoMccCode)
+        console.log('this.detail.lklThreeMccCode====================',this.detail.lklThreeMccCode)
+        console.log('lklCascaderArrCont====================',this.lklCascaderArrCont)*/
+        this.lklCascaderArr = [this.detail.lklMerBusiContent] //拉卡拉经营内容
         this.yiSCascaderArr = [this.detail.ysYloneMccCode, this.detail.ysYltwoMccCode, this.detail.ysYlthreeMccCode] //易生
         this.lsCascaderArr = [this.detail.leFirstMccCode, this.detail.leSecondMccCode, this.detail.leMccCode]
         this.ysCascaderArr = [this.detail.ysFirstName, this.detail.ysSecondName, this.detail.industrId]
@@ -2382,7 +2799,7 @@ export default {
         let fyNameArr = [this.detail.fuiouFirstMccCode, this.detail.fuiouSecondMccCode, this.detail.fuiouBusiness]
         this.zfbCascaderArr = this.detail.aliFirstLevel ? this.loopCall(this.zfbMaccList, zfbNameArr, []) : []
         this.fyCascaderArr = this.detail.fuiouFirstMccCode ? this.loopCall(this.fyMaccList, fyNameArr, []) : []
-        this.lklCascaderArr = [this.detail.lakalaMccCode] //拉卡拉
+        // this.lklCascaderArr = [this.detail.lakalaMccCode] //拉卡拉
         this.chCascaderArr = [this.detail.chMccCode, this.detail.chSubMccCode]
         this.provinceArr = [this.detail.accounRegProvCd, this.detail.accounRegCityCd]
         if (this.detail.fuiouAliRate !== null) {
@@ -2457,12 +2874,12 @@ export default {
     getZfbMccList() {
       if (!this.PROCESS.ZFB) {
 
-        console.log("支付宝信息2")
+        // console.log("支付宝信息2")
 
         return Promise.resolve()
       }
       return clientInfoApi.getZfbMccList().then(res => {
-        console.log("支付宝信息1")
+        // console.log("支付宝信息1")
         this.zfbMaccList = this.sortTreeAttr(res.obj)
       })
     },
@@ -2481,14 +2898,14 @@ export default {
       })
     },
     // 获取拉卡拉经营类目
-    getLklMccList() {
+   /* getLklMccList() {
       if (!this.PROCESS.LKL) return
-     /* clientInfoApi.getLklMccList().then(res => {
+     /!* clientInfoApi.getLklMccList().then(res => {
         this.lklMaccList = this.sortTreeAttr(res.obj,'lkl')
         console.log('this.lklMaccList================',this.lklMaccList)
-      })*/
+      })*!/
     },
-
+*/
 
 
     // 获取拉卡拉费率列表
@@ -2583,7 +3000,7 @@ export default {
         // this.mfMaccTree = this.sortTreeAttr(res.obj.data,'mf')
       })
     },
-    // 获取费率模板
+    // 获取敏付费率模板
     getMfprdVers() {
 
       clientInfoApi.getMfprdVers().then(res => {
@@ -2596,6 +3013,112 @@ export default {
         // this.mfMaccTree = this.sortTreeAttr(res.obj.data,'mf')
       })
     },
+
+      // 获取拉卡拉费率模板
+    findProdRateArray() {
+
+      clientInfoApi.findProdRateArray().then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        // res.obj = JSON.parse(res.obj)
+        this.lklProdRateArray = res.obj
+
+
+      })
+    },
+
+    // 获取拉卡拉经营类目
+    getLklMccListCont() {
+      if (!this.PROCESS.LKL) return
+      clientInfoApi.getLklMccListCont().then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+
+        this.lklMaccTreeCont = res.obj
+
+      })
+    },
+
+
+
+    // 获取拉卡拉经营内容
+    getLklMccList(e) {
+      if (!this.PROCESS.LKL) return
+      clientInfoApi.getLklMccList(e).then(res => {
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        var newdata =  res.obj;
+        var data = [];
+        for(var i=0,l=newdata.length;i<l;i++){
+          for(var key in newdata[i]){
+            var d = {
+              'id':key,
+              'code':key,
+              'name':newdata[i][key]
+
+            }
+            data.push(d)
+          }
+        }
+        if(e == 'busiContJson'){
+          this.lklMaccTree = data
+        }else if(e == 'posType'){
+          this.lklPosTypeList = data;
+        }else{
+          this.lklSettlementCycleTypeList = data
+        }
+        // alert(this.lklMaccTree);
+        // this.lklMaccTree = this.sortTreeAttr(res.obj.data,'lkl')
+      })
+    },
+
+
+    //获取银联标准MCC信息  拉卡拉
+
+
+
+    // 获取lkl经营地址
+    async getLklProviceAndCity() {
+      let that = this
+      await clientInfoApi.getLklAddressList().then(res => {
+        // let resObj = res
+        //请求失败也会返回200
+        if(!res.obj){
+          return
+        }
+        that.lklAddressTree =  res.obj
+
+      })
+    },
+
+
+
+
+    // 获取lkl经营类目
+
+  /*  getLklMccList() {
+      if (!this.PROCESS.LKL) {
+
+        // console.log("拉卡拉信息2")
+
+        return Promise.resolve()
+      }
+      return clientInfoApi.getLklMccList().then(res => {
+        // console.log("拉卡拉信息1")
+        this.lklMaccList = this.sortTreeAttr(res.obj)
+      })
+    },*/
+
+
+
+
+
     /**
      * 获取易生省市区
      */
@@ -2736,6 +3259,15 @@ export default {
         this.detail.mfTradeRate = item.wxRate
         this.detail.productVerCode = item.opnPrdVers
         this.mfTradeRateText = item.wxRate;
+      }else if(this.simpleTreeStatus === 7){
+        this.lklTradeRateText = item.verRate;
+        this.$set(this.detail, "lklTradeRate", item.verRate);
+      }else if(this.simpleTreeStatus === 8){
+        this.lklSettlementCycleTypeText = item.name;
+        this.$set(this.detail, "lklSettlePeriod", item.id);
+      }else if(this.simpleTreeStatus === 9){
+        this.lklPosTypeText = item.name;
+        this.$set(this.detail, "lklPosType", item.id);
       }
       this.openSimpleTree = false;
 
@@ -2928,8 +3460,10 @@ export default {
       let chRequireData = ['chMccCode', 'chSubMccCode', 'chRate']
       // 富友通道必填字段
       let fyRequireData = ['fuiouFirstMccCode', 'fuiouAreaName', 'fuiouAliRate', 'fuiouWxRate']
+     /* // 拉卡拉通道必填字段
+      let lklRequireData = ['lklMccCode', 'lklMccName','lklDistrictCode', 'lklDistrictName', 'lklCityCode', 'lklCityName', 'lklProvinceCode', 'lklProvinceName', 'lklMerRegDistCode', 'lklMerRegCityCode' ,'lklMerRegProvCode', 'lklMerRegAddr','lklSettlePeriod','lklMerBusiContent','lklOneMccCode','lklTwoMccCode','lklThreeMccCode','PosType','lklTradeRate']*/
       // 拉卡拉通道必填字段
-      let lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
+      let lklRequireData = ['lklMerRegDistCode', 'lklMerRegCityCode' ,'lklMerRegProvCode', 'lklMerRegAddr','lklSettlePeriod','lklMerBusiContent','lklOneMccCode','lklTwoMccCode','lklThreeMccCode','PosType','lklTradeRate']
       // 开店宝通道必填字段
       let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxTradeRate', 'kdbWxSettlementCycle', 'kdbSex']
       // 手机pos必填字段
@@ -2968,7 +3502,6 @@ export default {
         zfbRequiredData = ['aliAccount', 'aliFirstLevel']
         fyRequireData = ['fuiouFirstMccCode', 'fuiouAreaName']
         // todo 是否需要处理share
-        lklRequireData = ['lakalaMccCode', /*'lklMccClassCd',*/'lakalaRate'/*, 'lklAliRate', 'lklWxRate'*/]
         cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName']
         //敏付通道必填字段
         // 以下字段为登录敏付系统用，且必传
@@ -2976,6 +3509,9 @@ export default {
            mfUsrOprMbl:'', // 敏付商户管理员手机号码
            mfUsrOprEmail:'', // 敏付商户管理员邮箱*/
         mfRequireData = ['mfMccCode', 'mfMccName','mfDistrictCode', 'mfDistrictName', 'mfCityCode', 'mfCityName', 'mfProvinceCode', 'mfProvinceName', 'mfUsrOprNm', 'mfUsrOprMbl' ,'mfUsrOprEmail','businessScope']
+        // 拉卡拉通道必填字段
+        let lklRequireData = ['lklMerRegDistCode', 'lklMerRegCityCode' ,'lklMerRegProvCode', 'lklMerRegAddr','lklSettlePeriod','lklMerBusiContent','lklOneMccCode','lklTwoMccCode','lklThreeMccCode','PosType']
+
         sjPosRequireData = ['bankPhotoId','holdingCardId']
         kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbRegistryId', 'kdbAgreementId']
         yiSRequireData = ['ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
@@ -3120,7 +3656,7 @@ export default {
         this.detail.importNums.push('21')
         //敏付
         if (!mfRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
-          console.log('minfudetail=========',this.detail)
+          // console.log('minfudetail=========',this.detail)
           this.$toast.error('有内容未填入')
           return
         }
@@ -3130,6 +3666,15 @@ export default {
         }
         if (!emailValid(this.detail.mfUsrOprEmail)) {
           this.$toast.error('邮箱格式错误')
+          return
+        }
+      }
+      if (this.checkboxObj.lkl && this.PROCESS.LKL) {
+        this.detail.importNums.push('16')
+        //敏付
+        if (!lklRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
+          console.log('LAKALAdetail=========',this.detail)
+          this.$toast.error('有内容未填入')
           return
         }
       }
@@ -3162,13 +3707,13 @@ export default {
         }
       }
       //TODO 是否需要处理share
-      if (this.checkboxObj.lkl && this.PROCESS.LKL) {
+      /*if (this.checkboxObj.lkl && this.PROCESS.LKL) {
         this.detail.importNums.push('8')
         if (!lklRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
           return
         }
-      }
+      }*/
       if (this.checkboxObj.sjPos && this.PROCESS.SJPOS) {
         this.detail.importNums.push('17')
         if (!sjPosRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {

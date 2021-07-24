@@ -1285,12 +1285,12 @@ export default {
           this.lklData = res.obj
           console.log(res)
         })
-      }else if (item.channel === 9) { // 拉卡拉
+      }*/else if (item.channel === 16) { // 拉卡拉
         clientInfoApi.getLklCode({ id: item.id }).then(res => {
           this.lklData = res.obj
           console.log(res)
         })
-      }*/else if (item.channel === 10) { // 手机pos &网联
+      }else if (item.channel === 10) { // 手机pos &网联
         clientInfoApi.getSjPosCode({ id: item.id }).then(res => {
           this.sjPosData = res.obj
           // console.log('手机pos进件info==================',res)

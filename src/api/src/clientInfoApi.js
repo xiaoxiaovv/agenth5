@@ -146,19 +146,86 @@ export default {
     })
   },
   // 获取拉卡拉MccCd树类目列表
- /* getLklMccList() {
+  /*getLklMccList() {
     return requestAxios({
       url: `/batchFeed/lakala/get_lkl_mcctree`,
       method: 'get'
     })
   },*/
   // 获取拉卡拉费率列表
-  /*getLklRateList() {
+ /* getLklRateList() {
     return requestAxios({
       url: `/batchFeed/lkl/get_lkl_transaction_rate`,
       method: 'get'
     })
   },*/
+
+  // 获取拉卡拉MccCd树类目列表
+  getLklMccListCont() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/lakala/getlklMcc`,
+      method: 'get',
+      params:{
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+
+  // 获取拉卡拉经营内容列表
+  getLklMccList(e) {
+    return requestAxios({
+      url: `/batchFeed/lakala/getdictparams`,
+      method: 'get',
+      params:{
+        param:e,
+      }
+    })
+  },
+  // 获取拉卡拉区域列表
+  getLklAddressList() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId33333333333',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/lakala/findAreaArray`,
+      method: 'get',
+      params:{
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+
+ /* // 获取拉卡拉区域列表
+  getlklMccylinfo() {
+
+    return requestAxios({
+      url: `/batchFeed/lakala/getlklMcc`,
+      method: 'get',
+      params:{
+
+      }
+    })
+  },*/
+
+
+
+  // 获取敏付费率模板
+  findProdRateArray() {
+    // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
+    return requestAxios({
+      url: `/batchFeed/lklProdRate/findProdRateArray`,
+      method: 'get',
+      params:{
+        // serviceProviderId:serviceId
+        // companyId: afterLoginInfoLocal.getJSON().companyId || sessionStorage.companyId
+      }
+    })
+  },
+
+
+
+
+
+
 
   // 获取开店宝MccCd树类目列表
   getKdbMccList() {
@@ -228,7 +295,7 @@ export default {
       }
     })
   },
-
+    // 获取敏付费率模板
   getMfprdVers() {
     // console.log('afterLoginInfoLocal.getJSON().companyId22222222222',afterLoginInfoLocal.getJSON().companyId)
     return requestAxios({

@@ -136,7 +136,6 @@ export default {
       }
     },
     'value' (val, oldVal) {
-      console.log('===value====', val, oldVal)
       this.initData()
     }
   },
@@ -152,9 +151,10 @@ export default {
             console.log('val===', val)
           }
           arr = this.getCheckInfo(val, arr)
-          console.log('arr--初始化', this.value)
           this.checkArr = [...arr]
           this.laskCheck = [...arr]
+
+          console.log("來了老弟")
         } else {
           this.checkArr = []
           this.laskCheck = []
