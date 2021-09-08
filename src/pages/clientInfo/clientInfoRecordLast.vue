@@ -1731,6 +1731,10 @@ export default {
         {
           value: 1,
           name: 'T1'
+        },
+        {
+          value: 3,
+          name: 'D1'
         }
       ],//结算周期类型列表
       yiSSettlementCycleTypeList: [
@@ -1741,6 +1745,10 @@ export default {
         {
           value: 1,
           name: 'D0'
+        },
+        {
+          value: 2,
+          name: 'D1'
         }
 
       ],//结算周期类型列表
