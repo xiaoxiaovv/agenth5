@@ -203,72 +203,72 @@
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.mf" class="outbox-item">
-        <div class="item">
-          <VmaCascaderTree v-model="mfCascaderArr"
-                           class="client-info"
-                           :dataTree="mfMaccTree"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.mf"
-                           label="经营类目"
-                           @change="changeMfMenu"></VmaCascaderTree>
-        </div>
-        <div class="item">
-          <VmaCascaderTree class="client-info"
-                           v-model="mfAddressArr"
-                           :dataTree="mfAddressTree"
-                           :label="'商户营业地区'"
-                           :placeholder="'请选择省市'"
-                           :modalLabel="'选择省市'"
-                           :required="checkboxObj.mf"
-                           @change="changeMfAddress"></VmaCascaderTree>
-        </div>
-
-
-        <div class="item">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.mf">*</span>费率
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(6)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="mfTradeRateText">
+            <div class="item">
+              <VmaCascaderTree v-model="mfCascaderArr"
+                               class="client-info"
+                               :dataTree="mfMaccTree"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.mf"
+                               label="经营类目"
+                               @change="changeMfMenu"></VmaCascaderTree>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.mf">*</span>管理员姓名
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.mfUsrOprNm" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.mf">*</span>管理员手机号
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.mfUsrOprMbl" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.mf">*</span>管理员邮箱
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.mfUsrOprEmail" />
-          </div>
-        </div>
+            <div class="item">
+              <VmaCascaderTree class="client-info"
+                               v-model="mfAddressArr"
+                               :dataTree="mfAddressTree"
+                               :label="'商户营业地区'"
+                               :placeholder="'请选择省市'"
+                               :modalLabel="'选择省市'"
+                               :required="checkboxObj.mf"
+                               @change="changeMfAddress"></VmaCascaderTree>
+            </div>
 
-        <div class="item">
+
+            <div class="item">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.mf">*</span>费率
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(6)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="mfTradeRateText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.mf">*</span>管理员姓名
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.mfUsrOprNm" />
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.mf">*</span>管理员手机号
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.mfUsrOprMbl" />
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.mf">*</span>管理员邮箱
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.mfUsrOprEmail" />
+              </div>
+            </div>
+
+            <div class="item">
           <div class="subtitle">
             <span class="star"
                   v-show="checkboxObj.mf">*</span>营业范围
@@ -292,51 +292,51 @@
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.yiS" class="outbox-item">
-        <div class="item">
-          <VmaCascaderTree v-model="yiSCascaderArr"
-                           class="client-info"
-                           :dataTree="yiSMaccTree"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.yiS"
-                           label="经营类目"
-                           @change="changeYiSMenu"></VmaCascaderTree>
-        </div>
-        <div class="item">
-          <VmaCascaderTree class="client-info"
-                           v-model="yiSAddressArr"
-                           :dataTree="yiSAddressTree"
-                           :label="'商户营业地区'"
-                           :placeholder="'请选择省市'"
-                           :modalLabel="'选择省市'"
-                           :required="checkboxObj.yiS"
-                           @change="changeYiSAddress"></VmaCascaderTree>
-        </div>
-        <!--<div class="item">
-          <div class="subtitle">
-            <span class="star"  v-show="checkboxObj.yiS">*</span>结算账户类型
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(4)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="kdbAccountTypeText">
+            <div class="item">
+              <VmaCascaderTree v-model="yiSCascaderArr"
+                               class="client-info"
+                               :dataTree="yiSMaccTree"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.yiS"
+                               label="经营类目"
+                               @change="changeYiSMenu"></VmaCascaderTree>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>-->
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.yiS">*</span>费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.ysWxRate" />%
-          </div>
-        </div>
+            <div class="item">
+              <VmaCascaderTree class="client-info"
+                               v-model="yiSAddressArr"
+                               :dataTree="yiSAddressTree"
+                               :label="'商户营业地区'"
+                               :placeholder="'请选择省市'"
+                               :modalLabel="'选择省市'"
+                               :required="checkboxObj.yiS"
+                               @change="changeYiSAddress"></VmaCascaderTree>
+            </div>
+            <!--<div class="item">
+              <div class="subtitle">
+                <span class="star"  v-show="checkboxObj.yiS">*</span>结算账户类型
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(4)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="kdbAccountTypeText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
+            </div>-->
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.yiS">*</span>费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.ysWxRate" />%
+              </div>
+            </div>
 
-        <div class="item">
+            <div class="item">
           <div class="subtitle">
             <span class="star" v-show="checkboxObj.yiS">*</span>到账周期
           </div>
@@ -352,12 +352,6 @@
         </mu-expand-transition>
       </div>
 
-
-
-
-
-
-
       <!--畅捷-->
       <div class="match-width box align-default"
            v-if="PROCESS.CJ">
@@ -367,27 +361,27 @@
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.cj" class="outbox-item">
-        <div class="item">
-          <VmaCascaderTree v-model="cjCascaderArr"
-                           class="client-info"
-                           :dataTree="cjMaccTree"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.cj"
-                           label="经营类目"
-                           @change="changeCjMenu"></VmaCascaderTree>
-        </div>
-        <div class="item">
-          <VmaCascaderTree class="client-info"
-                           v-model="cjAddressArr"
-                           :dataTree="cjAddressTree"
-                           :label="'商户营业地区'"
-                           :placeholder="'请选择省市'"
-                           :modalLabel="'选择省市'"
-                           :required="checkboxObj.cj"
-                           @change="changeCjAddress"></VmaCascaderTree>
-        </div>
-        <div class="item"
+            <div class="item">
+              <VmaCascaderTree v-model="cjCascaderArr"
+                               class="client-info"
+                               :dataTree="cjMaccTree"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.cj"
+                               label="经营类目"
+                               @change="changeCjMenu"></VmaCascaderTree>
+            </div>
+            <div class="item">
+              <VmaCascaderTree class="client-info"
+                               v-model="cjAddressArr"
+                               :dataTree="cjAddressTree"
+                               :label="'商户营业地区'"
+                               :placeholder="'请选择省市'"
+                               :modalLabel="'选择省市'"
+                               :required="checkboxObj.cj"
+                               @change="changeCjAddress"></VmaCascaderTree>
+            </div>
+            <div class="item"
              v-if="from!=='share'">
           <div class="subtitle">
             <span class="star" v-show="checkboxObj.cj">*</span>费率
@@ -411,166 +405,160 @@
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.kdb" class="outbox-item">
-        <div class="item">
-          <VmaCascaderTree v-model="kdbCascaderArr"
-                           class="client-info"
-                           :dataTree="kdbMaccTree"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.kdb"
-                           label="经营类目"
-                           @change="changeKdbMenu"></VmaCascaderTree>
-        </div>
-        <div class="item">
-          <VmaCascaderTree class="client-info"
-                           v-model="kdbAddressArr"
-                           :dataTree="kdbAddressTree"
-                           :label="'商户营业地区'"
-                           :placeholder="'请选择省市'"
-                           :modalLabel="'选择省市'"
-                           :required="checkboxObj.kdb"
-                           @change="changeShopAddress"></VmaCascaderTree>
-        </div>
-
-
-
-
-        <div class="item" v-show="checkboxObj.kdb&&detail.businessLicensePhotoId">
-          <div class="subtitle">
-            <span class="star">*</span>公司类型
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(1)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="kdbCompanyTypeText">
+            <div class="item">
+              <VmaCascaderTree v-model="kdbCascaderArr"
+                               class="client-info"
+                               :dataTree="kdbMaccTree"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.kdb"
+                               label="经营类目"
+                               @change="changeKdbMenu"></VmaCascaderTree>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.kdb">*</span>到账周期
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(2)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="kdbSettlementCycleTypeText">
+            <div class="item">
+              <VmaCascaderTree class="client-info"
+                               v-model="kdbAddressArr"
+                               :dataTree="kdbAddressTree"
+                               :label="'商户营业地区'"
+                               :placeholder="'请选择省市'"
+                               :modalLabel="'选择省市'"
+                               :required="checkboxObj.kdb"
+                               @change="changeShopAddress"></VmaCascaderTree>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.kdb">*</span>性别
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(3)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="kdbSexText">
+            <div class="item" v-show="checkboxObj.kdb&&detail.businessLicensePhotoId">
+              <div class="subtitle">
+                <span class="star">*</span>公司类型
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(1)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="kdbCompanyTypeText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"  v-show="checkboxObj.kdb">*</span>结算账户类型
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(4)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="kdbAccountTypeText">
+            <div class="item">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.kdb">*</span>到账周期
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(2)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="kdbSettlementCycleTypeText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.kdb">*</span>费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.kdbWxTradeRate" />%
-          </div>
-        </div>
-        <!--<div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.kdb">*</span>D0手续费
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实手续费"
-                   v-model="detail.kdbServiceRate" /> （元）
-          </div>
-        </div>-->
-
-
-        <div class="item" style="border:0;">
-          <div class="subtitle">
-            <span class="star"  v-show="checkboxObj.kdb&&detail.businessLicensePhotoId&&detail.businessType==1">*</span>注册登记表照片
-          </div>
-        </div>
-        <div class="item id_img_wp">
-          <div class="img_wp img_wp_width">
-            <!-- <input class="file"
-                   type="file"
-                   ref="out"
-                   accept="image/*"
-                   @change="onFileChange($event, 'out')" /> -->
-            <vmaUploadImg ref="kdbRegistryId"
-                          @change="onFileChange($event, 'kdbRegistryId')"></vmaUploadImg>
-            <div>
-              <i v-if="detail.kdbRegistryId"
-                 class="icon iconfont iconshanchu"
-                 @click="deleteImg('kdbRegistryId')"></i>
-              <div class="icon iconfont iconzhaoxiangji ml-10"
-                   style="font-size:30px;"></div>
-              <img v-if="detail.kdbRegistryId"
-                   :src="detail.kdbRegistryId | previewLoadImage"
-                   @click="previewImage(detail.kdbRegistryId)" />
+            <div class="item">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.kdb">*</span>性别
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(3)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="kdbSexText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
             </div>
-            <p class="img_intro">注册登记表照片</p>
-          </div>
-        </div>
-        <div class="item"
-             style="border:0;">
-          <div class="subtitle">
-            <span class="star"  v-show="checkboxObj.kdb&&detail.businessLicensePhotoId&&detail.businessType==1">*</span>收单协议照片
-          </div>
-        </div>
-        <div class="item id_img_wp">
-          <div class="img_wp img_wp_width">
-            <!-- <input class="file"
-                   type="file"
-                   ref="out"
-                   accept="image/*"
-                   @change="onFileChange($event, 'out')" /> -->
-            <vmaUploadImg ref="kdbAgreementId"
-                          @change="onFileChange($event, 'kdbAgreementId')"></vmaUploadImg>
-            <div>
-              <i v-if="detail.kdbAgreementId"
-                 class="icon iconfont iconshanchu"
-                 @click="deleteImg('kdbAgreementId')"></i>
-              <div class="icon iconfont iconzhaoxiangji ml-10"
-                   style="font-size:30px;"></div>
-              <img v-if="detail.kdbAgreementId"
-                   :src="detail.kdbAgreementId | previewLoadImage"
-                   @click="previewImage(detail.kdbAgreementId)" />
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"  v-show="checkboxObj.kdb">*</span>结算账户类型
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(4)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="kdbAccountTypeText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
             </div>
-            <p class="img_intro">收单协议照片</p>
-          </div>
-        </div>
-        <div class="item"  v-if="detail.businessLicensePhotoId&&detail.businessType==1"
-             style="border:0;">
-          <div class="subtitle">
-            商户变更登记表照片(变更时必传)
-          </div>
-        </div>
-        <div class="item id_img_wp" v-if="detail.businessLicensePhotoId&&detail.businessType==1">
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.kdb">*</span>费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.kdbWxTradeRate" />%
+              </div>
+            </div>
+            <!--<div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.kdb">*</span>D0手续费
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实手续费"
+                       v-model="detail.kdbServiceRate" /> （元）
+              </div>
+            </div>-->
+            <div class="item" style="border:0;">
+              <div class="subtitle">
+                <span class="star"  v-show="checkboxObj.kdb&&detail.businessLicensePhotoId&&detail.businessType==1">*</span>注册登记表照片
+              </div>
+            </div>
+            <div class="item id_img_wp">
+              <div class="img_wp img_wp_width">
+                <!-- <input class="file"
+                       type="file"
+                       ref="out"
+                       accept="image/*"
+                       @change="onFileChange($event, 'out')" /> -->
+                <vmaUploadImg ref="kdbRegistryId"
+                              @change="onFileChange($event, 'kdbRegistryId')"></vmaUploadImg>
+                <div>
+                  <i v-if="detail.kdbRegistryId"
+                     class="icon iconfont iconshanchu"
+                     @click="deleteImg('kdbRegistryId')"></i>
+                  <div class="icon iconfont iconzhaoxiangji ml-10"
+                       style="font-size:30px;"></div>
+                  <img v-if="detail.kdbRegistryId"
+                       :src="detail.kdbRegistryId | previewLoadImage"
+                       @click="previewImage(detail.kdbRegistryId)" />
+                </div>
+                <p class="img_intro">注册登记表照片</p>
+              </div>
+            </div>
+            <div class="item"
+                 style="border:0;">
+              <div class="subtitle">
+                <span class="star"  v-show="checkboxObj.kdb&&detail.businessLicensePhotoId&&detail.businessType==1">*</span>收单协议照片
+              </div>
+            </div>
+            <div class="item id_img_wp">
+              <div class="img_wp img_wp_width">
+                <!-- <input class="file"
+                       type="file"
+                       ref="out"
+                       accept="image/*"
+                       @change="onFileChange($event, 'out')" /> -->
+                <vmaUploadImg ref="kdbAgreementId"
+                              @change="onFileChange($event, 'kdbAgreementId')"></vmaUploadImg>
+                <div>
+                  <i v-if="detail.kdbAgreementId"
+                     class="icon iconfont iconshanchu"
+                     @click="deleteImg('kdbAgreementId')"></i>
+                  <div class="icon iconfont iconzhaoxiangji ml-10"
+                       style="font-size:30px;"></div>
+                  <img v-if="detail.kdbAgreementId"
+                       :src="detail.kdbAgreementId | previewLoadImage"
+                       @click="previewImage(detail.kdbAgreementId)" />
+                </div>
+                <p class="img_intro">收单协议照片</p>
+              </div>
+            </div>
+            <div class="item"  v-if="detail.businessLicensePhotoId&&detail.businessType==1"
+                 style="border:0;">
+              <div class="subtitle">
+                商户变更登记表照片(变更时必传)
+              </div>
+            </div>
+            <div class="item id_img_wp" v-if="detail.businessLicensePhotoId&&detail.businessType==1">
           <div class="img_wp img_wp_width">
             <!-- <input class="file"
                    type="file"
@@ -605,71 +593,71 @@
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.sjPos" class="outbox-item">
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.sjPos">*</span>手机pos交易费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.posTradeRate" />%
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.sjPos">*</span>手机pos提现费
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.posDrawFee" />
-          </div>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.sjPos">*</span>网联交易费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.quickTradeRate" />%
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.sjPos">*</span>网联提现费
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.quickDrawFee" />
-          </div>
-        </div>
-        <!--<div class="item"
-             style="border:0;">
-          <div class="subtitle">结算银行卡背面照片</div>
-        </div>
-        <div class="item id_img_wp"
-             style="border:0;">
-          <div class="img_wp img_wp_width">
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.sjPos">*</span>手机pos交易费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.posTradeRate" />%
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.sjPos">*</span>手机pos提现费
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.posDrawFee" />
+              </div>
+            </div>
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.sjPos">*</span>网联交易费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.quickTradeRate" />%
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.sjPos">*</span>网联提现费
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.quickDrawFee" />
+              </div>
+            </div>
+            <!--<div class="item"
+                 style="border:0;">
+              <div class="subtitle">结算银行卡背面照片</div>
+            </div>
+            <div class="item id_img_wp"
+                 style="border:0;">
+              <div class="img_wp img_wp_width">
 
-            <vmaUploadImg ref="sjPosYinHangKaBeiMian"
-                          @change="onFileChange($event, 'sjPosYinHangKaBeiMian')"></vmaUploadImg>
-            <i v-if="detail.bankPhotoId"
-               class="icon iconfont iconshanchu"
-               @click="deleteImg('sjPosYinHangKaBeiMian')"></i>
-            <div class="icon iconfont iconzhaoxiangji ml-10"
-                 style="font-size:30px;"></div>
-            <img v-if="detail.bankPhotoId"
-                 :src="detail.bankPhotoId | previewLoadImage"
-                 @click="previewImage(detail.bankPhotoId)" />
-          </div>
-        </div>-->
-        <!--<div class="item"
+                <vmaUploadImg ref="sjPosYinHangKaBeiMian"
+                              @change="onFileChange($event, 'sjPosYinHangKaBeiMian')"></vmaUploadImg>
+                <i v-if="detail.bankPhotoId"
+                   class="icon iconfont iconshanchu"
+                   @click="deleteImg('sjPosYinHangKaBeiMian')"></i>
+                <div class="icon iconfont iconzhaoxiangji ml-10"
+                     style="font-size:30px;"></div>
+                <img v-if="detail.bankPhotoId"
+                     :src="detail.bankPhotoId | previewLoadImage"
+                     @click="previewImage(detail.bankPhotoId)" />
+              </div>
+            </div>-->
+            <!--<div class="item"
              style="border:0;">
           <div class="subtitle">手持身份证照片</div>
         </div>
@@ -701,17 +689,17 @@
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.sxf" class="outbox-item">
-        <div class="item">
-          <VmaCascaderTree v-model="cascaderArr"
-                           class="client-info"
-                           :dataTree="maccList"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.sxf"
-                           label="经营类目"
-                           @change="changeMenu"></VmaCascaderTree>
-        </div>
-        <div class="item"
+            <div class="item">
+              <VmaCascaderTree v-model="cascaderArr"
+                               class="client-info"
+                               :dataTree="maccList"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.sxf"
+                               label="经营类目"
+                               @change="changeMenu"></VmaCascaderTree>
+            </div>
+            <div class="item"
              v-if="from!=='share'">
           <div class="subtitle">
             <span class="star"
@@ -736,125 +724,125 @@
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.wx" class="outbox-item">
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.wx">*</span>经营描述
-          </div>
-          <div class="match-left-space align-right">
-            <div class="input align-right"
-                 @click="callActionSheet(2)">
-              <div>{{detail.productDesc}}</div>
-              <div class="icon iconfont iconenter ml-10"></div>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.wx">*</span>经营行业
-          </div>
-          <div class="match-left-space align-right">
-            <div class="input align-right"
-                 @click="callActionSheet(1)">
-              <div>{{detail.merchantBusiness}}</div>
-              <div class="icon iconfont iconenter ml-10"></div>
-            </div>
-          </div>
-        </div>
-        <template v-if="Number(detail.businessType)===1">
-          <div class="item"
-               style="border:0;">
-            <div class="subtitle">
-              <span class="star"
-                    v-show="checkboxObj.wx">*</span>
-              法人银行卡
-            </div>
-          </div>
-          <div class="item id_img_wp">
-            <div class="img_wp img_wp_width">
-              <!-- <input
-                class="file"
-                type="file"
-                ref="bank"
-                accept="image/*"
-                @change="onFileChange($event, 'bank')"
-                style="height:100%;width:100%;display:inline-block;"
-              /> -->
-              <vmaUploadImg ref="bank"
-                            @change="onFileChange($event, 'bank')"></vmaUploadImg>
-              <div>
-                <i v-if="detail.personAccountPicId"
-                   class="icon iconfont iconshanchu"
-                   @click="deleteImg('bank')"></i>
-                <div class="icon iconfont iconzhaoxiangji ml-10"
-                     style="font-size:30px;"></div>
-                <img v-if="detail.personAccountPicId"
-                     :src="detail.personAccountPicId | previewLoadImage"
-                     @click="previewImage(detail.personAccountPicId)" />
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.wx">*</span>经营描述
+              </div>
+              <div class="match-left-space align-right">
+                <div class="input align-right"
+                     @click="callActionSheet(2)">
+                  <div>{{detail.productDesc}}</div>
+                  <div class="icon iconfont iconenter ml-10"></div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="item">
-            <div class="subtitle">
-              <span class="star"
-                    v-show="checkboxObj.wx">*</span>开户名称
-            </div>
-            <div class="match-left-space align-right">
-              <input placeholder="开户名称"
-                     v-model="detail.personAccountName" />
-            </div>
-          </div>
-          <div class="item">
-            <div class="subtitle">
-              <span class="star"
-                    v-show="checkboxObj.wx">*</span>开户总行名称
-            </div>
-            <div class="match-left-space align-right">
-              <input placeholder="开户总行名称"
-                     v-model="detail.personAccountBank" />
-            </div>
-          </div>
-          <div class="item">
-            <div class="subtitle">
-              <span class="star"
-                    v-show="checkboxObj.wx">*</span>开户银行账号
-            </div>
-            <div class="match-left-space align-right">
-              <input placeholder="请输入银行账号并仔细核对"
-                     v-model="detail.personAccountNumber" />
-            </div>
-          </div>
-          <div class="item">
-            <VmaCascaderTree class="client-info"
-                             v-model="provinceArr"
-                             :dataTree="cascaderTree"
-                             :label="'开户支行所在地'"
-                             :placeholder="'请选择省市'"
-                             :modalLabel="'选择省市'"
-                             :required="checkboxObj.wx"
-                             @change="changeCity"></VmaCascaderTree>
-          </div>
-          <div class="item">
-            <div class="subtitle">
-              <span class="star"
-                    v-show="checkboxObj.wx">*</span>开户行银行全称
-              <div>（包括支行）</div>
-            </div>
-            <div class="match-left-space align-right">
-              <div class="input align-right"
-                   @click="callActionSheet(3)">
-                <div style="flex:1;">{{detail.personBankName}}</div>
-                <i class="icon iconfont iconenter ml-10"></i>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.wx">*</span>经营行业
+              </div>
+              <div class="match-left-space align-right">
+                <div class="input align-right"
+                     @click="callActionSheet(1)">
+                  <div>{{detail.merchantBusiness}}</div>
+                  <div class="icon iconfont iconenter ml-10"></div>
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-        <div class="item"
-             style="border:0;">
-          <div class="subtitle">特殊资质</div>
-        </div>
-        <div class="item id_img_wp">
+            <template v-if="Number(detail.businessType)===1">
+              <div class="item"
+                   style="border:0;">
+                <div class="subtitle">
+                  <span class="star"
+                        v-show="checkboxObj.wx">*</span>
+                  法人银行卡
+                </div>
+              </div>
+              <div class="item id_img_wp">
+                <div class="img_wp img_wp_width">
+                  <!-- <input
+                    class="file"
+                    type="file"
+                    ref="bank"
+                    accept="image/*"
+                    @change="onFileChange($event, 'bank')"
+                    style="height:100%;width:100%;display:inline-block;"
+                  /> -->
+                  <vmaUploadImg ref="bank"
+                                @change="onFileChange($event, 'bank')"></vmaUploadImg>
+                  <div>
+                    <i v-if="detail.personAccountPicId"
+                       class="icon iconfont iconshanchu"
+                       @click="deleteImg('bank')"></i>
+                    <div class="icon iconfont iconzhaoxiangji ml-10"
+                         style="font-size:30px;"></div>
+                    <img v-if="detail.personAccountPicId"
+                         :src="detail.personAccountPicId | previewLoadImage"
+                         @click="previewImage(detail.personAccountPicId)" />
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="subtitle">
+                  <span class="star"
+                        v-show="checkboxObj.wx">*</span>开户名称
+                </div>
+                <div class="match-left-space align-right">
+                  <input placeholder="开户名称"
+                         v-model="detail.personAccountName" />
+                </div>
+              </div>
+              <div class="item">
+                <div class="subtitle">
+                  <span class="star"
+                        v-show="checkboxObj.wx">*</span>开户总行名称
+                </div>
+                <div class="match-left-space align-right">
+                  <input placeholder="开户总行名称"
+                         v-model="detail.personAccountBank" />
+                </div>
+              </div>
+              <div class="item">
+                <div class="subtitle">
+                  <span class="star"
+                        v-show="checkboxObj.wx">*</span>开户银行账号
+                </div>
+                <div class="match-left-space align-right">
+                  <input placeholder="请输入银行账号并仔细核对"
+                         v-model="detail.personAccountNumber" />
+                </div>
+              </div>
+              <div class="item">
+                <VmaCascaderTree class="client-info"
+                                 v-model="provinceArr"
+                                 :dataTree="cascaderTree"
+                                 :label="'开户支行所在地'"
+                                 :placeholder="'请选择省市'"
+                                 :modalLabel="'选择省市'"
+                                 :required="checkboxObj.wx"
+                                 @change="changeCity"></VmaCascaderTree>
+              </div>
+              <div class="item">
+                <div class="subtitle">
+                  <span class="star"
+                        v-show="checkboxObj.wx">*</span>开户行银行全称
+                  <div>（包括支行）</div>
+                </div>
+                <div class="match-left-space align-right">
+                  <div class="input align-right"
+                       @click="callActionSheet(3)">
+                    <div style="flex:1;">{{detail.personBankName}}</div>
+                    <i class="icon iconfont iconenter ml-10"></i>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <div class="item"
+                 style="border:0;">
+              <div class="subtitle">特殊资质</div>
+            </div>
+            <div class="item id_img_wp">
           <div class="img_wp img_wp_width">
             <!-- <input
               class="file"
@@ -4026,6 +4014,9 @@ export default {
 }
 .outbox-item {
   width: 100vw;
+}
+.title {
+  margin-top: 1px;
 }
 </style>
 <style>
