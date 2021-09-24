@@ -22,171 +22,173 @@
           <mu-checkbox v-model="checkboxObj.lkl"
                        label="拉卡拉通道"></mu-checkbox>
         </div>
-
-        <div class="item">
-          <VmaCascaderTree v-model="lklCascaderArrCont"
-                           class="client-info"
-                           :dataTree="lklMaccTreeCont"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.lkl"
-                           label="经营类目"
-                           @change="changeLklcontMenu"></VmaCascaderTree>
-        </div>
-
-
-        <div class="item">
-          <VmaCascaderTree v-model="lklCascaderArr"
-                           class="client-info"
-                           :dataTree="lklMaccTree"
-                           :placeholder="'请选择内容'"
-                           :modalLabel="'选择内容'"
-                           :required="checkboxObj.lkl"
-                           label="经营内容"
-                           @change="changeLklMenu"></VmaCascaderTree>
-        </div>
-        <div class="item">
-          <VmaCascaderTree class="client-info"
-                           v-model="lklAddressArr"
-                           :dataTree="lklAddressTree"
-                           :label="'商户营业地区'"
-                           :placeholder="'请选择省市'"
-                           :modalLabel="'选择省市'"
-                           :required="checkboxObj.lkl"
-                           @change="changeLklAddress"></VmaCascaderTree>
-        </div>
-
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.lkl">*</span>商户详细地址
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入不包含省市区的地址"
-                   v-model="detail.lklMerRegAddr" />
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.lkl">*</span>费率
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(7)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="lklTradeRateText">
+        <mu-expand-transition>
+          <div v-show="checkboxObj.lkl" class="outbox-item">
+            <div class="item">
+              <VmaCascaderTree v-model="lklCascaderArrCont"
+                               class="client-info"
+                               :dataTree="lklMaccTreeCont"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.lkl"
+                               label="经营类目"
+                               @change="changeLklcontMenu"></VmaCascaderTree>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
 
 
-       <!-- <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.lkl">*</span>商户省级编码
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.leFirstMccCode" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.lkl">*</span>商户市级编码
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.leSecondMccCode " />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.lkl">*</span>商户地区编码
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.leMccCode" />
-          </div>
-        </div>-->
-
-
-       <!-- <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.lkl">*</span>银联标准一级Mcc编码
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.lklOneMccCode" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.lkl">*</span>银联标准二级Mcc编码
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.lklTwoMccCode" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.lkl">*</span>银联标准三级Mcc编码
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.lklThreeMccCode" />
-          </div>
-        </div>-->
-
-
-       <!-- <div class="item" v-if="posType">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.lkl">*</span>POS类型
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(9)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="lklPosTypeText">
+            <div class="item">
+              <VmaCascaderTree v-model="lklCascaderArr"
+                               class="client-info"
+                               :dataTree="lklMaccTree"
+                               :placeholder="'请选择内容'"
+                               :modalLabel="'选择内容'"
+                               :required="checkboxObj.lkl"
+                               label="经营内容"
+                               @change="changeLklMenu"></VmaCascaderTree>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>-->
-
-
-        <div class="item">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.lkl">*</span>POS类型
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(9)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="lklPosTypeText">
+            <div class="item">
+              <VmaCascaderTree class="client-info"
+                               v-model="lklAddressArr"
+                               :dataTree="lklAddressTree"
+                               :label="'商户营业地区'"
+                               :placeholder="'请选择省市'"
+                               :modalLabel="'选择省市'"
+                               :required="checkboxObj.lkl"
+                               @change="changeLklAddress"></VmaCascaderTree>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
 
-
-
-        <div class="item">
-          <div class="subtitle">
-            <span class="star" v-show="checkboxObj.lkl">*</span>到账周期
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callSimpleTree(8)">
-            <div class="input ellipsis"
-                 style="text-align: right" v-text="lklSettlementCycleTypeText">
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.lkl">*</span>商户详细地址
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入不包含省市区的地址"
+                       v-model="detail.lklMerRegAddr" />
+              </div>
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
-          </div>
-        </div>
 
+            <div class="item">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.lkl">*</span>费率
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(7)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="lklTradeRateText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
+            </div>
+
+
+           <!-- <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.lkl">*</span>商户省级编码
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.leFirstMccCode" />
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.lkl">*</span>商户市级编码
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.leSecondMccCode " />
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.lkl">*</span>商户地区编码
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.leMccCode" />
+              </div>
+            </div>-->
+
+
+           <!-- <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.lkl">*</span>银联标准一级Mcc编码
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.lklOneMccCode" />
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.lkl">*</span>银联标准二级Mcc编码
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.lklTwoMccCode" />
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.lkl">*</span>银联标准三级Mcc编码
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.lklThreeMccCode" />
+              </div>
+            </div>-->
+
+
+           <!-- <div class="item" v-if="posType">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.lkl">*</span>POS类型
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(9)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="lklPosTypeText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
+            </div>-->
+
+
+            <div class="item">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.lkl">*</span>POS类型
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(9)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="lklPosTypeText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
+            </div>
+
+
+
+            <div class="item">
+              <div class="subtitle">
+                <span class="star" v-show="checkboxObj.lkl">*</span>到账周期
+              </div>
+              <div class="match-left-space box align-right"
+                   @click="callSimpleTree(8)">
+                <div class="input ellipsis"
+                     style="text-align: right" v-text="lklSettlementCycleTypeText">
+                </div>
+                <div class="icon iconfont iconenter ml-10"></div>
+              </div>
+            </div>
+          </div>
+        </mu-expand-transition>
 
 
 
@@ -199,6 +201,8 @@
           <mu-checkbox v-model="checkboxObj.mf"
                        label="敏付通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.mf" class="outbox-item">
         <div class="item">
           <VmaCascaderTree v-model="mfCascaderArr"
                            class="client-info"
@@ -274,7 +278,8 @@
                    v-model="detail.businessScope" />
           </div>
         </div>
-
+          </div>
+        </mu-expand-transition>
 
 
       </div>
@@ -285,6 +290,8 @@
           <mu-checkbox v-model="checkboxObj.yiS"
                        label="易生通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.yiS" class="outbox-item">
         <div class="item">
           <VmaCascaderTree v-model="yiSCascaderArr"
                            class="client-info"
@@ -341,6 +348,8 @@
             <div class="icon iconfont iconenter ml-10"></div>
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
 
 
@@ -356,6 +365,8 @@
           <mu-checkbox v-model="checkboxObj.cj"
                        label="畅捷通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.cj" class="outbox-item">
         <div class="item">
           <VmaCascaderTree v-model="cjCascaderArr"
                            class="client-info"
@@ -387,6 +398,8 @@
                    v-model="detail.chanpayTradeRate" />%
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
 
       <!--开店宝-->
@@ -396,6 +409,8 @@
           <mu-checkbox v-model="checkboxObj.kdb"
                        label="开店宝通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.kdb" class="outbox-item">
         <div class="item">
           <VmaCascaderTree v-model="kdbCascaderArr"
                            class="client-info"
@@ -577,15 +592,19 @@
             <p class="img_intro">商户变更登记表</p>
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
 
-
+      <!--手机pos通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.SJPOS && from!=='share'">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.sjPos"
                        label="手机pos通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.sjPos" class="outbox-item">
         <div class="item"
              v-if="from!=='share'">
           <div class="subtitle">
@@ -669,15 +688,19 @@
                  @click="previewImage(detail.holdingCardId)" />
           </div>
         </div>-->
+          </div>
+        </mu-expand-transition>
       </div>
 
-
+      <!--随行付通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.SXF">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.sxf"
                        label="随行付通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.sxf" class="outbox-item">
         <div class="item">
           <VmaCascaderTree v-model="cascaderArr"
                            class="client-info"
@@ -700,13 +723,19 @@
                    v-model="detail.sxfRate" />%
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
+
+      <!--微信官方通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.WX">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.wx"
                        label="微信官方通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.wx" class="outbox-item">
         <div class="item">
           <div class="subtitle">
             <span class="star"
@@ -846,205 +875,223 @@
                  @click="previewImage(detail.specialQualificationPhotoId)" />
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
+
+      <!--支付宝-->
       <div class="match-width box align-default"
            v-if="PROCESS.ZFB">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.zfb"
                        label="支付宝"></mu-checkbox>
         </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.zfb">*</span>商家支付宝账号
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入"
-                   v-model="detail.aliAccount" />
-          </div>
-        </div>
-        <div class="item">
-          <VmaCascaderTree v-model="zfbCascaderArr"
-                           class="client-info"
-                           :dataTree="zfbMaccList"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="true"
-                           label="经营行业"
-                           :hasId="true"
-                           @change="changeZfbMenu"></VmaCascaderTree>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.zfb">*</span>费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.aliRate" />%
-          </div>
-        </div>
-        <div class="item"
-             style="border:0;">
-          <div class="subtitle">特殊资质</div>
-        </div>
-        <div class="item id_img_wp"
-             style="border:0;">
-          <div class="img_wp img_wp_width">
+        <mu-expand-transition>
+          <div v-show="checkboxObj.zfb" class="outbox-item">
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.zfb">*</span>商家支付宝账号
+              </div>
+              <div class="match-left-space align-right">
+                <input placeholder="请输入"
+                       v-model="detail.aliAccount" />
+              </div>
+            </div>
+            <div class="item">
+              <VmaCascaderTree v-model="zfbCascaderArr"
+                               class="client-info"
+                               :dataTree="zfbMaccList"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="true"
+                               label="经营行业"
+                               :hasId="true"
+                               @change="changeZfbMenu"></VmaCascaderTree>
+            </div>
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.zfb">*</span>费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.aliRate" />%
+              </div>
+            </div>
+            <div class="item"
+                 style="border:0;">
+              <div class="subtitle">特殊资质</div>
+            </div>
+            <div class="item id_img_wp"
+                 style="border:0;">
+              <div class="img_wp img_wp_width">
 
-            <vmaUploadImg ref="zfbZizhi"
-                          @change="onFileChange($event, 'zfbZizhi')"></vmaUploadImg>
-            <i v-if="detail.aliSpecialLicensePic"
-               class="icon iconfont iconshanchu"
-               @click="deleteImg('zfbZizhi')"></i>
-            <div class="icon iconfont iconzhaoxiangji ml-10"
-                 style="font-size:30px;"></div>
-            <img v-if="detail.aliSpecialLicensePic"
-                 :src="detail.aliSpecialLicensePic | previewLoadImage"
-                 @click="previewImage(detail.aliSpecialLicensePic)" />
-          </div>
-        </div>
-        <div class="item text-left"
+                <vmaUploadImg ref="zfbZizhi"
+                              @change="onFileChange($event, 'zfbZizhi')"></vmaUploadImg>
+                <i v-if="detail.aliSpecialLicensePic"
+                   class="icon iconfont iconshanchu"
+                   @click="deleteImg('zfbZizhi')"></i>
+                <div class="icon iconfont iconzhaoxiangji ml-10"
+                     style="font-size:30px;"></div>
+                <img v-if="detail.aliSpecialLicensePic"
+                     :src="detail.aliSpecialLicensePic | previewLoadImage"
+                     @click="previewImage(detail.aliSpecialLicensePic)" />
+              </div>
+            </div>
+            <div class="item text-left"
              style="border:0;font-size: 12px;color:red;"
              v-if="needQualification">提示：当前所选行业需要特殊资质：{{needQualification}}</div>
+          </div>
+        </mu-expand-transition>
       </div>
+
+      <!--乐刷通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.LS">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.ls"
                        label="乐刷通道"></mu-checkbox>
         </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star">*</span>是否为餐饮
+        <mu-expand-transition>
+          <div v-show="checkboxObj.ls" class="outbox-item">
+            <div class="item">
+              <div class="subtitle">
+                <span class="star">*</span>是否为餐饮
+              </div>
+              <div class="match-left-space align-right input-number">
+                <mu-switch v-model="detail.isIndustryDining"></mu-switch>
+              </div>
+            </div>
+            <div class="item"
+                 style="border:0;"
+                 v-if="detail.isIndustryDining">
+              <div class="subtitle">食品卫生许可证</div>
+            </div>
+            <div class="item id_img_wp"
+                 v-if="detail.isIndustryDining">
+              <div class="img_wp img_wp_width">
+                <!-- <input
+                  class="file"
+                  type="file"
+                  ref="leShipin"
+                  accept="image/*"
+                  @change="onFileChange($event, 'leShipin')"
+                  style="height:100%;width:100%;display:inline-block;"
+                /> -->
+                <vmaUploadImg ref="leShipin"
+                              @change="onFileChange($event, 'leShipin')"></vmaUploadImg>
+                <i v-if="detail.foodHealthPermissionPic"
+                   class="icon iconfont iconshanchu"
+                   @click="deleteImg('leShipin')"></i>
+                <div class="icon iconfont iconzhaoxiangji ml-10"
+                     style="font-size:30px;"></div>
+                <img v-if="detail.foodHealthPermissionPic"
+                     :src="detail.foodHealthPermissionPic | previewLoadImage"
+                     @click="previewImage(detail.foodHealthPermissionPic)" />
+              </div>
+            </div>
+            <!--<div class="item"
+                 style="border:0;">
+              <div class="subtitle"><span class="star">*</span>收银台照片</div>
+            </div>
+            <div class="item id_img_wp">
+              <div class="img_wp img_wp_width">
+                &lt;!&ndash; <input
+                  class="file"
+                  type="file"
+                  ref="leshouyin"
+                  accept="image/*"
+                  @change="onFileChange($event, 'leshouyin')"
+                  style="height:100%;width:100%;display:inline-block;"
+                /> &ndash;&gt;
+                <vmaUploadImg ref="leshouyin"
+                              @change="onFileChange($event, 'leshouyin')"></vmaUploadImg>
+                <i v-if="detail.cashierDeskPicId"
+                   class="icon iconfont iconshanchu"
+                   @click="deleteImg('leshouyin')"></i>
+                <div class="icon iconfont iconzhaoxiangji ml-10"
+                     style="font-size:30px;"></div>
+                <img v-if="detail.cashierDeskPicId"
+                     :src="detail.cashierDeskPicId | previewLoadImage"
+                     @click="previewImage(detail.cashierDeskPicId)" />
+              </div>
+            </div>-->
+            <div class="item">
+              <VmaCascaderTree v-model="lsCascaderArr"
+                               class="client-info"
+                               :dataTree="lsMaccList"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="true"
+                               label="经营类目"
+                               @change="changeLsMenu"></VmaCascaderTree>
+            </div>
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star">*</span>微信费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.leWxRate" />%
+              </div>
+            </div>
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star">*</span>阿里费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.leAliRate" />%
+              </div>
+            </div>
           </div>
-          <div class="match-left-space align-right input-number">
-            <mu-switch v-model="detail.isIndustryDining"></mu-switch>
-          </div>
-        </div>
-        <div class="item"
-             style="border:0;"
-             v-if="detail.isIndustryDining">
-          <div class="subtitle">食品卫生许可证</div>
-        </div>
-        <div class="item id_img_wp"
-             v-if="detail.isIndustryDining">
-          <div class="img_wp img_wp_width">
-            <!-- <input
-              class="file"
-              type="file"
-              ref="leShipin"
-              accept="image/*"
-              @change="onFileChange($event, 'leShipin')"
-              style="height:100%;width:100%;display:inline-block;"
-            /> -->
-            <vmaUploadImg ref="leShipin"
-                          @change="onFileChange($event, 'leShipin')"></vmaUploadImg>
-            <i v-if="detail.foodHealthPermissionPic"
-               class="icon iconfont iconshanchu"
-               @click="deleteImg('leShipin')"></i>
-            <div class="icon iconfont iconzhaoxiangji ml-10"
-                 style="font-size:30px;"></div>
-            <img v-if="detail.foodHealthPermissionPic"
-                 :src="detail.foodHealthPermissionPic | previewLoadImage"
-                 @click="previewImage(detail.foodHealthPermissionPic)" />
-          </div>
-        </div>
-        <!--<div class="item"
-             style="border:0;">
-          <div class="subtitle"><span class="star">*</span>收银台照片</div>
-        </div>
-        <div class="item id_img_wp">
-          <div class="img_wp img_wp_width">
-            &lt;!&ndash; <input
-              class="file"
-              type="file"
-              ref="leshouyin"
-              accept="image/*"
-              @change="onFileChange($event, 'leshouyin')"
-              style="height:100%;width:100%;display:inline-block;"
-            /> &ndash;&gt;
-            <vmaUploadImg ref="leshouyin"
-                          @change="onFileChange($event, 'leshouyin')"></vmaUploadImg>
-            <i v-if="detail.cashierDeskPicId"
-               class="icon iconfont iconshanchu"
-               @click="deleteImg('leshouyin')"></i>
-            <div class="icon iconfont iconzhaoxiangji ml-10"
-                 style="font-size:30px;"></div>
-            <img v-if="detail.cashierDeskPicId"
-                 :src="detail.cashierDeskPicId | previewLoadImage"
-                 @click="previewImage(detail.cashierDeskPicId)" />
-          </div>
-        </div>-->
-        <div class="item">
-          <VmaCascaderTree v-model="lsCascaderArr"
-                           class="client-info"
-                           :dataTree="lsMaccList"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="true"
-                           label="经营类目"
-                           @change="changeLsMenu"></VmaCascaderTree>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star">*</span>微信费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.leWxRate" />%
-          </div>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star">*</span>阿里费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.leAliRate" />%
-          </div>
-        </div>
+        </mu-expand-transition>
       </div>
+
+      <!--威富通通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.YS">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.ys"
                        label="威富通通道"></mu-checkbox>
         </div>
-        <div class="item">
-          <VmaCascaderTree v-model="ysCascaderArr"
-                           class="client-info"
-                           :dataTree="ysMaccList"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.ys"
-                           label="经营类目"
-                           @change="changeYsMenu"></VmaCascaderTree>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.ys">*</span>结算费率
-          </div>
-          <div class="match-left-space align-right input-number">
-            <input type="number"
-                   placeholder="请填写真实费率"
-                   v-model="detail.ysRate" />%
-          </div>
-        </div>
-        <div class="item"
-             style="border:0;">
-          <div class="subtitle"><span class="star"
-                  v-show="checkboxObj.ys">*</span>商家协议</div>
-        </div>
-        <div class="item id_img_wp">
+        <mu-expand-transition>
+          <div v-show="checkboxObj.ys" class="outbox-item">
+            <div class="item">
+              <VmaCascaderTree v-model="ysCascaderArr"
+                               class="client-info"
+                               :dataTree="ysMaccList"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.ys"
+                               label="经营类目"
+                               @change="changeYsMenu"></VmaCascaderTree>
+            </div>
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.ys">*</span>结算费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.ysRate" />%
+              </div>
+            </div>
+            <div class="item"
+                 style="border:0;">
+              <div class="subtitle"><span class="star"
+                      v-show="checkboxObj.ys">*</span>商家协议</div>
+            </div>
+            <div class="item id_img_wp">
           <div class="img_wp img_wp_width"
                v-if="proImgList.length"
                v-for="(item, index) in proImgList"
@@ -1072,13 +1119,19 @@
                  style="font-size:30px;"></div>
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
+
+      <!--传化通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.CH">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.ch"
                        label="传化通道"></mu-checkbox>
         </div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.ch" class="outbox-item">
         <div class="item">
           <VmaCascaderTree v-model="chCascaderArr"
                            class="client-info"
@@ -1100,96 +1153,102 @@
                    v-model="detail.chRate" />%
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
+
+      <!--富友通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.FY">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.fy"
                        label="富友通道"></mu-checkbox>
         </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.wx">*</span>商户营业地区
-          </div>
-          <div class="match-left-space align-right">
-            <div class="input align-right"
-                 @click="callActionSheet(4)">
-              <div>{{detail.fuiouAreaName}}</div>
-              <div class="icon iconfont iconenter ml-10"></div>
+        <mu-expand-transition>
+          <div v-show="checkboxObj.fy" class="outbox-item">
+            <div class="item">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.wx">*</span>商户营业地区
+              </div>
+              <div class="match-left-space align-right">
+                <div class="input align-right"
+                     @click="callActionSheet(4)">
+                  <div>{{detail.fuiouAreaName}}</div>
+                  <div class="icon iconfont iconenter ml-10"></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="item">
-          <VmaCascaderTree v-model="fyCascaderArr"
-                           class="client-info"
-                           :dataTree="fyMaccList"
-                           :placeholder="'请选择类目'"
-                           :modalLabel="'选择类目'"
-                           :required="checkboxObj.fy"
-                           label="经营类目"
-                           @change="changeFyMenu"></VmaCascaderTree>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.fy">*</span>支付宝费率
-          </div>
-          <!--          <div class="match-left-space align-right input-number">-->
-          <!--            <input type="number"-->
-          <!--                   v-model="detail.fuiouAliRate" />%-->
-          <!--          </div>-->
-          <div class="match-left-space align-right">
-            <div class="input align-right"
-                 @click="callActionSheet(5)">
-              <div>{{fuiouAliRate}}</div>
-              <div class="icon iconfont iconenter ml-10"></div>
+            <div class="item">
+              <VmaCascaderTree v-model="fyCascaderArr"
+                               class="client-info"
+                               :dataTree="fyMaccList"
+                               :placeholder="'请选择类目'"
+                               :modalLabel="'选择类目'"
+                               :required="checkboxObj.fy"
+                               label="经营类目"
+                               @change="changeFyMenu"></VmaCascaderTree>
             </div>
-          </div>
-        </div>
-        <div class="item"
-             v-if="from!=='share'">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="checkboxObj.fy">*</span>微信费率
-          </div>
-          <!--          <div class="match-left-space align-right input-number">-->
-          <!--            <input type="number"-->
-          <!--                   v-model="detail.fuiouWxRate" />%-->
-          <!--          </div>-->
-          <div class="match-left-space align-right">
-            <div class="input align-right"
-                 @click="callActionSheet(6)">
-              <div>{{fuiouWxRate}}</div>
-              <div class="icon iconfont iconenter ml-10"></div>
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.fy">*</span>支付宝费率
+              </div>
+              <!--          <div class="match-left-space align-right input-number">-->
+              <!--            <input type="number"-->
+              <!--                   v-model="detail.fuiouAliRate" />%-->
+              <!--          </div>-->
+              <div class="match-left-space align-right">
+                <div class="input align-right"
+                     @click="callActionSheet(5)">
+                  <div>{{fuiouAliRate}}</div>
+                  <div class="icon iconfont iconenter ml-10"></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="item"
-             style="border:0;">
-          <div class="subtitle"><span class="star"
-                  v-show="!detail.businessLicensePhotoId">*</span>小微商户手持证件照</div>
-        </div>
-        <div class="item id_img_wp">
-          <div class="img_wp img_wp_width">
-            <vmaUploadImg ref="fyXiaowei"
-                          @change="onFileChange($event, 'fyXiaowei')"></vmaUploadImg>
-            <i v-if="detail.inHandPicId"
-               class="icon iconfont iconshanchu"
-               @click="deleteImg('fyXiaowei')"></i>
-            <div class="icon iconfont iconzhaoxiangji ml-10"
-                 style="font-size:30px;"></div>
-            <img v-if="detail.inHandPicId"
-                 :src="detail.inHandPicId | previewLoadImage"
-                 @click="previewImage(detail.inHandPicId)" />
-          </div>
-        </div>
-        <div class="item"
-             style="border:0;">
-          <div class="subtitle">经营许可证</div>
-        </div>
-        <div class="item id_img_wp">
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.fy">*</span>微信费率
+              </div>
+              <!--          <div class="match-left-space align-right input-number">-->
+              <!--            <input type="number"-->
+              <!--                   v-model="detail.fuiouWxRate" />%-->
+              <!--          </div>-->
+              <div class="match-left-space align-right">
+                <div class="input align-right"
+                     @click="callActionSheet(6)">
+                  <div>{{fuiouWxRate}}</div>
+                  <div class="icon iconfont iconenter ml-10"></div>
+                </div>
+              </div>
+            </div>
+            <div class="item"
+                 style="border:0;">
+              <div class="subtitle"><span class="star"
+                      v-show="!detail.businessLicensePhotoId">*</span>小微商户手持证件照</div>
+            </div>
+            <div class="item id_img_wp">
+              <div class="img_wp img_wp_width">
+                <vmaUploadImg ref="fyXiaowei"
+                              @change="onFileChange($event, 'fyXiaowei')"></vmaUploadImg>
+                <i v-if="detail.inHandPicId"
+                   class="icon iconfont iconshanchu"
+                   @click="deleteImg('fyXiaowei')"></i>
+                <div class="icon iconfont iconzhaoxiangji ml-10"
+                     style="font-size:30px;"></div>
+                <img v-if="detail.inHandPicId"
+                     :src="detail.inHandPicId | previewLoadImage"
+                     @click="previewImage(detail.inHandPicId)" />
+              </div>
+            </div>
+            <div class="item"
+                 style="border:0;">
+              <div class="subtitle">经营许可证</div>
+            </div>
+            <div class="item id_img_wp">
           <div class="img_wp img_wp_width">
             <vmaUploadImg ref="fyXuke"
                           @change="onFileChange($event, 'fyXuke')"></vmaUploadImg>
@@ -1203,6 +1262,8 @@
                  @click="previewImage(detail.businessCertPicId)" />
           </div>
         </div>
+          </div>
+        </mu-expand-transition>
       </div>
 
     <!--  <div class="match-width box align-default"
@@ -1434,6 +1495,7 @@
             </div>
           </div>
         </div>
+
 
 
 
@@ -3938,6 +4000,9 @@ export default {
 <style scoped>
 .action-sheet .item {
   height: auto;
+}
+.outbox-item {
+  width: 100vw;
 }
 </style>
 <style>
