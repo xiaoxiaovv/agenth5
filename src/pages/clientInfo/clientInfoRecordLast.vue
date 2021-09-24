@@ -1793,6 +1793,10 @@ export default {
         {
           value: 1,
           name: 'T1'
+        },
+        {
+          value: 3,
+          name: 'D1'
         }
       ],//结算周期类型列表
       yiSSettlementCycleTypeList: [
@@ -1803,6 +1807,10 @@ export default {
         {
           value: 1,
           name: 'D0'
+        },
+        {
+          value: 2,
+          name: 'D1'
         }
 
       ],//结算周期类型列表
@@ -2432,12 +2440,25 @@ export default {
       this.detail.lakalaMccCode = item ? item[0].code:'';*!/
     },*/
 // ===================================================================
+    // // 选择经营类目  易生
+    // changeYiSMenu(item) {
+    //   if (item.length) {
+    //    this.$set(this.detail, "mccCodeClass", item[0].id);
+    //     this.$set(this.detail, "mccCode", item[1].id);
+    //     this.$set(this.detail, "mccName", item[1].name);
+    //   }
+    // },
     // 选择经营类目  易生
     changeYiSMenu(item) {
       if (item.length) {
-       this.$set(this.detail, "mccCodeClass", item[0].id);
+        this.detail.ysYloneMccCode = item[0].id
+        this.detail.ysYltwoMccCode = item[1].id
+        this.detail.ysYlthreeMccCode = item[2].id
+        // console.log('选择开店宝经营类目8888888888:',item[0].id)
+        // console.log('选择开店宝经营类目999999999:',item[1].id)
+        /*this.$set(this.detail, "mccCodeClass", item[0].id);
         this.$set(this.detail, "mccCode", item[1].id);
-        this.$set(this.detail, "mccName", item[1].name);
+        this.$set(this.detail, "mccName", item[1].name);*/
       }
     },
 
@@ -3742,6 +3763,8 @@ export default {
       }
       if (this.checkboxObj.yiS && this.PROCESS.YIS) {
         this.detail.importNums.push('13')
+        console.log(this.detail)
+        console.log(yiSRequireData)
         //畅捷
         if (!yiSRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')
