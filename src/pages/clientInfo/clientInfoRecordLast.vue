@@ -3440,7 +3440,7 @@ export default {
       this.detail.kdbJjkSettlementCycle = this.detail.kdbWxSettlementCycle;
       this.detail.kdbDjkSettlementCycle = this.detail.kdbWxSettlementCycle;
       //易生写死字段--开始
-      this.detail.ysJjkRate = '0.52';
+      this.detail.ysJjkRate = '0.46';
       this.detail.ysDjkRate = '0.62';
       this.detail.ysZfbRate = this.detail.ysWxRate;
       this.detail.ysYlRate = this.detail.ysWxRate;
