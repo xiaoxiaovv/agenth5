@@ -2831,7 +2831,7 @@ export default {
         this.detail.kdbServiceRate = '0.02'; //d0手续费  百分比
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--结束
         //设置开店宝默认费率
-        this.detail.kdbWxTradeRate = this.detail.kdbWxTradeRate || '0.36'
+        this.detail.kdbWxTradeRate = this.detail.kdbWxTradeRate || '0.38'
         //设置手机pos默认费率 'posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee'
         this.detail.posTradeRate = this.detail.posTradeRate || '0.55'
         this.detail.posDrawFee = this.detail.posDrawFee || '3'
