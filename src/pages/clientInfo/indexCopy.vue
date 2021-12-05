@@ -15,7 +15,7 @@
               class="fl">
             <div>
               <p class="pandect-data-price">￥382.11</p>
-              <p class="pandect-data-name">总交易额</p>
+              <p class="pandect-data-name">月交易额</p>
             </div>
           </li>
         </ul>

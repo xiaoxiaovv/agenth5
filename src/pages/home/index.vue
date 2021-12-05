@@ -20,7 +20,7 @@
                     <div>
                       <p class="pandect-data-price vm-ell">￥{{dataViews.transactionMoney || 0}}</p>
                       <p class="pandect-data-name flex
-                      ">总交易额 <i class="icon iconfont iconeye order-eye" @click="toOrder"></i></p>
+                      ">本月交易额 <i class="icon iconfont iconeye order-eye" @click="toOrder"></i></p>
                     </div>
                   </li>
 <!--                  v-if="userType=='2' || userType=='3' || userType=='4'"-->
@@ -57,7 +57,7 @@
                   <li class="fl">
                     <div>
                       <p class="pandect-data-price vm-ell">{{dataViews.transactiontNum || 0}}</p>
-                      <p class="pandect-data-name">总交易笔数</p>
+                      <p class="pandect-data-name">本月交易笔数</p>
                     </div>
                   </li>
                   <li class="fl" v-if="userType=='3'">

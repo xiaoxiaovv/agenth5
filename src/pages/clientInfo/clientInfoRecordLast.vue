@@ -1321,6 +1321,7 @@
       </div>-->
       <div class="match-width box align-center">
         <div class="next box align-center"
+              id='btn-list'
              @click="onNext">提交</div>
       </div>
 
@@ -3449,10 +3450,27 @@ export default {
           if (res.code === 200) {
             this.$toast.success('提交成功')
             let from = fromReactNativeLocal.get()
+            console.log(from)
+            if (from === 'app') {
+              uni.getEnv(function(res) {
+                  console.log('当前环境：' + JSON.stringify(res));
+              });
+              uni.navigateTo({
+                  url: '/pages/daili/home/shanghuguanli/home'
+              })
+              return
+            }
             if (from === 'iframe') { // 是否为iframe内嵌的环境
               console.log('iframe内嵌的环境：触发')
               let data = {}
               window.parent.postMessage(data, '*')
+              if (this.from === 'app') {
+                document.addEventListener('UniAppJSBridgeReady', function() {
+                      uni.navigateTo({
+                          url: '/pages/daili/home/shanghuguanli/home'
+                      })
+                });
+              }
               return
             }
             // 分销APPRN来源

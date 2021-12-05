@@ -263,7 +263,7 @@ export default {
       this.locationDisabledFlag = true
     }
     if (this.$route.query.token) {
-      sessionStorage.token = this.$route.query.token
+      sessionStorage.token = this.$route.query.token 
       setTimeout(() => {
         this.loginByTokenToGetInfo()
       })
@@ -448,7 +448,7 @@ export default {
         this.$toast.message(msg)
       } else {
         if(this.isOpenBtn){
-          this.geoCode()
+          this.addAndEditSubmit()
         }else{
           this.addAndEditSubmit()
         }

@@ -41,7 +41,7 @@ import { homeApi } from '../../api';
                 </div>
                 <div class="flex-1 black-label text-right">
                  ￥{{item.presentCommissionAmount || 0}}
-                 <p class="gray-label">{{item.payTime |date}}</p>
+                 <p class="gray-label">{{item.payTime}}</p>
                 </div>
               </div>
             </mu-list>
