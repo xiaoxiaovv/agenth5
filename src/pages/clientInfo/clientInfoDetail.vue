@@ -8,7 +8,7 @@
            @click="onBack"></div>
       <div class="title">{{detail.merchantName}}</div>
       <div class="text"
-           v-if="isEdit"
+           v-if="isEdit || userType == 1"
            @click="toEdit">录入资料</div>
       <div class="text"
            v-else></div>
@@ -1087,7 +1087,7 @@
 </template>
 
 <script>
-import { clientInfoDetailLocal, clientInfoDetailMerchantNameLocal } from '@/storage'
+import { clientInfoDetailLocal, clientInfoDetailMerchantNameLocal, afterLoginInfoLocal } from '@/storage'
 import { clientInfoApi } from '@/api'
 import { url } from '@/utils/src/request'
 import { CLIENT_INFO, CLIENT_INFO_RECORD } from '@/router/types'
@@ -1096,6 +1096,7 @@ import { getProcess } from '@/constants'
 export default {
   data() {
     return {
+      userType: afterLoginInfoLocal.getJSON().userType,
       // PROCESS,
       PROCESS: {
         SXF: false,

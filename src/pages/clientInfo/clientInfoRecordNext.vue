@@ -40,8 +40,9 @@
         </div>
         <div class="item id_img_wp">
           <div class="img_wp img_wp_width">
-            <vmaUploadImg ref="bank"
-                          @change="onFileChange($event, 'bank')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="bank"
+                          @change="onFileChange($event, 'bank')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'bank')"></h5-cropper>
             <template v-if="(Number(detail.businessType) === 1 && detail.openingAccountLicensePicId) || (Number(detail.businessType) === 2 && detail.bankCardPositivePicId)">
               <i class="icon iconfont iconshanchu"
                  @click="deleteImg('card')"></i>
@@ -50,11 +51,13 @@
                  style="font-size:30px;"></div>
             <template v-if="Number(detail.businessType) === 1">
               <img v-if="detail.openingAccountLicensePicId"
+              class="img_show"
                    :src="detail.openingAccountLicensePicId | previewLoadImage"
                    @click="previewImage(detail.openingAccountLicensePicId)" />
             </template>
             <template v-else>
               <img v-if="detail.bankCardPositivePicId"
+              class="img_show"
                    :src="detail.bankCardPositivePicId | previewLoadImage"
                    @click="previewImage(detail.bankCardPositivePicId)" />
             </template>
@@ -62,8 +65,9 @@
           </div>
 
           <div class="img_wp img_wp_width">
-            <vmaUploadImg ref="back"
-                          @change="onFileChange($event, 'back')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="back"
+                          @change="onFileChange($event, 'back')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'back')"></h5-cropper>
             <div>
               <i v-if="detail.bankPhotoId"
                  class="icon iconfont iconshanchu"
@@ -71,6 +75,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.bankPhotoId"
+              class="img_show"
                    :src="detail.bankPhotoId | previewLoadImage"
                    @click="previewImage(detail.bankPhotoId)" />
             </div>
@@ -395,12 +400,23 @@ import { clientInfoApi } from '@/api'
 import vmaUploadImg from '@/components/common/vmaUploadImg'
 import vmaImagePreview from '@/components/common/vmaImagePreview'
 import indexMixins from './src/mixins'
-
+import H5Cropper from 'vue-cropper-h5'
 export default {
-  components: { vmaUploadImg, vmaImagePreview },
+  components: { vmaUploadImg, vmaImagePreview, H5Cropper },
   mixins: [indexMixins],
   data() {
     return {
+      option: {
+          autoCrop: true,
+          autoCropWidth: 350,
+          autoCropHeight: 220,
+          fixed: false,
+          outputSize: 1,
+          fixedBox: false,
+          canMoveBox: true,
+          centerBox: true,
+          canMove: true,
+      },
       kdbAccountTypeText:'请选择结算账户类型',
       simpleTreeStatus: '',
       kdbAccountTypeList: [
@@ -481,6 +497,12 @@ export default {
       if(this.simpleTreeStatus === 1){
         this.detail.kdbAccountType = item.value;
         this.kdbAccountTypeText = item.name;
+        console.log(this.detail.kdbAccountType)
+        if(this.detail.kdbAccountType == 1) { //对私
+            this.detail.accountHolder = this.detail.representativeName
+        } else { //对公
+          this.detail.accountHolder = this.detail.businessLicenseName
+        }
       }
       this.openSimpleTree = false;
 
@@ -775,40 +797,79 @@ export default {
         this.loading = false
       })
     },
+    // 将裁剪base64的图片转换为file文件
+    dataURLtoFile (dataurl, filename) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    // 压缩图片
+    onImgCompression (img) {
+      let canvas = document.createElement("canvas")
+      let ctx = canvas.getContext("2d")
+      let initSize = img.src.length
+      let width = img.width
+      let height = img.height
+      canvas.width = width
+      canvas.height = height
+      // 铺底色
+      ctx.fillStyle = "#fff"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0, width, height)
+      //进行压缩
+      let compress = 0.4  //压缩率
+      return canvas.toDataURL("image/jpeg", compress)
+    },
     // 文件改变
     onFileChange(file, type) {
-      if (file) {
-        clientInfoApi.uploadImage(file).then(res => {
-          if (res.code === 200) {
-            this.$toast.success('图片上传成功')
-            this.$refs[type].$refs.file.value = ''
-            let photoId = res.obj
-            if (type === 'bank') { // 获取银行卡照片
-              if (Number(this.detail.businessType) === 1) { // 对公账户
-                this.$set(this.detail, 'openingAccountLicensePicId', photoId)
-                // todo 临时用
-                this.$set(this.detail, 'bankCardPositivePicId', photoId)  //临时解决方案，添加企业开户证的时候，给个人银行卡正面字段也赋上相同的值，后台取了这个字段作为企业开户证字段
-                this.getOpenAccountInfo(photoId)
-              } else {
-                this.$set(this.detail, 'bankCardPositivePicId', photoId)
-                this.getBankInfo(photoId)
+      let imgfile = null
+      let img = new Image()
+      img.src = file
+      img.onload = () => {
+        let _data = this.onImgCompression(img)
+        console.log(_data)
+        var arr = _data.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        fileName = new Date().getTime() + '.' + mime.split('/')[1]
+        imgfile = this.dataURLtoFile(_data, fileName)
+        console.log('图片大小-压缩过:', (imgfile.size / 1024).toFixed(2), 'kb，', '压缩率：', 0.4)
+        console.log(imgfile)
+        if (imgfile) {
+          clientInfoApi.uploadImage(imgfile).then(res => {
+            if (res.code === 200) {
+              this.$toast.success('图片上传成功')
+              let photoId = res.obj
+              if (type === 'bank') { // 获取银行卡照片
+                if (Number(this.detail.businessType) === 1) { // 对公账户
+                  this.$set(this.detail, 'openingAccountLicensePicId', photoId)
+                  // todo 临时用
+                  this.$set(this.detail, 'bankCardPositivePicId', photoId)  //临时解决方案，添加企业开户证的时候，给个人银行卡正面字段也赋上相同的值，后台取了这个字段作为企业开户证字段
+                  this.getOpenAccountInfo(photoId)
+                } else {
+                  this.$set(this.detail, 'bankCardPositivePicId', photoId)
+                  this.getBankInfo(photoId)
+                }
+              }else if (type === 'back') { // 获取银行卡背面照片
+                  this.$set(this.detail, 'bankPhotoId', photoId)
               }
-            }else if (type === 'back') { // 获取银行卡背面照片
-                this.$set(this.detail, 'bankPhotoId', photoId)
+            } else {
+              this.$toast.error(res.msg)
             }
-          } else {
-            this.$toast.error(res.msg)
-          }
-        }, (err) => {
-          this.$toast.error(err.msg)
-        })
+          }, (err) => {
+            this.$toast.error(err.msg)
+          })
+        }
       }
+
     },
     // 获取列表详情
     getMchInfo(id) {
       clientInfoApi.getMchInfo({ id }).then(res => {
         // res.obj.accountHolder = res.obj.accountHolder || res.obj.representativeName
         this.detail = Object.assign({}, this.detail, res.obj)
+        this.detail.bankPhone = this.detail.bankPhone?this.detail.bankPhone:this.detail.legalPersonPhone
         this.setSimpleTreeText(this.detail)
       })
     },

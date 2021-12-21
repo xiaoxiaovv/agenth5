@@ -336,7 +336,7 @@
               </div>
             </div>
 
-            <div class="item">
+         <div class="item">
           <div class="subtitle">
             <span class="star" v-show="checkboxObj.yiS">*</span>到账周期
           </div>
@@ -346,6 +346,21 @@
                  style="text-align: right" v-text="yiSSettlementCycleTypeText">
             </div>
             <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+        <div class="item" v-show="detail.ysAgreementId && detail.ysRegistryId && detail.ysLiquidationId">
+          <div class="subtitle">
+            <span class="star" v-show="checkboxObj.yiS">*</span>是否重新发送验证码
+          </div>
+          <div class="match-left-space box align-right">
+            <mu-radio v-model="isSendEwm"
+                      style="margin-right: 16px;"
+                      :value="0"
+                      label="否"></mu-radio>
+            <mu-radio v-model="isSendEwm"
+                      style="margin-right: 16px;"
+                      :value="1"
+                      label="是"></mu-radio>
           </div>
         </div>
           </div>
@@ -509,8 +524,9 @@
                        ref="out"
                        accept="image/*"
                        @change="onFileChange($event, 'out')" /> -->
-                <vmaUploadImg ref="kdbRegistryId"
-                              @change="onFileChange($event, 'kdbRegistryId')"></vmaUploadImg>
+                <!-- <vmaUploadImg ref="kdbRegistryId"
+                              @change="onFileChange($event, 'kdbRegistryId')"></vmaUploadImg> -->
+                <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'kdbRegistryId')"></h5-cropper>
                 <div>
                   <i v-if="detail.kdbRegistryId"
                      class="icon iconfont iconshanchu"
@@ -518,6 +534,7 @@
                   <div class="icon iconfont iconzhaoxiangji ml-10"
                        style="font-size:30px;"></div>
                   <img v-if="detail.kdbRegistryId"
+                        class="img_show"
                        :src="detail.kdbRegistryId | previewLoadImage"
                        @click="previewImage(detail.kdbRegistryId)" />
                 </div>
@@ -537,8 +554,9 @@
                        ref="out"
                        accept="image/*"
                        @change="onFileChange($event, 'out')" /> -->
-                <vmaUploadImg ref="kdbAgreementId"
-                              @change="onFileChange($event, 'kdbAgreementId')"></vmaUploadImg>
+                <!-- <vmaUploadImg ref="kdbAgreementId"
+                              @change="onFileChange($event, 'kdbAgreementId')"></vmaUploadImg> -->
+                <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'kdbAgreementId')"></h5-cropper>
                 <div>
                   <i v-if="detail.kdbAgreementId"
                      class="icon iconfont iconshanchu"
@@ -546,10 +564,42 @@
                   <div class="icon iconfont iconzhaoxiangji ml-10"
                        style="font-size:30px;"></div>
                   <img v-if="detail.kdbAgreementId"
+                      class="img_show"
                        :src="detail.kdbAgreementId | previewLoadImage"
                        @click="previewImage(detail.kdbAgreementId)" />
                 </div>
                 <p class="img_intro">收单协议照片</p>
+              </div>
+            </div>
+            <div class="item"
+                 v-if="!detail.license && detail.kdbProvinceId == 6"
+                 style="border:0;">
+              <div class="subtitle">
+                小微商户租赁协议照片
+              </div>
+            </div>
+            <div class="item id_img_wp" v-if="!detail.license && detail.kdbProvinceId == 6">
+              <div class="img_wp img_wp_width">
+                <!-- <input class="file"
+                       type="file"
+                       ref="out"
+                       accept="image/*"
+                       @change="onFileChange($event, 'out')" /> -->
+                <!-- <vmaUploadImg ref="kdbRentalId"
+                              @change="onFileChange($event, 'kdbRentalId')"></vmaUploadImg> -->
+                <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'kdbRentalId')"></h5-cropper>
+                <div>
+                  <i v-if="detail.kdbRentalId"
+                     class="icon iconfont iconshanchu"
+                     @click="deleteImg('kdbRentalId')"></i>
+                  <div class="icon iconfont iconzhaoxiangji ml-10"
+                       style="font-size:30px;"></div>
+                  <img v-if="detail.kdbRentalId"
+                      class="img_show"
+                       :src="detail.kdbRentalId | previewLoadImage"
+                       @click="previewImage(detail.kdbRentalId)" />
+                </div>
+                <p class="img_intro" style="font-size: 12px;">小微商户租赁协议照片</p>
               </div>
             </div>
             <div class="item"  v-if="detail.businessLicensePhotoId&&detail.businessType==1"
@@ -565,8 +615,9 @@
                    ref="out"
                    accept="image/*"
                    @change="onFileChange($event, 'out')" /> -->
-            <vmaUploadImg ref="kdbUpregisterId"
-                          @change="onFileChange($event, 'kdbUpregisterId')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="kdbUpregisterId"
+                          @change="onFileChange($event, 'kdbUpregisterId')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'kdbUpregisterId')"></h5-cropper>
             <div>
               <i v-if="detail.kdbUpregisterId"
                  class="icon iconfont iconshanchu"
@@ -574,6 +625,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.kdbUpregisterId"
+                  class="img_show"
                    :src="detail.kdbUpregisterId | previewLoadImage"
                    @click="previewImage(detail.kdbUpregisterId)" />
             </div>
@@ -769,8 +821,9 @@
                     @change="onFileChange($event, 'bank')"
                     style="height:100%;width:100%;display:inline-block;"
                   /> -->
-                  <vmaUploadImg ref="bank"
-                                @change="onFileChange($event, 'bank')"></vmaUploadImg>
+                  <!-- <vmaUploadImg ref="bank"
+                                @change="onFileChange($event, 'bank')"></vmaUploadImg> -->
+                  <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'bank')"></h5-cropper>
                   <div>
                     <i v-if="detail.personAccountPicId"
                        class="icon iconfont iconshanchu"
@@ -851,8 +904,9 @@
               accept="image/*"
               @change="onFileChange($event, 'zizhi')"
               style="height:100%;width:100%;display:inline-block;"/> -->
-            <vmaUploadImg ref="zizhi"
-                          @change="onFileChange($event, 'zizhi')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="zizhi"
+                          @change="onFileChange($event, 'zizhi')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'zizhi')"></h5-cropper>
             <i v-if="detail.specialQualificationPhotoId"
                class="icon iconfont iconshanchu"
                @click="deleteImg('zizhi')"></i>
@@ -917,8 +971,9 @@
                  style="border:0;">
               <div class="img_wp img_wp_width">
 
-                <vmaUploadImg ref="zfbZizhi"
-                              @change="onFileChange($event, 'zfbZizhi')"></vmaUploadImg>
+                <!-- <vmaUploadImg ref="zfbZizhi"
+                              @change="onFileChange($event, 'zfbZizhi')"></vmaUploadImg> -->
+                <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'zfbZizhi')"></h5-cropper>
                 <i v-if="detail.aliSpecialLicensePic"
                    class="icon iconfont iconshanchu"
                    @click="deleteImg('zfbZizhi')"></i>
@@ -969,8 +1024,9 @@
                   @change="onFileChange($event, 'leShipin')"
                   style="height:100%;width:100%;display:inline-block;"
                 /> -->
-                <vmaUploadImg ref="leShipin"
-                              @change="onFileChange($event, 'leShipin')"></vmaUploadImg>
+                <!-- <vmaUploadImg ref="leShipin"
+                              @change="onFileChange($event, 'leShipin')"></vmaUploadImg> -->
+                <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'leShipin')"></h5-cropper>
                 <i v-if="detail.foodHealthPermissionPic"
                    class="icon iconfont iconshanchu"
                    @click="deleteImg('leShipin')"></i>
@@ -1101,8 +1157,9 @@
               @change="onFileChange($event, 'xieyi')"
               style="height:100%;width:100%;display:inline-block;"
             /> -->
-            <vmaUploadImg ref="xieyi"
-                          @change="onFileChange($event, 'xieyi')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="xieyi"
+                          @change="onFileChange($event, 'xieyi')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'xieyi')"></h5-cropper>
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
           </div>
@@ -1220,8 +1277,9 @@
             </div>
             <div class="item id_img_wp">
               <div class="img_wp img_wp_width">
-                <vmaUploadImg ref="fyXiaowei"
-                              @change="onFileChange($event, 'fyXiaowei')"></vmaUploadImg>
+                <!-- <vmaUploadImg ref="fyXiaowei"
+                              @change="onFileChange($event, 'fyXiaowei')"></vmaUploadImg> -->
+                <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'fyXiaowei')"></h5-cropper>
                 <i v-if="detail.inHandPicId"
                    class="icon iconfont iconshanchu"
                    @click="deleteImg('fyXiaowei')"></i>
@@ -1238,8 +1296,9 @@
             </div>
             <div class="item id_img_wp">
           <div class="img_wp img_wp_width">
-            <vmaUploadImg ref="fyXuke"
-                          @change="onFileChange($event, 'fyXuke')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="fyXuke"
+                          @change="onFileChange($event, 'fyXuke')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'fyXuke')"></h5-cropper>
             <i v-if="detail.businessCertPicId"
                class="icon iconfont iconshanchu"
                @click="deleteImg('fyXuke')"></i>
@@ -1694,17 +1753,30 @@ import { getProcess } from '@/constants'
 import { NativeAppRouter } from '../../utils/src/webviewBridgeUtils'
 import { afterLoginInfoLocal} from '@/storage'
 import { validPhone, emailValid } from '@/utils'
-
+import H5Cropper from 'vue-cropper-h5'
 
 export default {
   components: {
     VmaCascaderTree,
     vmaUploadImg,
-    vmaImagePreview
+    vmaImagePreview,
+    H5Cropper
   },
   mixins: [indexMixins],
   data() {
     return {
+      option: {
+          autoCrop: true,
+          autoCropWidth: 350,
+          autoCropHeight: 220,
+          fixed: false,
+          outputSize: 1,
+          fixedBox: false,
+          canMoveBox: true,
+          centerBox: true,
+          canMove: true,
+      },
+      isSendEwm: 0,
       // PROCESS,
       PROCESS: {
           //所有的值会被mounted里接口请求的数据覆盖
@@ -1881,6 +1953,7 @@ export default {
         kdbSex:'', //性别
         kdbRegistryId:'',  //注册登记表照片id
         kdbAgreementId:'',  //收单协议照片id
+        kdbRentalId: '',
         kdbUpregisterId:'',  //开店宝商户变更登记表照片id
         kdbBusinessId:'',  //二级经营类目id
         kdbBusinessId1:'',  //一级经营类目id
@@ -2239,8 +2312,6 @@ export default {
     init(){
 
     },
-
-
     closeAlertDialog() {
       this.openAlert = false
     },
@@ -2509,6 +2580,9 @@ export default {
       }else if(type === 'kdbUpregisterId'){
         //开店宝开店宝商户变更登记表照片id
         this.detail.kdbUpregisterId = ''
+      }else if(type === 'kdbRentalId'){
+        //开店宝收单协议照片id
+        this.detail.kdbRentalId = ''
       }
 
 
@@ -3509,7 +3583,7 @@ export default {
       this.detail.kdbDjkSettlementCycle = this.detail.kdbWxSettlementCycle;
       //易生写死字段--开始
       this.detail.ysJjkRate = '0.46';
-      this.detail.ysDjkRate = '0.62';
+      this.detail.ysDjkRate = '0.58';
       this.detail.ysZfbRate = this.detail.ysWxRate;
       this.detail.ysYlRate = this.detail.ysWxRate;
       this.detail.ysJjkDiscountRate = '20';
@@ -3576,7 +3650,7 @@ export default {
 
       if (this.detail.businessLicensePhotoId&&this.detail.businessType==1) {
         //营业执照
-        kdbRequireData.push('kdbCompanyType', 'kdbRegistryId', 'kdbAgreementId')
+        kdbRequireData.push('kdbCompanyType', 'kdbRegistryId', 'kdbAgreementId', 'kdbRentalId')
       }
       if (!this.detail.businessLicensePhotoId) {
         //营业执照
@@ -3602,7 +3676,7 @@ export default {
         let lklRequireData = ['lklMerRegDistCode', 'lklMerRegCityCode' ,'lklMerRegProvCode', 'lklMerRegAddr','lklSettlePeriod','lklMerBusiContent','lklOneMccCode','lklTwoMccCode','lklThreeMccCode','PosType']
 
         sjPosRequireData = ['bankPhotoId','holdingCardId']
-        kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbRegistryId', 'kdbAgreementId']
+        kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxSettlementCycle', 'kdbSex', 'kdbRegistryId', 'kdbAgreementId', 'kdbRentalId']
         yiSRequireData = ['ysIsService','ysYloneAreaCode', 'ysYltwoAreaCode', 'ysYlthreeAreaCode', 'ysYloneMccCode', 'ysYltwoMccCode', 'ysYlthreeMccCode']
       }
 
@@ -3827,9 +3901,17 @@ export default {
       } else {
         this.detail.isCommit = 1
       }
-
       if (this.checkboxObj.yiS && this.PROCESS.YIS) {
-        this.getYiSMsgCode()
+        if(this.detail.ysAgreementId && this.detail.ysRegistryId && this.detail.ysLiquidationId) {
+          console.log(this.isSendEwm)
+          if (this.isSendEwm) {
+            this.getYiSMsgCode()
+          } else {
+            this.submitMchIfo()
+          }
+        } else {
+          this.getYiSMsgCode()
+        }
       }else{
         this.submitMchIfo()
       }
@@ -3936,78 +4018,108 @@ export default {
           this.loading = false
         })
     },
+    // 将裁剪base64的图片转换为file文件
+    dataURLtoFile (dataurl, filename) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    // 压缩图片
+    onImgCompression (img) {
+      let canvas = document.createElement("canvas")
+      let ctx = canvas.getContext("2d")
+      let initSize = img.src.length
+      let width = img.width
+      let height = img.height
+      canvas.width = width
+      canvas.height = height
+      // 铺底色
+      ctx.fillStyle = "#fff"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0, width, height)
+      //进行压缩
+      let compress = 0.4  //压缩率
+      return canvas.toDataURL("image/jpeg", compress)
+    },
     // 文件改变
     onFileChange(file, type) {
-      // if (!e.target.files) {
-      //   return
-      // }
-      // let file = e.target.files[0]
-      // if (file.size / 1024 / 1024 > 2) {
-      //   this.$toast.error('图片不能大于2M')
-      //   return
-      // }
-      // let file = this.$refs.file.files[0]
-      if (file) {
-        clientInfoApi.uploadImage(file).then(
-          res => {
-            if (res.code === 200) {
-              this.$toast.success('图片上传成功')
-              // console.log('this.$refs[type]77777777777777777777777777',this.$refs[type])
-              this.$refs[type].$refs.file.value = ''
-              // console.log('aaa=======================',this.$refs)
-              let photoId = res.obj
+      let imgfile = null
+      let img = new Image()
+      img.src = file
+      img.onload = () => {
+        let _data = this.onImgCompression(img)
+        console.log(_data)
+        var arr = _data.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        fileName = new Date().getTime() + '.' + mime.split('/')[1]
+        imgfile = this.dataURLtoFile(_data, fileName)
+        console.log('图片大小-压缩过:', (imgfile.size / 1024).toFixed(2), 'kb，', '压缩率：', 0.4)
+        console.log(imgfile)
+        if (imgfile) {
+          clientInfoApi.uploadImage(imgfile).then(
+            res => {
+              if (res.code === 200) {
+                this.$toast.success('图片上传成功')
+                let photoId = res.obj
 
-              if (type === 'bank') {
-                // 获取银行卡照片
-                this.$set(this.detail, 'personAccountPicId', photoId)
-                this.getBankInfo(photoId)
-              }else if (type === 'sjPosShouChi') {
-                // 手机pos手持身份证
-                this.$set(this.detail, 'holdingCardId', photoId)
-              }else if (type === 'sjPosYinHangKaBeiMian') {
-                // 手机pos结算银行卡背面
-                this.$set(this.detail, 'bankPhotoId', photoId)
-              } else if (type === 'zizhi') {
-                // 获取微信特殊资质照片
-                this.$set(this.detail, 'specialQualificationPhotoId', photoId)
-                // this.getBankInfo(photoId)
-              } else if (type === 'zfbZizhi') {
-                // 获取支付宝特殊资质照片
-                this.$set(this.detail, 'aliSpecialLicensePic', photoId)
-              } else if (type === 'leShipin') {
-                // (乐刷)获取食品卫生许可证照片
-                this.$set(this.detail, 'foodHealthPermissionPic', photoId)
-              } /*else if (type === 'leshouyin') {
-                // (乐刷)获取收银台照片
-                this.$set(this.detail, 'cashierDeskPicId', photoId)
-              }*/ else if (type === 'fyXiaowei') {
-                // (富友)获取小微商户
-                this.$set(this.detail, 'inHandPicId', photoId)
-              } else if (type === 'fyXuke') {
-                // (富友)获取经营许可证
-                this.$set(this.detail, 'businessCertPicId', photoId)
-              } else if (type === 'xieyi') {
-                // 商家协议
-                this.proImgList.push(photoId)
-              }else if(type === 'kdbRegistryId'){
-                //开店宝注册登记表照片id
-                this.$set(this.detail, 'kdbRegistryId', photoId)
-              }else if(type === 'kdbAgreementId'){
-                //开店宝收单协议照片id
-                this.$set(this.detail, 'kdbAgreementId', photoId)
-              }else if(type === 'kdbUpregisterId'){
-                //开店宝开店宝商户变更登记表照片id
-                this.$set(this.detail, 'kdbUpregisterId', photoId)
+                if (type === 'bank') {
+                  // 获取银行卡照片
+                  this.$set(this.detail, 'personAccountPicId', photoId)
+                  this.getBankInfo(photoId)
+                }else if (type === 'sjPosShouChi') {
+                  // 手机pos手持身份证
+                  this.$set(this.detail, 'holdingCardId', photoId)
+                }else if (type === 'sjPosYinHangKaBeiMian') {
+                  // 手机pos结算银行卡背面
+                  this.$set(this.detail, 'bankPhotoId', photoId)
+                } else if (type === 'zizhi') {
+                  // 获取微信特殊资质照片
+                  this.$set(this.detail, 'specialQualificationPhotoId', photoId)
+                  // this.getBankInfo(photoId)
+                } else if (type === 'zfbZizhi') {
+                  // 获取支付宝特殊资质照片
+                  this.$set(this.detail, 'aliSpecialLicensePic', photoId)
+                } else if (type === 'leShipin') {
+                  // (乐刷)获取食品卫生许可证照片
+                  this.$set(this.detail, 'foodHealthPermissionPic', photoId)
+                } /*else if (type === 'leshouyin') {
+                  // (乐刷)获取收银台照片
+                  this.$set(this.detail, 'cashierDeskPicId', photoId)
+                }*/ else if (type === 'fyXiaowei') {
+                  // (富友)获取小微商户
+                  this.$set(this.detail, 'inHandPicId', photoId)
+                } else if (type === 'fyXuke') {
+                  // (富友)获取经营许可证
+                  this.$set(this.detail, 'businessCertPicId', photoId)
+                } else if (type === 'xieyi') {
+                  // 商家协议
+                  this.proImgList.push(photoId)
+                }else if(type === 'kdbRegistryId'){
+                  //开店宝注册登记表照片id
+                  this.$set(this.detail, 'kdbRegistryId', photoId)
+                }else if(type === 'kdbAgreementId'){
+                  //开店宝收单协议照片id
+                  this.$set(this.detail, 'kdbAgreementId', photoId)
+                }else if(type === 'kdbUpregisterId'){
+                  //开店宝开店宝商户变更登记表照片id
+                  this.$set(this.detail, 'kdbUpregisterId', photoId)
+                }else if(type === 'kdbRentalId'){
+                  //开店宝收单协议照片id
+                  this.$set(this.detail, 'kdbRentalId', photoId)
+                }
+              } else {
+                this.$toast.error(res.msg)
               }
-            } else {
-              this.$toast.error(res.msg)
+            },
+            err => {
+              this.$toast.error(err.msg)
             }
-          },
-          err => {
-            this.$toast.error(err.msg)
-          }
-        )
+          )
+        }
       }
+
     }
   },
 

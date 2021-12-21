@@ -27,10 +27,11 @@
             <span class="star">*</span>上传身份证照片
           </div>
         </div>
-        <div class="item id_img_wp ">
+        <div class="item id_img_wp">
           <div class="img_wp img_wp_width">
-            <vmaUploadImg ref="face"
-                          @change="onFileChange($event, 'face')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="face"
+                          @change="onFileChange($event, 'face')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'face')"></h5-cropper>
             <div>
               <i v-if="detail.epresentativePhotoId"
                  class="icon iconfont iconshanchu"
@@ -38,6 +39,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.epresentativePhotoId"
+                    class="img_show"
                    :src="detail.epresentativePhotoId | previewLoadImage"
                    @click="previewImage(detail.epresentativePhotoId)" />
             </div>
@@ -45,8 +47,9 @@
           </div>
 
           <div class="img_wp img_wp_width">
-            <vmaUploadImg ref="back"
-                          @change="onFileChange($event, 'back')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="back"
+                          @change="onFileChange($event, 'back')"></vmaUploadImg> -->
+              <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'back')"></h5-cropper>
             <div>
               <i v-if="detail.epresentativePhotoId2"
                  class="icon iconfont iconshanchu"
@@ -54,6 +57,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.epresentativePhotoId2"
+                    class="img_show"
                    :src="detail.epresentativePhotoId2 | previewLoadImage"
                    @click="previewImage(detail.epresentativePhotoId2)" />
             </div>
@@ -61,8 +65,9 @@
           </div>
 
           <div class="img_wp img_wp_width mt-10">
-            <vmaUploadImg ref="inHand"
-                          @change="onFileChange($event, 'inHand')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="inHand"
+                          @change="onFileChange($event, 'inHand')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'inHand')"></h5-cropper>
             <div>
               <i v-if="detail.holdingCardId"
                  class="icon iconfont iconshanchu"
@@ -70,6 +75,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.holdingCardId"
+                    class="img_show"
                    :src="detail.holdingCardId | previewLoadImage"
                    @click="previewImage(detail.holdingCardId)" />
             </div>
@@ -78,7 +84,6 @@
 
           <div class="img_wp img_wp_width mt-10">
             <div>
-
               <div @click="showSign" class="showSignBtn" :class="{signBackgroundColor:signBackgroundColor}"></div>
               <i v-if="detail.signId"
                  class="icon iconfont iconshanchu"
@@ -89,9 +94,13 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.signId"
+                    class="img_show"
+                    style="background-color: transparent;"
                    :src="detail.signId | previewLoadImage"
                    @click="previewImage(detail.signId,true)" />
               <img v-if="detail.sign"
+                    class="img_show"
+                    style="background-color: transparent;"
                    :src="detail.sign"
                    @click="previewImage(detail.sign,true)"
                    />
@@ -160,8 +169,9 @@
         <div class="item">
           <div class="img_wp img_wp_width"
                style="flex:none;">
-            <vmaUploadImg ref="storePhoto"
-                          @change="onFileChange($event, 'storePhoto')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="storePhoto"
+                          @change="onFileChange($event, 'storePhoto')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'storePhoto')"></h5-cropper>
             <div>
               <i v-if="detail.businessLicensePhotoId"
                  class="icon iconfont iconshanchu"
@@ -169,6 +179,7 @@
               <div class="icon iconfont iconzhaoxiangji ml-10"
                    style="font-size:30px;"></div>
               <img v-if="detail.businessLicensePhotoId"
+              class="img_show"
                    :src="detail.businessLicensePhotoId | previewLoadImage"
                    @click="previewImage(detail.businessLicensePhotoId)" />
             </div>
@@ -437,6 +448,20 @@
                  color="primary"
                  @click="confirmTime">确定</mu-button>
     </mu-dialog>
+   <!-- <div style="position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;"
+    v-if="cropper">
+      <vueCropper
+        ref="cropper"
+        :img="fileCropper"
+        :autoCrop="true"
+        :centerBox="true"
+      ></vueCropper>
+    </div> -->
   </div>
 </template>
 
@@ -455,12 +480,23 @@ import vmaUploadImg from '@/components/common/vmaUploadImg'
 import sign from '@/components/common/sign'
 import vmaImagePreview from '@/components/common/vmaImagePreview'
 import indexMixins from './src/mixins'
-
+import H5Cropper from 'vue-cropper-h5'
 export default {
-  components: { vmaUploadImg, vmaImagePreview, sign },
+  components: { vmaUploadImg, vmaImagePreview, sign, H5Cropper },
   mixins: [indexMixins],
   data() {
     return {
+      option: {
+          autoCrop: true,
+          autoCropWidth: 350,
+          autoCropHeight: 220,
+          fixed: false,
+          outputSize: 1,
+          fixedBox: false,
+          canMoveBox: true,
+          centerBox: true,
+          canMove: true,
+      },
       requiredData:[],
       signBackgroundColor:false,
       type: '', // 1-身份证有效期
@@ -1013,6 +1049,32 @@ export default {
       }
       return ''
     },
+    // 将裁剪base64的图片转换为file文件
+    dataURLtoFile (dataurl, filename) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    // 压缩图片
+    onImgCompression (img) {
+      let canvas = document.createElement("canvas")
+      let ctx = canvas.getContext("2d")
+      let initSize = img.src.length
+      let width = img.width
+      let height = img.height
+      canvas.width = width
+      canvas.height = height
+      // 铺底色
+      ctx.fillStyle = "#fff"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0, width, height)
+      //进行压缩
+      let compress = 0.4  //压缩率
+      return canvas.toDataURL("image/jpeg", compress)
+    },
     // 文件改变
     onFileChange(file, type) {
       // if (!e.target.files) {
@@ -1023,55 +1085,69 @@ export default {
       //   this.$toast.error('图片不能大于2M')
       //   return
       // }
-      if (file) {
-        clientInfoApi.uploadImage(file).then(
-          res => {
-            if (res.code === 200) {
-              this.$toast.success('图片上传成功')
-              this.$refs[type].$refs.file = ''
-              let photoId = res.obj
-              // console.log(photoId)
-              // 1 app
-              // 2 公众号
-              // 3 特殊资质
-              // 4 补充材料
-              if (type === 1) {
-                this.$set(this.detail, 'appPhotoId', photoId)
-              } else if (type === 2) {
-                this.$set(this.detail, 'miniProgramPhotoId', photoId)
-              } else if (type === 3) {
-                this.$set(this.detail, 'specialQualificationPhotoId', photoId)
-              } else if (type === 4) {
-                this.$set(this.detail, 'supplementPhotoId', photoId)
-              } else if (type === 'face') {
-                this.detail.epresentativePhotoId = photoId
-                this.getIdCard({
-                  pathId: photoId,
-                  type
-                })
-              } else if (type === 'back') {
-                this.detail.epresentativePhotoId2 = photoId
-                this.getIdCard({
-                  pathId: photoId,
-                  type
-                })
-              } else if (type === 'storePhoto') {
-                this.detail.businessLicensePhotoId = photoId
-                this.getLicense({
-                  pathId: photoId
-                })
-              }else if(type === 'inHand'){
-                this.$set(this.detail, 'holdingCardId', photoId)
+      console.log(file)
+      let imgfile = null
+      let img = new Image()
+      img.src = file
+      img.onload = () => {
+        let _data = this.onImgCompression(img)
+        console.log(_data)
+        var arr = _data.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        fileName = new Date().getTime() + '.' + mime.split('/')[1]
+        imgfile = this.dataURLtoFile(_data, fileName)
+        console.log('图片大小-压缩过:', (imgfile.size / 1024).toFixed(2), 'kb，', '压缩率：', 0.4)
+        console.log(imgfile)
+        if (imgfile) {
+          clientInfoApi.uploadImage(imgfile).then(
+            res => {
+              if (res.code === 200) {
+                this.$toast.success('图片上传成功')
+                // this.$refs[type].$refs.file = ''
+                let photoId = res.obj
+                // console.log(photoId)
+                // 1 app
+                // 2 公众号
+                // 3 特殊资质
+                // 4 补充材料
+                if (type === 1) {
+                  this.$set(this.detail, 'appPhotoId', photoId)
+                } else if (type === 2) {
+                  this.$set(this.detail, 'miniProgramPhotoId', photoId)
+                } else if (type === 3) {
+                  this.$set(this.detail, 'specialQualificationPhotoId', photoId)
+                } else if (type === 4) {
+                  this.$set(this.detail, 'supplementPhotoId', photoId)
+                } else if (type === 'face') {
+                  this.detail.epresentativePhotoId = photoId
+                  this.getIdCard({
+                    pathId: photoId,
+                    type
+                  })
+                } else if (type === 'back') {
+                  this.detail.epresentativePhotoId2 = photoId
+                  this.getIdCard({
+                    pathId: photoId,
+                    type
+                  })
+                } else if (type === 'storePhoto') {
+                  this.detail.businessLicensePhotoId = photoId
+                  this.getLicense({
+                    pathId: photoId
+                  })
+                }else if(type === 'inHand'){
+                  this.$set(this.detail, 'holdingCardId', photoId)
+                }
+              } else {
+                this.$toast.error(res.msg)
               }
-            } else {
-              this.$toast.error(res.msg)
+            },
+            err => {
+              this.$toast.error(err.msg)
             }
-          },
-          err => {
-            this.$toast.error(err.msg)
-          }
-        )
+          )
+        }
       }
+
     },
     // 获取图片
     getImage(id) {

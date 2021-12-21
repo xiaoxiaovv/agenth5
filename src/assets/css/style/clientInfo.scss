@@ -1,6 +1,20 @@
 @import "../cxby/mixins.scss";
 
 // 进件页
+.btndiv {
+	.img {
+		width: 8vw!important;
+		height: 8vw!important;
+		background-color: transparent!important;
+	}
+}
+.upbtn {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+}
 .client-info {
 
   @include match-width();
@@ -217,12 +231,12 @@
         color: #333;
       }
 
-      img {
+      .img_show {
         @include size(121, 79);
         width: auto;
       }
 
-      .img {
+      .img_show {
         @include size(121, 79);
         background-color: #DDD;
       }
@@ -251,7 +265,7 @@
         .signBackgroundColor {
           background-color: white;
         }
-        img{
+        .img_show{
           @include size(242, 158);
         }
 
@@ -260,7 +274,7 @@
         @include size(320, 180);
         flex:inherit;
         // overflow: hidden;
-        img {
+        .img_show {
           @include size(310, 170);
           position: absolute;
           top:0;

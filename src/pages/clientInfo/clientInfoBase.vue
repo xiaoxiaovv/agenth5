@@ -33,8 +33,9 @@
                  ref="out"
                  accept="image/*"
                  @change="onFileChange($event, 'out')" /> -->
-          <vmaUploadImg ref="out"
-                        @change="onFileChange($event, 'out')"></vmaUploadImg>
+          <!-- <vmaUploadImg ref="out"
+                        @change="onFileChange($event, 'out')"></vmaUploadImg> -->
+          <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'out')"></h5-cropper>
           <div>
             <i v-if="detail.storeEntrancePicId"
                class="icon iconfont iconshanchu"
@@ -42,6 +43,7 @@
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
             <img v-if="detail.storeEntrancePicId"
+            class="img_show"
                  :src="detail.storeEntrancePicId | previewLoadImage"
                  @click="previewImage(detail.storeEntrancePicId)" />
           </div>
@@ -54,8 +56,9 @@
                  ref="indoor"
                  accept="image/*"
                  @change="onFileChange($event, 'indoor')" /> -->
-          <vmaUploadImg ref="indoor"
-                        @change="onFileChange($event, 'indoor')"></vmaUploadImg>
+          <!-- <vmaUploadImg ref="indoor"
+                        @change="onFileChange($event, 'indoor')"></vmaUploadImg> -->
+           <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'indoor')"></h5-cropper>
           <div>
             <i v-if="detail.indoorPicId"
                class="icon iconfont iconshanchu"
@@ -63,6 +66,7 @@
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
             <img v-if="detail.indoorPicId"
+            class="img_show"
                  :src="detail.indoorPicId | previewLoadImage"
                  @click="previewImage(detail.indoorPicId)" />
           </div>
@@ -75,17 +79,17 @@
                  ref="indoor"
                  accept="image/*"
                  @change="onFileChange($event, 'indoor')" /> -->
-          <vmaUploadImg ref="cashierDeskPicId"
-                        @change="onFileChange($event, 'indoor')"></vmaUploadImg>
           <div>
-            <vmaUploadImg ref="cashierDeskPicId"
-                          @change="onFileChange($event, 'cashierDeskPicId')"></vmaUploadImg>
+            <!-- <vmaUploadImg ref="cashierDeskPicId"
+                          @change="onFileChange($event, 'cashierDeskPicId')"></vmaUploadImg> -->
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'cashierDeskPicId')"></h5-cropper>
             <i v-if="detail.cashierDeskPicId"
                class="icon iconfont iconshanchu"
                @click="deleteImg('cashierDeskPicId')"></i>
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
             <img v-if="detail.cashierDeskPicId"
+            class="img_show"
                  :src="detail.cashierDeskPicId | previewLoadImage"
                  @click="previewImage(detail.cashierDeskPicId)" />
           </div>
@@ -197,12 +201,23 @@ import { validPhone, emailValid } from '@/utils'
 import vmaUploadImg from '@/components/common/vmaUploadImg'
 import vmaImagePreview from '@/components/common/vmaImagePreview'
 import indexMixins from './src/mixins'
-
+import H5Cropper from 'vue-cropper-h5'
 export default {
-  components: { VmaCascaderTree, vmaUploadImg, vmaImagePreview },
+  components: { VmaCascaderTree, vmaUploadImg, vmaImagePreview, H5Cropper },
   mixins: [indexMixins],
   data() {
     return {
+      option: {
+          autoCrop: true,
+          autoCropWidth: 350,
+          autoCropHeight: 220,
+          fixed: false,
+          outputSize: 1,
+          fixedBox: false,
+          canMoveBox: true,
+          centerBox: true,
+          canMove: true,
+      },
       detail: {
         // isCommit: 0,
         regProvCd: '',
@@ -356,27 +371,64 @@ export default {
         this.$toast.error('有内容未填入')
       }
     },
+    // 将裁剪base64的图片转换为file文件
+    dataURLtoFile (dataurl, filename) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    // 压缩图片
+    onImgCompression (img) {
+      let canvas = document.createElement("canvas")
+      let ctx = canvas.getContext("2d")
+      let initSize = img.src.length
+      let width = img.width
+      let height = img.height
+      canvas.width = width
+      canvas.height = height
+      // 铺底色
+      ctx.fillStyle = "#fff"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0, width, height)
+      //进行压缩
+      let compress = 0.4  //压缩率
+      return canvas.toDataURL("image/jpeg", compress)
+    },
     // 文件改变
     onFileChange(file, type) {
-      if (file) {
-        clientInfoApi.uploadImage(file).then(res => {
-          if (res.code === 200) {
-            this.$toast.success('图片上传成功')
-            this.$refs[type].$refs.file.value = ''
-            let photoId = res.obj
-            if (type === 'out') { // 店内门头照
-              this.$set(this.detail, 'storeEntrancePicId', photoId)
-            } else if (type === 'indoor') { // 店内环境照片
-              this.$set(this.detail, 'indoorPicId', photoId)
-            }else if (type === 'cashierDeskPicId') { // 店内环境照片
-              this.$set(this.detail, 'cashierDeskPicId', photoId)
+      let imgfile = null
+      let img = new Image()
+      img.src = file
+      img.onload = () => {
+        let _data = this.onImgCompression(img)
+        console.log(_data)
+        var arr = _data.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        fileName = new Date().getTime() + '.' + mime.split('/')[1]
+        imgfile = this.dataURLtoFile(_data, fileName)
+        console.log('图片大小-压缩过:', (imgfile.size / 1024).toFixed(2), 'kb，', '压缩率：', 0.4)
+        console.log(imgfile)
+        if (imgfile) {
+          clientInfoApi.uploadImage(imgfile).then(res => {
+            if (res.code === 200) {
+              this.$toast.success('图片上传成功')
+              let photoId = res.obj
+              if (type === 'out') { // 店内门头照
+                this.$set(this.detail, 'storeEntrancePicId', photoId)
+              } else if (type === 'indoor') { // 店内环境照片
+                this.$set(this.detail, 'indoorPicId', photoId)
+              }else if (type === 'cashierDeskPicId') { // 店内环境照片
+                this.$set(this.detail, 'cashierDeskPicId', photoId)
+              }
+            } else {
+              this.$toast.error(res.msg)
             }
-          } else {
-            this.$toast.error(res.msg)
-          }
-        }, (err) => {
-          this.$toast.error(err.msg)
-        })
+          }, (err) => {
+            this.$toast.error(err.msg)
+          })
+        }
       }
     },
     // 预览图片
