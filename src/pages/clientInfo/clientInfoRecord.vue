@@ -14,11 +14,12 @@
       <div class="title">{{detail.merchantName}}</div>
       <div class="pass"></div>
     </div>
-
-
     <!-- 信息主体 -->
     <div class="client-info-detail__content box match-left-space">
-
+      <div class="flex header-radio">
+        <mu-radio :value="1" v-model="accountType" label="小微"></mu-radio>
+        <mu-radio :value="2" v-model="accountType" label="企业或个体工商户"></mu-radio>
+      </div>
       <div class="match-width box align-default">
         <div class="title">可上传照片进行资料识别</div>
         <div class="item"
@@ -124,6 +125,19 @@
         </div>
         <div class="item">
           <div class="subtitle">
+            <span class="star">*</span>性别
+          </div>
+          <div class="match-left-space box align-right"
+               @click="callActionSheet(4)">
+            <div class="input ellipsis"
+                 style="text-align: right">
+              {{['男','女'][Number(detail.sex)-1]}}
+            </div>
+            <div class="icon iconfont iconenter ml-10"></div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="subtitle">
             <span class="star">*</span>身份证号码
           </div>
           <div class="match-left-space align-right">
@@ -162,104 +176,106 @@
                    maxlength="11" />
           </div>
         </div>
-        <div class="item"
-             style="border:0;margin-top:15px;">
-          <div class="subtitle">营业执照（小微商户请忽略）</div>
-        </div>
-        <div class="item">
-          <div class="img_wp img_wp_width"
-               style="flex:none;">
-            <!-- <vmaUploadImg ref="storePhoto"
-                          @change="onFileChange($event, 'storePhoto')"></vmaUploadImg> -->
-            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'storePhoto')"></h5-cropper>
-            <div>
-              <i v-if="detail.businessLicensePhotoId"
-                 class="icon iconfont iconshanchu"
-                 @click="deleteImg('license')"></i>
-              <div class="icon iconfont iconzhaoxiangji ml-10"
-                   style="font-size:30px;"></div>
-              <img v-if="detail.businessLicensePhotoId"
-              class="img_show"
-                   :src="detail.businessLicensePhotoId | previewLoadImage"
-                   @click="previewImage(detail.businessLicensePhotoId)" />
+        <div v-if="accountType == 2">
+          <div class="item"
+               style="border:0;margin-top:15px;">
+            <div class="subtitle">营业执照（小微商户请忽略）</div>
+          </div>
+          <div class="item">
+            <div class="img_wp img_wp_width"
+                 style="flex:none;">
+              <!-- <vmaUploadImg ref="storePhoto"
+                            @change="onFileChange($event, 'storePhoto')"></vmaUploadImg> -->
+              <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'storePhoto')"></h5-cropper>
+              <div>
+                <i v-if="detail.businessLicensePhotoId"
+                   class="icon iconfont iconshanchu"
+                   @click="deleteImg('license')"></i>
+                <div class="icon iconfont iconzhaoxiangji ml-10"
+                     style="font-size:30px;"></div>
+                <img v-if="detail.businessLicensePhotoId"
+                class="img_show"
+                     :src="detail.businessLicensePhotoId | previewLoadImage"
+                     @click="previewImage(detail.businessLicensePhotoId)" />
+              </div>
+              <p class="img_intro">上传店铺营业执照</p>
             </div>
-            <p class="img_intro">上传店铺营业执照</p>
           </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="detail.businessLicensePhotoId">*</span>注册号
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入注册号"
-                   v-model="detail.license" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="detail.businessLicensePhotoId">*</span>名称
-          </div>
-          <div class="match-left-space align-right">
-            <input placeholder="请输入名称"
-                   v-model="detail.businessLicenseName" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="detail.businessLicensePhotoId">*</span>类型
-          </div>
-          <div class="match-left-space box align-right"
-               @click="callActionSheet(2)">
-            <div class="input ellipsis"
-                 style="text-align: right">
-              {{['企业','个体工商户'][Number(detail.businessType)-1]}}
+          <div class="item">
+            <div class="subtitle">
+              <span class="star"
+                    v-show="detail.businessLicensePhotoId">*</span>注册号
             </div>
-            <div class="icon iconfont iconenter ml-10"></div>
+            <div class="match-left-space align-right">
+              <input placeholder="请输入注册号"
+                     v-model="detail.license" />
+            </div>
           </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="detail.businessLicensePhotoId">*</span>地址
+          <div class="item">
+            <div class="subtitle">
+              <span class="star"
+                    v-show="detail.businessLicensePhotoId">*</span>名称
+            </div>
+            <div class="match-left-space align-right">
+              <input placeholder="请输入名称"
+                     v-model="detail.businessLicenseName" />
+            </div>
           </div>
-          <div class="match-left-space align-right">
-            <input style=""
-                   placeholder="请输入地址"
-                   v-model="detail.registerAddress" />
+          <div class="item">
+            <div class="subtitle">
+              <span class="star"
+                    v-show="detail.businessLicensePhotoId">*</span>类型
+            </div>
+            <div class="match-left-space box align-right"
+                 @click="callActionSheet(2)">
+              <div class="input ellipsis"
+                   style="text-align: right">
+                {{['企业','个体工商户'][Number(detail.businessType)-1]}}
+              </div>
+              <div class="icon iconfont iconenter ml-10"></div>
+            </div>
           </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="detail.businessLicensePhotoId">*</span>法定代表人/经营者
+          <div class="item">
+            <div class="subtitle">
+              <span class="star"
+                    v-show="detail.businessLicensePhotoId">*</span>地址
+            </div>
+            <div class="match-left-space align-right">
+              <input style=""
+                     placeholder="请输入地址"
+                     v-model="detail.registerAddress" />
+            </div>
           </div>
-          <div class="match-left-space align-right">
-            <input style="width4rem;"
-                   placeholder="请输入法定代表人"
-                   v-model="detail.person" />
+          <div class="item">
+            <div class="subtitle">
+              <span class="star"
+                    v-show="detail.businessLicensePhotoId">*</span>法定代表人/经营者
+            </div>
+            <div class="match-left-space align-right">
+              <input style="width4rem;"
+                     placeholder="请输入法定代表人"
+                     v-model="detail.person" />
+            </div>
           </div>
-        </div>
-        <div class="item">
-          <div class="subtitle">
-            <span class="star"
-                  v-show="detail.businessLicensePhotoId">*</span>营业期限
-          </div>
-          <div class="match-left-space align-right">
-            <div class="input align-default time-range">
-              <mu-date-input @change="onDateTimeChange(2, 1, $event)"
-                             v-model="detail.startBusinessTime"
-                             label="开始时间"
-                             container="bottomSheet"
-                             label-float
-                             full-width></mu-date-input>
-              <span>~</span>
-              <div @click="selectEndTime(2)">
-                <template v-if="detail.endBusinessTime==='2099-12-31'">长期</template>
-                <template v-else-if="detail.endBusinessTime">{{detail.endBusinessTime}}</template>
-                <template v-else><span style="color:#ccc">结束时间</span></template>
+          <div class="item">
+            <div class="subtitle">
+              <span class="star"
+                    v-show="detail.businessLicensePhotoId">*</span>营业期限
+            </div>
+            <div class="match-left-space align-right">
+              <div class="input align-default time-range">
+                <mu-date-input @change="onDateTimeChange(2, 1, $event)"
+                               v-model="detail.startBusinessTime"
+                               label="开始时间"
+                               container="bottomSheet"
+                               label-float
+                               full-width></mu-date-input>
+                <span>~</span>
+                <div @click="selectEndTime(2)">
+                  <template v-if="detail.endBusinessTime==='2099-12-31'">长期</template>
+                  <template v-else-if="detail.endBusinessTime">{{detail.endBusinessTime}}</template>
+                  <template v-else><span style="color:#ccc">结束时间</span></template>
+                </div>
               </div>
             </div>
           </div>
@@ -357,7 +373,30 @@
           </div>
         </div>
       </mu-bottom-sheet>
-
+      <mu-bottom-sheet :open.sync="openSex">
+        <div class="action-sheet box align-default">
+          <div class="title box align-hor-bet plr-30">
+            <div @click="onNextStep">返回</div>
+            <!-- <div class="confirm">
+              <div  @click="onActionSheetConfirm(2)">确定</div>
+              <div v-else @click="onNextStep">取消</div>
+            </div> -->
+          </div>
+        </div>
+        <div class="action-sheet__header align-left box plr-30">请选择性别</div>
+        <div class="action-sheet__content">
+          <div class="match-width"
+               v-for="(item, index) in sexList"
+               :key="index">
+            <div :class="['item align-hor-bet plr-30 ptb-30', (item.value === detail.sex)?'active':'']"
+                 @click="getSexType(item)">
+              <div>{{item.label}}</div>
+              <!-- <div v-if="item.value === threeList[curThree]" class="icon iconfont iconcheck"></div> -->
+              <!-- <div class="pass" v-else></div> -->
+            </div>
+          </div>
+        </div>
+      </mu-bottom-sheet>
       <!-- 隐藏获取图片 -->
       <div class="file">
         <input type="file"
@@ -486,6 +525,7 @@ export default {
   mixins: [indexMixins],
   data() {
     return {
+      accountType: 1,
       option: {
           autoCrop: true,
           autoCropWidth: 350,
@@ -536,6 +576,7 @@ export default {
         businessLicensePhotoId: '',
         license: '',
         businessType: '2',  //1企业  2个体
+        sex: '',
         registerAddress: '',
         person: '',
         startBusinessTime: '',
@@ -585,6 +626,7 @@ export default {
       openMenu: false,
       photoTaker: 0,
       openThree: false,
+      openSex: false,
       threeList: [],
       curThree: 0,
       sourceData: [],
@@ -597,6 +639,16 @@ export default {
         {
           value: 2,
           label: '个体工商户'
+        }
+      ],
+      sexList: [
+        {
+          value: '1',
+          label: '男'
+        },
+        {
+          value: '2',
+          label: '女'
         }
       ],
       isEnd: false,
@@ -671,6 +723,7 @@ export default {
         this.detail.epresentativePhotoId = ''
         this.detail.representativeName = ''
         this.detail.certificateNum = ''
+        this.detail.sex = ''
       }
       // 身份证（背面）
       if (type === 'back') {
@@ -771,6 +824,8 @@ export default {
         this.open = true
       } else if (this.status === 2) {
         this.openThree = true
+      } else if (this.status === 4) {
+        this.openSex = true
       }
     },
     // action-sheet取消
@@ -808,6 +863,10 @@ export default {
     getLicenseType(item) {
       this.detail.businessType = String(item.value)
       this.openThree = false
+    },
+    getSexType(item) {
+      this.detail.sex = String(item.value)
+      this.openSex = false
     },
     // 切换选项
     changeItem(index, value) {
@@ -876,6 +935,9 @@ export default {
     },
     // 下一步
     onNext() {
+      if (this.accountType == 1) {
+        this.detail.businessType = null
+      }
       if (this.detail.businessLicensePhotoId) {
         this.requiredData = [
           'epresentativePhotoId',
@@ -883,6 +945,7 @@ export default {
           'holdingCardId',
           'representativeName',
           'certificateNum',
+          'sex',
           'startCertificateTime',
           'endCertificateTime',
           'legalPersonPhone',
@@ -902,6 +965,7 @@ export default {
           'holdingCardId',
           'representativeName',
           'certificateNum',
+          'sex',
           'startCertificateTime',
           'endCertificateTime',
           'legalPersonPhone'
@@ -1160,6 +1224,7 @@ export default {
           let obj = {}
           obj.representativeName = res.obj.name
           obj.certificateNum = res.obj.idNum
+          obj.sex = res.obj.sex == '男'? '1': '2'
           this.detail = Object.assign({}, this.detail, obj)
         } else if (params.type === 'back') {
           let obj = {}
@@ -1209,6 +1274,11 @@ export default {
       clientInfoApi.getMchInfo({ id }).then(res => {
         res.obj.businessType = String(res.obj.businessType) || '2'
         this.detail = Object.assign({}, this.detail, res.obj)
+        if (!this.detail.businessLicensePhotoId) {
+          this.accountType = 1
+        } else {
+          this.accountType = 2
+        }
         if(this.detail.signId){
           this.signBackgroundColor = true;
         }else{
@@ -1251,6 +1321,7 @@ export default {
       //   this.openThree++
       // }
       this.openThree = false
+      this.openSex = false
     },
     // 返回
     onBackStep() {

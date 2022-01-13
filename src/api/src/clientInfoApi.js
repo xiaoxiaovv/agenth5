@@ -101,10 +101,10 @@ export default {
       method: 'get'
     })
   },
-  // 获取威富通MccCd树复制
+  // 获取银盛MccCd树复制
   getYsMccList() {
     return requestAxios({
-      url: `/batchFeed/ys/queryFirstMcc`,
+      url: `/batchFeed/ys/get_yinsheng_mcc`,
       method: 'get'
     })
   },
@@ -478,12 +478,12 @@ export default {
     })
   },
   /**
-   * 威富通-查询进件状态
+   * 银盛-查询进件状态
    * @param {*} params
    */
   getYsCode(params) {
     return requestAxios({
-      url: '/batchFeed/ys/feedInfo',
+      url: '/batchFeed/ys/get_yinsheng_feedstatus',
       method: 'get',
       params
     })
@@ -527,7 +527,7 @@ export default {
    */
   getLklCode(params) {
     return requestAxios({
-      url: '/batchFeed/ali/get_lkl_feedstatus',
+      url: '/batchFeed/lakala/get_lkl_feedstatus',
       method: 'get',
       params
     })

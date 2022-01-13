@@ -22,13 +22,6 @@
           <mu-tab v-for="(item, index) in tabList"
                   :key="index"
                   v-show="item.open">{{item.name}}</mu-tab>
-          <!-- <mu-tab>基本材料</mu-tab>
-          <mu-tab>随行付</mu-tab>
-          <mu-tab>微信</mu-tab>
-          <mu-tab>支付宝</mu-tab>
-          <mu-tab>乐刷</mu-tab>
-          <mu-tab>威富通</mu-tab>
-          <mu-tab>传化</mu-tab> -->
         </mu-tabs>
         <div class="demo-text"
              v-if="active === 0">
@@ -71,6 +64,10 @@
               <div class="item">
                 <div class="subtitle">身份证号码</div>
                 <div class="match-left-space align-right">{{detail.certificateNum}}</div>
+              </div>
+              <div class="item">
+                <div class="subtitle">性别</div>
+                <div class="match-left-space align-right">{{detail.sex == 1?'男':'女'}}</div>
               </div>
               <div class="item">
                 <div class="subtitle">有效期</div>
@@ -535,47 +532,43 @@
           <div class="client-info-detail__content box match-left-space pb-40"
                v-show="PROCESS.YS">
             <div class="match-width box align-default">
-              <div class="title">威富通通道</div>
-              <div class="item">
+              <div class="title">银盛通道</div>
+              <!-- <div class="item">
                 <div class="subtitle">经营类目</div>
                 <div class="match-left-space text-right"
                      v-if="detail.ysFirstName">{{detail.industrName}}</div>
+              </div> -->
+              <div class="item">
+                <div class="subtitle">微信结算费率</div>
+                <div class="match-left-space align-right">{{detail.ysWxInterestRate}}</div>
               </div>
               <div class="item">
-                <div class="subtitle">结算费率</div>
-                <div class="match-left-space align-right">{{detail.ysRate}}</div>
+                <div class="subtitle">支付宝结算费率</div>
+                <div class="match-left-space align-right">{{detail.ysAliInterestRate}}</div>
               </div>
-              <div class="item">
-                <div class="subtitle">商家协议</div>
-                <div class="match-left-space align-right ellipsis">
-                  <div v-if="detail.pro"
-                       v-for="(item, index) in detail.pro"
-                       :key="index"
-                       @click="previewImage(item)">
-                    <img class="match-parent"
-                         :src="item | loadImage"
-                         style="margin-right:4px;" />
-                  </div>
-                </div>
-              </div>
+
               <div v-if="ysData"
                    style="width:100%">
                 <div class="title">进件状态</div>
                 <div class="item">
                   <div class="subtitle">商户编号</div>
-                  <div class="match-left-space align-right">{{ysData.mno}}</div>
+                  <div class="match-left-space align-right">{{ysData.ysMchId}}</div>
                 </div>
                 <div class="item">
-                  <div class="subtitle">注册名称</div>
-                  <div class="match-left-space align-right">{{ysData.name}}</div>
+                  <div class="subtitle">银盛商户名称</div>
+                  <div class="match-left-space align-right">{{ysData.ysMchName}}</div>
+                </div>
+                <div class="item">
+                  <div class="subtitle">签约地址</div>
+                  <div class="match-left-space align-right">{{ysData.ysSignUrl}}</div>
                 </div>
                 <div class="item">
                   <div class="subtitle">进件状态</div>
-                  <div class="match-left-space align-right">{{['未知','审核中','审核通过','审核驳回','资料不齐全', '进件失败','商户验证'][Number(ysData.status)-1]}}</div>
+                  <div class="match-left-space align-right">{{entryStatus[ysData.entryStatus]}}</div>
                 </div>
                 <div class="item">
                   <div class="subtitle">进件结果</div>
-                  <div class="match-left-space align-right">{{ysData.result}}</div>
+                  <div class="match-left-space align-right">{{ysData.ysMsg}}</div>
                 </div>
                 <div class="item">
                   <div class="subtitle">提交时间</div>
@@ -1148,16 +1141,15 @@ export default {
         { index: 2, name: '微信', open: true },
         { index: 3, name: '支付宝', open: true },
         { index: 4, name: '乐刷', open: true },
-        { index: 5, name: '威富通', open: true },
+        { index: 5, name: '银盛', open: true },
         { index: 6, name: '传化', open: true },
         { index: 7, name: '富友', open: true },
-        // { index: 8, name: '银联', open: true },
-        // { index: 9, name: '拉卡拉', open: true }
         { index: 8, name: '手机pos', open: true },
         { index: 9, name: '开店宝', open: true },
         { index: 10, name: '畅捷', open: true },
         { index: 11, name: '易生', open: true },
         { index: 12, name: '敏付', open: true },
+        { index: 13, name: '拉卡拉', open: true },
       ],
       fyEntryStatus: {
         '-1': '进件失败',
@@ -1246,6 +1238,7 @@ export default {
       })
     },
     getWxOrsxfcode(item) {
+      console.log('ooooooooooo',item)
       if (item.channel === 2) { // 微信
         clientInfoApi.getWxcode({ merDetailId: item.id }).then(res => {
           this.wxData = res.obj
@@ -1261,7 +1254,7 @@ export default {
           this.lsData = res.obj
           console.log(res)
         })
-      } else if (item.channel === 4) { // 威富通
+      } else if (item.channel === 4) { // 银盛
         clientInfoApi.getYsCode({ id: item.id }).then(res => {
           this.ysData = res.obj
           console.log(res)
@@ -1286,7 +1279,7 @@ export default {
           this.lklData = res.obj
           console.log(res)
         })
-      }*/else if (item.channel === 16) { // 拉卡拉
+      }*/else if (item.channel === 9) { // 拉卡拉
         clientInfoApi.getLklCode({ id: item.id }).then(res => {
           this.lklData = res.obj
           console.log(res)
@@ -1570,7 +1563,6 @@ export default {
     this.isEdit = this.$route.query.isEdit || false
     // debugger
     this.wxList = (this.$route.query.list && this.$route.query.list.length) ? JSON.parse(this.$route.query.list) : []
-    // console.log('bbbbbbbbbbbbbbbbbb==========',this.wxList)
     getProcess().then(res => {
       this.PROCESS = res
       this.tabList[1].open = res.SXF
@@ -1580,13 +1572,12 @@ export default {
       this.tabList[5].open = res.YS
       this.tabList[6].open = res.CH
       this.tabList[7].open = res.FY
-      // this.tabList[8].open = res.YL
-      // this.tabList[9].open = res.LKL
       this.tabList[8].open = res.SJPOS
       this.tabList[9].open = res.KDB
       this.tabList[10].open = res.CJ
       this.tabList[11].open = res.YIS
       this.tabList[12].open = res.MF
+      this.tabList[13].open = res.LKL
 
     })
     this.wxList.forEach(item => {

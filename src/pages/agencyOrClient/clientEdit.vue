@@ -96,7 +96,7 @@
 
           <div class="vm-list-ul vm-bg-white vmalis-fontweight-400">
             <div class="vm-list-li">
-              <div class="vma-list-li-left">定位开关<span v-show="!id">（已开启）</span></div>
+              <div class="vma-list-li-left">定位开关</div>
               <div class="vma-list-li-right vm-ell"><mu-switch v-model="isOpenBtn" :disabled="locationDisabledFlag"></mu-switch></div>
 
             </div>
@@ -186,7 +186,7 @@ export default {
       locationDisabledFlag: true,
       loading: false,
       gdWebKey:'',
-      isOpenBtn:false, //是否开启定位
+      isOpenBtn:true, //是否开启定位
       geocoder: null,
       geolocation:null,
       shopAddress:'',
@@ -263,7 +263,7 @@ export default {
       this.locationDisabledFlag = true
     }
     if (this.$route.query.token) {
-      sessionStorage.token = this.$route.query.token 
+      sessionStorage.token = this.$route.query.token
       setTimeout(() => {
         this.loginByTokenToGetInfo()
       })
@@ -663,6 +663,13 @@ export default {
   }
 }
 </script>
-<style scoped>
-
+<style>
+.mu-switch.disabled input[type=checkbox]:checked+.mu-switch-wrapper .mu-switch-track {
+  background-color: currentColor!important;
+  opacity: .4;
+}
+.mu-switch.disabled input[type=checkbox]:checked+.mu-switch-wrapper .mu-switch-thumb {
+  background-color: currentColor!important;
+  opacity: .4;
+}
 </style>

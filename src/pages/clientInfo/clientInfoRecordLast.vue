@@ -1099,12 +1099,12 @@
         </mu-expand-transition>
       </div>
 
-      <!--威富通通道-->
+      <!--银盛通道-->
       <div class="match-width box align-default"
            v-if="PROCESS.YS">
         <div class="title">
           <mu-checkbox v-model="checkboxObj.ys"
-                       label="威富通通道"></mu-checkbox>
+                       label="银盛通道"></mu-checkbox>
         </div>
         <mu-expand-transition>
           <div v-show="checkboxObj.ys" class="outbox-item">
@@ -1122,18 +1122,38 @@
                  v-if="from!=='share'">
               <div class="subtitle">
                 <span class="star"
-                      v-show="checkboxObj.ys">*</span>结算费率
+                      v-show="checkboxObj.ys">*</span>微信结算费率
               </div>
               <div class="match-left-space align-right input-number">
                 <input type="number"
                        placeholder="请填写真实费率"
-                       v-model="detail.ysRate" />%
+                       v-model="detail.ysWxInterestRate" />%
+              </div>
+            </div>
+            <div class="item"
+                 v-if="from!=='share'">
+              <div class="subtitle">
+                <span class="star"
+                      v-show="checkboxObj.ys">*</span>支付宝结算费率
+              </div>
+              <div class="match-left-space align-right input-number">
+                <input type="number"
+                       placeholder="请填写真实费率"
+                       v-model="detail.ysAliInterestRate" />%
+              </div>
+            </div>
+            <div class="item">
+              <div class="subtitle">
+                <span class="star">*</span>是否开通D0秒到服务
+              </div>
+              <div class="match-left-space align-right input-number">
+                <mu-switch v-model="detail.ysAdvanceOpen"></mu-switch>
               </div>
             </div>
             <div class="item"
                  style="border:0;">
               <div class="subtitle"><span class="star"
-                      v-show="checkboxObj.ys">*</span>商家协议</div>
+                      v-show="checkboxObj.ys"></span>商户变更登记表照片(变更时必传)</div>
             </div>
             <div class="item id_img_wp">
           <div class="img_wp img_wp_width"
@@ -1144,10 +1164,11 @@
             <i class="icon iconfont iconshanchu"
                @click="deleteProImg(index)"></i>
             <img :src="item | previewLoadImage"
+                 class="img_show"
                  @click="previewImage(item)" />
           </div>
           <div class="img_wp img_wp_width"
-               v-if="proImgList.length<4"
+               v-if="proImgList.length == 0"
                style="margin-bottom:20px;">
             <!-- <input
               class="file"
@@ -1162,6 +1183,30 @@
             <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'xieyi')"></h5-cropper>
             <div class="icon iconfont iconzhaoxiangji ml-10"
                  style="font-size:30px;"></div>
+          </div>
+        </div>
+        <div class="item"
+             v-if="!detail.license"
+             style="border:0;">
+          <div class="subtitle">
+            小微商户租赁协议照片
+          </div>
+        </div>
+        <div class="item id_img_wp" v-if="!detail.license">
+          <div class="img_wp img_wp_width">
+            <h5-cropper :option="option" @getbase64Data="onFileChange($event, 'ysLeaseId')"></h5-cropper>
+            <div>
+              <i v-if="detail.ysLeaseId"
+                 class="icon iconfont iconshanchu"
+                 @click="deleteImg('ysLeaseId')"></i>
+              <div class="icon iconfont iconzhaoxiangji ml-10"
+                   style="font-size:30px;"></div>
+              <img v-if="detail.ysLeaseId"
+                  class="img_show"
+                   :src="detail.ysLeaseId | previewLoadImage"
+                   @click="previewImage(detail.ysLeaseId)" />
+            </div>
+            <p class="img_intro" style="font-size: 12px;">小微商户租赁协议照片</p>
           </div>
         </div>
           </div>
@@ -1983,8 +2028,14 @@ export default {
         mfUsrOprMbl:'', // 敏付商户管理员手机号码
         mfUsrOprEmail:'', // 敏付商户管理员邮箱
         businessScope:'',//敏付营业范围
-
-
+        // 银盛
+        ysWxInterestRate: '', // （银盛）微信结算费率
+        ysAliInterestRate: '', // （银盛）支付宝结算费率
+        industrName: '',
+        ysMcc: '', // （银盛）mcc行业码
+        ysAdvanceOpen: 0, // （银盛）是否开通D0秒到服务 0:不开通，1:开通
+        ysUpregisterId: '', // （银盛）商户变更登记表照片id （非必传，进件变更时必传）
+        ysLeaseId: '',
         //  拉卡拉参数配置
         // lklMccCodeClass: '', //一级经营类目    反显用
         lklMccCode:'',  //二级经营类目id
@@ -2071,7 +2122,7 @@ export default {
 
 
       // 经营类目返显用
-      ysCascaderArr: [], // (威富通)经营类目
+      ysCascaderArr: [], // (银盛)经营类目
       lsCascaderArr: [], // (乐刷)经营类目
       chCascaderArr: [], // (传化)经营类目
       zfbCascaderArr: [], // (支付宝)经营行业
@@ -2123,9 +2174,9 @@ export default {
 
     proImgList(val) {
       if (!val.length) {
-        this.detail.pro = ''
+        this.detail.ysUpregisterId = ''
       } else {
-        this.detail.pro = val.join(';')
+        this.detail.ysUpregisterId = val[0]
       }
     },
     provinceArr(val) {
@@ -2165,17 +2216,15 @@ export default {
         this.detail.leMccCode = ''
       }
     },
-    ysCascaderArr(val) {
-      if (val.length) {
-        this.detail.ysFirstName = val[0]
-        this.detail.ysSecondName = val[1]
-        this.detail.industrId = val[2]
-      } else {
-        this.detail.ysFirstName = ''
-        this.detail.ysSecondName = ''
-        this.detail.industrId = ''
-      }
-    },
+    // ysCascaderArr(val) {
+    //   if (val.length) {
+    //     this.detail.industrName = val[0]
+    //     this.detail.ysMcc = val[1]
+    //   } else {
+    //     this.detail.industrName = ''
+    //     this.detail.ysMcc = ''
+    //   }
+    // },
     chCascaderArr(val) {
       if (val.length) {
         this.detail.chMccCode = val[0]
@@ -2250,7 +2299,7 @@ export default {
           this.getLsMccList() // 乐刷经营类目
         }
         if(this.PROCESS.YS){
-          this.getYsMccList() // 威富通经营类目
+          this.getYsMccList() // 银盛经营类目
         }
         if(this.PROCESS.CH){
           this.getChMccList() // 传化经营类目
@@ -2421,9 +2470,11 @@ export default {
     changeLsMenu(item) {
       this.detail.leMccName = item ? item.map(res => res.name).join('/') : ''
     },
-    // 选择威富通经营类目
+    // 选择银盛经营类目
     changeYsMenu(item) {
-      this.detail.industrName = item ? item.map(res => res.name).join('/') : ''
+      this.detail.industrName = item ? item[0].name : ''
+      this.detail.ysMcc = item ? item[0].id : ''
+      console.log(this.detail.ysMcc)
     },
     // 选择传化经营类目
     changeChMenu(item) {
@@ -2583,6 +2634,9 @@ export default {
       }else if(type === 'kdbRentalId'){
         //开店宝收单协议照片id
         this.detail.kdbRentalId = ''
+      }else if(type === 'ysLeaseId'){
+        //开店宝收单协议照片id
+        this.detail.ysLeaseId = ''
       }
 
 
@@ -2617,9 +2671,10 @@ export default {
       // this.detail.cashierDeskPicId = ''
       this.lsCascaderArr = []
       this.detail.leMccName = ''
-      // 威富通
+      // 银盛
       this.ysCascaderArr = []
       this.detail.industrName = ''
+      this.detail.ysMcc = ''
       this.proImgList = []
       // 传化
       this.chCascaderArr = []
@@ -2916,8 +2971,8 @@ export default {
 
 
 
-        this.proImgList = this.detail.pro ? this.detail.pro.split(';') : []
-        this.detail.industrId = this.detail.industrId + ''
+        this.proImgList = this.detail.ysUpregisterId ? [this.detail.ysUpregisterId] : []
+        this.detail.ysMcc = this.detail.ysMcc + ''
         this.detail.isIndustryDining = Boolean(this.detail.isIndustryDining)
         this.cascaderArr = [this.detail.mccClassCd, this.detail.mccCd] //随行付
         this.kdbAddressArr = [this.detail.kdbProvinceId, this.detail.kdbCityId, this.detail.kdbAreaId] //开店宝省市区
@@ -2940,7 +2995,8 @@ export default {
         this.lklCascaderArr = [this.detail.lklMerBusiContent] //拉卡拉经营内容
         this.yiSCascaderArr = [this.detail.ysYloneMccCode, this.detail.ysYltwoMccCode, this.detail.ysYlthreeMccCode] //易生
         this.lsCascaderArr = [this.detail.leFirstMccCode, this.detail.leSecondMccCode, this.detail.leMccCode]
-        this.ysCascaderArr = [this.detail.ysFirstName, this.detail.ysSecondName, this.detail.industrId]
+        this.ysCascaderArr = [this.detail.ysMcc]
+        this.detail.ysAdvanceOpen = this.detail.ysAdvanceOpen == 1
         let zfbNameArr = [this.detail.aliFirstLevel, this.detail.aliSecondLevel, this.detail.aliThirdLevel]
         let fyNameArr = [this.detail.fuiouFirstMccCode, this.detail.fuiouSecondMccCode, this.detail.fuiouBusiness]
         this.zfbCascaderArr = this.detail.aliFirstLevel ? this.loopCall(this.zfbMaccList, zfbNameArr, []) : []
@@ -3000,11 +3056,11 @@ export default {
         this.lsMaccList = this.forTree(res.obj)
       })
     },
-    // 获取威富通经营类目
+    // 获取银盛经营类目
     getYsMccList() {
       if (!this.PROCESS.YS) return
       clientInfoApi.getYsMccList().then(res => {
-        this.ysMaccList = this.forTree(res.obj)
+        this.ysMaccList = res.obj
       })
     },
     // 获取传化经营类目
@@ -3577,6 +3633,7 @@ export default {
     },
     // 下一步
     onNext() {
+      this.detail.ysAdvanceOpen = this.detail.ysAdvanceOpen ? 1 : 0
       this.detail.isIndustryDining = this.detail.isIndustryDining ? 1 : 0
       //开店宝借记卡和贷记卡结算周期都取页面上的周期
       this.detail.kdbJjkSettlementCycle = this.detail.kdbWxSettlementCycle;
@@ -3617,25 +3674,16 @@ export default {
       let zfbRequiredData = ['aliAccount', 'aliFirstLevel', 'aliRate']
       // 乐刷通道必填字段
       let lsRequireData = [/*'cashierDeskPicId',*/ 'leFirstMccCode', 'leSecondMccCode', 'leMccCode', 'leWxRate', 'leAliRate']
-      // 威富通通道必填字段
-      let ysRequireData = ['ysFirstName', 'ysSecondName', 'ysRate', 'pro']
+      // 银盛通道必填字段
+      let ysRequireData = ['ysWxInterestRate', 'ysAliInterestRate', 'ysMcc', 'ysAdvanceOpen']
       // 传化通道必填字段
       let chRequireData = ['chMccCode', 'chSubMccCode', 'chRate']
       // 富友通道必填字段
       let fyRequireData = ['fuiouFirstMccCode', 'fuiouAreaName', 'fuiouAliRate', 'fuiouWxRate']
-     /* // 拉卡拉通道必填字段
-      let lklRequireData = ['lklMccCode', 'lklMccName','lklDistrictCode', 'lklDistrictName', 'lklCityCode', 'lklCityName', 'lklProvinceCode', 'lklProvinceName', 'lklMerRegDistCode', 'lklMerRegCityCode' ,'lklMerRegProvCode', 'lklMerRegAddr','lklSettlePeriod','lklMerBusiContent','lklOneMccCode','lklTwoMccCode','lklThreeMccCode','PosType','lklTradeRate']*/
       // 拉卡拉通道必填字段
       let lklRequireData = ['lklMerRegDistCode', 'lklMerRegCityCode' ,'lklMerRegProvCode', 'lklMerRegAddr','lklSettlePeriod','lklMerBusiContent','lklOneMccCode','lklTwoMccCode','lklThreeMccCode','PosType','lklTradeRate']
       // 开店宝通道必填字段
       let kdbRequireData = ['kdbProvinceId', 'kdbCityId', 'kdbAreaId', 'kdbBusinessId', 'kdbWxTradeRate', 'kdbWxSettlementCycle', 'kdbSex']
-      // 手机pos必填字段
-      /*posDrawFee 手机pos提现费
-      posTradeRate手机pos交易费率
-      quickDrawFee网联提现费
-      quickTradeRate网联交易费率
-      bankPhotoId银行卡背面照片ID
-      holdingCardId手持身份证照片*/
       let sjPosRequireData = ['posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee']
       //畅捷通道必填字段
       let cjRequireData = ['mccCode', 'mccName','operationProvinceCode', 'operationProvinceName', 'operationCityCode', 'operationCityName', 'operationDistrictCode', 'operationDistrictName', 'chanpayTradeRate']
@@ -3659,7 +3707,7 @@ export default {
       //share 不需要填费率
       if (this.from === 'share') {
         sxfRequiredData = ['mccCd', 'mccClassCd']
-        ysRequireData = ['ysFirstName', 'ysSecondName', 'pro']
+        ysRequireData = ['ysMcc', 'ysAdvanceOpen']
         chRequireData = ['chMccCode', 'chSubMccCode']
         lsRequireData = [/*'cashierDeskPicId',*/ 'leFirstMccCode', 'leSecondMccCode', 'leMccCode']
         zfbRequiredData = ['aliAccount', 'aliFirstLevel']
@@ -3754,7 +3802,8 @@ export default {
       if (this.checkboxObj.ys && this.PROCESS.YS) {
         this.detail.importNums.push('9')
         if (!ysRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
-          this.$toast.error('有内容未填入')
+          console.log(this.detail)
+          this.$toast.error('有内容未填入1212')
           return
         }
         if (this.from !== 'share' && Number(this.detail.ysRate) < 0.3) {
@@ -4094,7 +4143,7 @@ export default {
                   // (富友)获取经营许可证
                   this.$set(this.detail, 'businessCertPicId', photoId)
                 } else if (type === 'xieyi') {
-                  // 商家协议
+                  // 商户变更登记表照片
                   this.proImgList.push(photoId)
                 }else if(type === 'kdbRegistryId'){
                   //开店宝注册登记表照片id
@@ -4108,6 +4157,9 @@ export default {
                 }else if(type === 'kdbRentalId'){
                   //开店宝收单协议照片id
                   this.$set(this.detail, 'kdbRentalId', photoId)
+                }else if(type === 'ysLeaseId'){
+                  //开店宝收单协议照片id
+                  this.$set(this.detail, 'ysLeaseId', photoId)
                 }
               } else {
                 this.$toast.error(res.msg)

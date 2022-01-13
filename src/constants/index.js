@@ -4,10 +4,10 @@ export const SEX_MALE = 2
 
 const PROCESS_NAME = {
   //所有字母必须大写
-  SXF: '随行付',
+  SXF: '天阙随行付',
   WX: '官方',
   LS: '乐刷',
-  YS: '威富通', // 原名：银盛
+  YS: '银盛',
   CH: '传化',
   ZFB: '官方',
   FY: '富友',

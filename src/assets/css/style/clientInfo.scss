@@ -15,6 +15,14 @@
       left: 0;
       top: 0;
 }
+.header-radio {
+  width: 100%;
+  height: 45px;
+  margin-top: 20px;
+  background-color: #fff;
+  align-items: center;
+  justify-content: space-around;
+}
 .client-info {
 
   @include match-width();
@@ -39,7 +47,6 @@
       font-weight: bold;
       color: #333;
     }
-
     .search {
       @include size(31, 31);
     }
