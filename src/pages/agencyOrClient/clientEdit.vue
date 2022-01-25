@@ -207,6 +207,7 @@ export default {
         province: '',
         city: '',
         address: '',
+        locationAddress: '',
       },
       nameRules: [
         { validate: (val) => !!val, message: '' }
@@ -347,14 +348,14 @@ export default {
         if (status == 'complete') {
           /*this.params.autoGetlongitude = result.position.lng
           this.params.autoGetlatitude = result.position.lat*/
-          // this.longitude = result.position.lng
-          // this.latitude = result.position.lat
+          this.params.longitude = result.position.lng
+          this.params.latitude = result.position.lat
           console.log('获取坐标================',result.position.lng+','+result.position.lat)
           this.geocoder.getAddress([result.position.lng, result.position.lat], (status, result)=> {
             if (status === 'complete'&&result.regeocode) {
               let address = result.regeocode.formattedAddress;
               this.shopAddress = address
-
+              this.params.locationAddress = address
               console.log('经纬度转地址==================',address)
               // alert('经纬度转地址'+address)
             }else{
@@ -552,10 +553,12 @@ export default {
           status: res.obj.email,
           longitude: res.obj.longitude, //经度
           latitude: res.obj.latitude, //纬度
+          locationAddress: res.obj.locationAddress,
           isOpen: res.obj.isOpen, // 开关
           // expirDate: res.obj.expirDate,  //有效期
           // rangeAction : res.obj.rangeAction // 有效范围
         }
+        this.shopAddress = res.obj.locationAddress
         this.params = Object.assign({}, this.params, params);
         if(this.params.isOpen === 1){
           this.isOpenBtn = true
