@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 100px 10px;">
+  <div style="padding: 100px 10px;" v-loading="loading">
     <mu-button color="primary" @click="geolocationFn">定位</mu-button>
     <mu-card style="width: 85%; margin: 40px auto;padding: 20px;font-size: 15px;min-height: 70px;">
       {{shopAddress}}
@@ -10,10 +10,12 @@
 
 <script>
 import { agentOrClient, clientInfoApi } from '@/api'
+import { afterLoginInfoLocal } from '@/storage'
 import AMapLoader from '@amap/amap-jsapi-loader';
 export default {
   data() {
     return {
+      loading: false,
       merId: '',
       lng: '',
       lat: '',
@@ -29,7 +31,8 @@ export default {
   },
   methods: {
     getGaoDeKey(){
-      agentOrClient.getGaoDeKey('1218861037927170048').then(res => {
+      let userInfo = afterLoginInfoLocal.getJSON()
+      agentOrClient.getGaoDeKey(userInfo.serviceId).then(res => {
         this.gdWebKey = res.obj.gdWebSideKey;
         this.AMapLoader();
       })
@@ -79,6 +82,7 @@ export default {
           this.lng = result.position.lng
           this.lat = result.position.lat
           this.geocoder.getAddress([result.position.lng, result.position.lat], (status, result)=> {
+            this.loading = false
             if (status === 'complete'&&result.regeocode) {
               let address = result.regeocode.formattedAddress;
               this.shopAddress = address
@@ -86,6 +90,7 @@ export default {
               console.log('经纬度转地址==================',address)
               // alert('经纬度转地址'+address)
             }else{
+              this.loading = false
               log.error('根据经纬度查询地址失败')
             }
           });
@@ -95,6 +100,7 @@ export default {
           // }
 
         } else {
+          this.loading = false
           this.$toast.error('定位失败,'+result.message)
         }
       })

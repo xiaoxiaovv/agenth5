@@ -190,6 +190,17 @@ export default {
       })
     },
     commissionApplyAuth() {
+      let requiredData = ['cardFront','cardBack','idCardNo','cidAddress','bankAccount','bankName','cardNo','companyId','bankPhone']
+      let flag = true
+      for (let i in this.bankCarkInfo) {
+        if (this.bankCarkInfo.hasOwnProperty(i) && requiredData.indexOf(i) !== -1) {
+          if (!this.bankCarkInfo[i]) {
+            flag = false
+            break
+          }
+        }
+      }
+      if(flag) {
         commissionApi.khcommissionApplyCommit(this.companyId, this.applyAmount).then(res=>{
           if(res.code === 200){
             this.$toast.success('提交成功')
@@ -199,6 +210,9 @@ export default {
             }
           }
         })
+      } else {
+        this.$toast.error('请更新银行卡信息~')
+      }  
     },
 
   },

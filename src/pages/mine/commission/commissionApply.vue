@@ -259,7 +259,21 @@ export default {
       )
     },
     commissionApplySubmit(){
-      this.openAlert = true
+      let requiredData = ['cardFront','cardBack','idCardNo','cidAddress','bankAccount','bankName','cardNo','companyId','bankPhone']
+      let flag = true
+      for (let i in this.bankCarkInfo) {
+        if (this.bankCarkInfo.hasOwnProperty(i) && requiredData.indexOf(i) !== -1) {
+          if (!this.bankCarkInfo[i]) {
+            flag = false
+            break
+          }
+        }
+      }
+      if(flag) {
+        this.openAlert = true
+      } else {
+        this.$toast.error('请更新银行卡信息~')
+      }
     },
     closeAlertDialog() {
       this.openAlert = false

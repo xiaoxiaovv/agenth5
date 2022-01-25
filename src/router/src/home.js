@@ -13,7 +13,7 @@ export default [{
   name: types.LOCATION,
   component: resolve => require(['@/pages/location'], resolve),
   meta: {
-    isShowFooter: true,
+    isShowFooter: false,
     title: '定位'
   }
 }, {
