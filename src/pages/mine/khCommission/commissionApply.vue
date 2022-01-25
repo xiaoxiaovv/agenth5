@@ -21,7 +21,7 @@ import { isProd } from '../../config';
     <div class="pandect-data">
       <div class="text-left pl-30 ptb-20 commission-apply__title">
         <p class="title-text">未提现奖励</p>
-        <p class="money mt-6"><span>¥ </span><span>{{canCommission}}</span></p>
+        <p class="money mt-6"><span>¥ </span><span>{{canCommission || '0.00'}}</span></p>
       </div>
       <div class="client-info-detail__content box match-left-space">
       <div class="match-width box align-default">
