@@ -25,12 +25,28 @@ export default [{
     title: '分润管理'
   }
 }, {
+  path: '/khcommission',
+  name: types.KHCOMMISSION,
+  component: resolve => require(['@/pages/mine/khCommission/index'], resolve),
+  meta: {
+    isShowFooter: false,
+    title: '奖励提现管理'
+  }
+}, {
   path: '/commission_apply',
   name: types.COMMISSIONAPPLY,
   component: resolve => require(['@/pages/mine/commission/commissionApply'], resolve),
   meta: {
     isShowFooter: false,
     title: '分润提现'
+  }
+}, {
+  path: '/kh_commission_apply',
+  name: types.KHCOMMISSIONAPPLY,
+  component: resolve => require(['@/pages/mine/khCommission/commissionApply'], resolve),
+  meta: {
+    isShowFooter: false,
+    title: '奖励提现'
   }
 }, {
   path: '/commission_add_bank_card',

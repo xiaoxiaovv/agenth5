@@ -3,6 +3,18 @@
   overflow-y:auto;
 }
 .mime-info-first {
+  position: relative;
+  .tip-box {
+    position: absolute;
+    right: 0.325rem;
+    top: 0.385rem;
+    width: 24px;
+    height: 24px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
   .info-first-container {
     position: absolute;
     left: 0;

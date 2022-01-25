@@ -10,7 +10,7 @@ import { isProd } from '../../config';
     <div class="commission-apply__nav align-hor-bet box plr-40 ">
       <!--      <div class="pass"></div>-->
       <div class="icon iconfont iconreturn" @click="$router.back(-1)"></div>
-      <div class="title">提现管理</div>
+      <div class="title">奖励提现管理</div>
       <div class="search"
            @click="">
         <!-- <img
@@ -20,7 +20,7 @@ import { isProd } from '../../config';
 
     <div class="pandect-data">
       <div class="text-left pl-30 ptb-20 commission-apply__title">
-        <p class="title-text">未提现分润</p>
+        <p class="title-text">未提现奖励</p>
         <p class="money mt-6"><span>¥ </span><span>{{canCommission}}</span></p>
       </div>
       <div class="client-info-detail__content box match-left-space">
@@ -43,10 +43,6 @@ import { isProd } from '../../config';
       </div>
 
     </div>
-
-
-
-
     <!-- 数据列表 -->
     <div class="commission-apply__content   align-default">
       <div class="mt-20 bank-info-box">
@@ -92,89 +88,14 @@ import { isProd } from '../../config';
         </div>
       </div>
     </div>
-
-
-
-
-    <!--<div class="commission-apply__content   align-default">
-      <div class="mt-20 bank-info-box">
-        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
-          <div class="vm-list-li">
-            <div class="vma-list-li-left">开户人</div>
-            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.bankAccount}}</div>
-          </div>
-        </div>
-        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
-          <div class="vm-list-li">
-            <div class="vma-list-li-left">分润税点</div>
-            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.bankName}}</div>
-          </div>
-        </div>
-        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
-          <div class="vm-list-li">
-            <div class="vma-list-li-left">到账时间</div>
-            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.cardNo | cardFilter}}</div>
-          </div>
-        </div>
-        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
-          <div class="vm-list-li">
-            <div class="vma-list-li-left">提现金额不得低于</div>
-            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.cardNo | cardFilter}}</div>
-          </div>
-        </div>
-        <div class="vm-list-ul vm-bg-gray vmalis-fontweight-400  ">
-          <div class="vm-list-li">
-            <div class="vma-list-li-left">提现时间</div>
-            <div class="vma-list-li-right vm-ell">{{bankCarkInfo.cardNo | cardFilter}}</div>
-          </div>
-        </div>
-      </div>
-
-    </div>-->
     <div class="commission-apply__out-login center-flex">
-      <p @click="commissionApplySubmit">提交申请</p>
+      <p @click="commissionApplyAuth">提交申请</p>
     </div>
-
-   <!-- <div class="mt-30 explain">
-      <p>说明：分润税点8%，</p>
-      <p class="explain_ml">到账时间 T+1，</p>
-      <p class="explain_ml">提现金额不得低于13元，</p>
-      <p class="explain_ml">提现时间：9:00 - 17:00</p>
-    </div>-->
-
-    <mu-dialog title="提示"
-               width="600"
-               max-width="80%"
-               :esc-press-close="false"
-               :overlay-close="false"
-               :open.sync="openAlert">
-<!--      <p class=" mb-12" style="font-size: 0.4rem">请输入登录密码</p>-->
-      <input
-        style="border: 1px solid #dddddd;"
-        autocomplete=“off”
-        type="password"
-        placeholder="请输入登录密码"
-        v-model="password" />
-      <mu-button slot="actions"
-                 flat
-                 color="primary"
-                 @click="closeAlertDialog">取消</mu-button>
-      <mu-button slot="actions"
-                 flat
-                 color="primary"
-                 @click="commissionApplyAuth">确定</mu-button>
-    </mu-dialog>
-    <!--<div class="commission-apply__out-login center-flex">
-      <p @click="commissionApplyCommit">获取token</p>
-    </div>-->
-    <!-- 补脚 -->
-    <!--    <div class="commission-apply__footer"></div>-->
 
   </div>
 </template>
 
 <script>
-// clientInfoDetailIDLocal
 import { afterLoginInfoLocal } from '@/storage'
 import { commissionApi } from '@/api'
 import { COMMISSION_ADD_BANK_CARD } from '@/router/types'
@@ -239,12 +160,11 @@ export default {
       )
     },
     findCommissionCurrentMonth(){
-      commissionApi.findCommissionCurrentMonth().then(
+      commissionApi.getCollect().then(
         res => {
           this.loading = false
           if (res.code === 200) {
-            // this.allCommissionTotal = res.obj.allCommissionTotal
-            this.canCommission = res.obj.canCommission
+            this.canCommission = res.obj.canAmount.toFixed(2)
           } else {
             if (res && res.msg) {
               this.$toast.error(res.msg)
@@ -258,12 +178,6 @@ export default {
         }
       )
     },
-    commissionApplySubmit(){
-      this.openAlert = true
-    },
-    closeAlertDialog() {
-      this.openAlert = false
-    },
     // 获取佣金提现卡
     commissionGetBankCard() {
       commissionApi.commissionGetBankCard(this.companyId).then(res => {
@@ -275,36 +189,22 @@ export default {
         name: COMMISSION_ADD_BANK_CARD,
       })
     },
-    commissionApplyAuth(){
-      this.openAlert = false
-  commissionApi.commissionApplyAuth(this.password).then(res=>{
-    if(res.code === 200){
-      this.accountType = '3';
-      commissionApi.commissionApplyCommit(res.obj, this.accountType, this.applyAmount).then(res=>{
-        if(res.code === 200){
-          this.$toast.success('提交成功')
-        }else {
-          if (res && res.msg) {
-            this.$toast.error(res.msg)
+    commissionApplyAuth() {
+        commissionApi.khcommissionApplyCommit(this.companyId, this.applyAmount).then(res=>{
+          if(res.code === 200){
+            this.$toast.success('提交成功')
+          }else {
+            if (res && res.msg) {
+              this.$toast.error(res.msg)
+            }
           }
-        }
-      })
-    }else{
-      if (res && res.msg) {
-        this.$toast.error(res.msg)
-      }
-    }
-
-  })
+        })
     },
-    commissionApplyCommit(){
-      commissionApi.commissionApplyCommit()
-    }
 
   },
 
   filters: {
-    // cardFilter
+     //cardFilter
   }
 }
 </script>

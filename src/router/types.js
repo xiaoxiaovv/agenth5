@@ -1,7 +1,11 @@
+// webview定位
+export const LOCATION = 'LOCATION'
 // 首页
 export const HOME = 'HOME'
 // 交易流水
 export const ORDER_LIST = 'ORDER_LIST'
+// 消息详情
+export const NOTICE = 'NOTICE'
 // 进件
 export const CLIENT_INFO = 'CLIENT_INFO'
 // 进件详情
@@ -44,7 +48,11 @@ export const RESETPASSWORD = `RESETPASSWORD`
 export const PRIVACY = `PRIVACY`
 //分润管理
 export const COMMISSION = `COMMISSION`
+//开户奖励
+export const KHCOMMISSION = `KHCOMMISSION`
 //分润提现申请
 export const COMMISSIONAPPLY = `COMMISSIONAPPLY`
-//分润提现加卡/编辑卡
+//分润提现申请
+export const KHCOMMISSIONAPPLY = `KHCOMMISSIONAPPLY`
+//提现加卡/编辑卡
 export const COMMISSION_ADD_BANK_CARD = `COMMISSION_ADD_BANK_CARD`

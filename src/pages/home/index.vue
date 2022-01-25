@@ -1,5 +1,5 @@
 <template>
-  <div class="frame-container">
+  <div class="frame-container-home">
     <div class="vm-padding-height page-home-head">
       <div class="vm-postion-box">
         <div class="vm-padding-height page-home-head-bg">
@@ -79,6 +79,20 @@
         </div>
       </div>
     </div>
+    <vue-seamless-scroll :data="listData" :class-option="defaultOption" class="warp">
+        <ul class="item">
+          <li v-for="(item, index) in listData" :key="index" @click="goNotice(item)">
+            <div>
+              <img src="../../assets/images/icons/icon_notice.png" />
+              <span class="title" v-text="item.title"></span>
+            </div>
+            <div class="reight-time-go">
+              <span class="date" v-text="item.createTime.substring(0,10)"></span>
+              <img src="../../assets/images/icons/icon_enter.png" />
+            </div>
+          </li>
+        </ul>
+    </vue-seamless-scroll>
     <!-- 业务员发展商户占比 -->
     <div class="home-container-echart">
       <div class="echart-title">
@@ -90,7 +104,7 @@
           </div>
         </div>
       </div>
-      <div class="vm-padding-height echat-paddings" :style="{paddingTop: paddingTopVal}">
+      <div class="vm-padding-height echat-paddings" :style="{paddingTop: paddingTopVal}" style="height: 380px;">
         <div class="vm-postion-box">
           <div class="echart-data" id="payPercent">
             <div style="padding-top: 80px;">暂无数据</div>
@@ -109,11 +123,15 @@ import { afterLoginInfoLocal } from '@/storage'
 import echartResizeMixin from './mixin/echartResizeMixin.js'
 import indexMixins from './mixin/indexMixins.js'
 import * as types from '@/router/types'
-
+import vueSeamlessScroll from 'vue-seamless-scroll'
 export default {
   mixins: [isShowFooterMixin, echartResizeMixin, indexMixins],
+  components: {
+      vueSeamlessScroll
+  },
   data() {
     return {
+      listData: [],
       commissionMoneyData:{},
       isActive: 1,
       companyId: '',
@@ -133,10 +151,43 @@ export default {
       } // 交易数据
     }
   },
+  computed: {
+      defaultOption () {
+          return {
+              step: 0.5, // 数值越大速度滚动越快
+              limitMoveNum: this.listData.length, // 开始无缝滚动的数据量 this.dataList.length
+              hoverStop: true, // 是否开启鼠标悬停stop
+              openWatch: true, // 开启数据实时监控刷新dom
+              direction: 1, // 0向下 1向上 2向左 3向右
+              singleHeight: 0, // 单步运动停止的高度(默认值0是无缝不停止的滚动) direction => 0/1
+              singleWidth: 0, // 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction => 2/3
+              waitTime: 1000 // 单步运动停止的时间(默认值1000ms)
+          }
+      }
+
+  },
   methods: {
     changeStatus(val) {
       this.isActive = val
       this.getRunAccountNewDataView()
+    },
+    noticeBar() {
+      // userType 1服务商,2一级,3二级,4三级5商户
+      const params = {
+        type: this.userType,
+        createType: this.userType == 1 ? 1 : 3,//userType 1 服务商传1否则传3
+        pageNumber: 1,
+        pageSize: 100
+      }
+      homeApi.noticeBar(params).then(res => {
+          if(res.code === 200) {
+            this.listData = res.obj.content
+          }
+      })
+    },
+    goNotice(val) {
+      console.log(val)
+      this.$router.push({name: types.NOTICE,params:val})
     },
     /**
      * 数据概览
@@ -148,6 +199,7 @@ export default {
       }
       homeApi.dataView(params).then(res => {
         this.dataViews = res.obj
+        this.dataViews.transactionMoney = this.dataViews.transactionMoney.toFixed(2)
       })
     },
     /**
@@ -205,10 +257,10 @@ export default {
   },
   created() {
     let userInfo = afterLoginInfoLocal.getJSON()
-    // console.log('conpanyid111111111111111:',userInfo)
     this.levelAlias = userInfo.levelAlias
     this.companyId = userInfo.companyId
     this.userType = userInfo.userType
+    this.noticeBar()
     this.getDataViews()
     this.getRunAccountNewDataView()
     this.getDataTransaction()
@@ -216,3 +268,46 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .warp {
+    position: relative;
+    z-index: 99;
+    height: 1rem;
+    width: 92%;
+    margin: 0 auto 0.826666rem;
+    padding: 0 0.4rem;
+    box-shadow: 0px 10px 20px 0px rgba(175, 191, 207, 0.2);
+    border-radius: 0.13rem;
+    overflow: hidden;
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      li {
+        display: block;
+        height: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        img {
+          width: 20px;
+          height: 20px;
+        }
+        .reight-time-go {
+          display: flex;
+          align-items: center;
+          img {
+            width: 9px;
+            height: 15px;
+          }
+        }
+        .date {
+          font-size: 13px;
+          color: #999;
+          margin-right: 0.16rem;
+        }
+      }
+    }
+  }
+</style>

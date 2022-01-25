@@ -601,6 +601,17 @@ export default {
     })
   },
   /**
+   * 商户更新位置
+   * @param {*} params
+   */
+  updateLocation(params) {
+    return requestAxios({
+      url: '/merchant/merchant/update',
+      method: 'get',
+      params
+    })
+  },
+  /**
    * 获取易生验证码
    * @param {*} params
    */

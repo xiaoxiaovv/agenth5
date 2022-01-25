@@ -56,5 +56,16 @@ export default {
       method: 'GET',
       params: params
     })
+  },
+  /**
+   * 通告栏
+   * @param {*} params
+   */
+  noticeBar(params) {
+    return requestAxios({
+      url: `/merchant/notice`,
+      method: 'GET',
+      params: params
+    })
   }
 }

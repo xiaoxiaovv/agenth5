@@ -1076,7 +1076,7 @@
             <div class="item"
                  v-if="from!=='share'">
               <div class="subtitle">
-                <span class="star">*</span>微信费率
+                <span class="star">*</span>费率
               </div>
               <div class="match-left-space align-right input-number">
                 <input type="number"
@@ -1084,7 +1084,7 @@
                        v-model="detail.leWxRate" />%
               </div>
             </div>
-            <div class="item"
+            <!-- <div class="item"
                  v-if="from!=='share'">
               <div class="subtitle">
                 <span class="star">*</span>阿里费率
@@ -1094,7 +1094,7 @@
                        placeholder="请填写真实费率"
                        v-model="detail.leAliRate" />%
               </div>
-            </div>
+            </div> -->
           </div>
         </mu-expand-transition>
       </div>
@@ -1122,7 +1122,7 @@
                  v-if="from!=='share'">
               <div class="subtitle">
                 <span class="star"
-                      v-show="checkboxObj.ys">*</span>微信结算费率
+                      v-show="checkboxObj.ys">*</span>结算费率
               </div>
               <div class="match-left-space align-right input-number">
                 <input type="number"
@@ -1130,7 +1130,7 @@
                        v-model="detail.ysWxInterestRate" />%
               </div>
             </div>
-            <div class="item"
+            <!-- <div class="item"
                  v-if="from!=='share'">
               <div class="subtitle">
                 <span class="star"
@@ -1141,7 +1141,7 @@
                        placeholder="请填写真实费率"
                        v-model="detail.ysAliInterestRate" />%
               </div>
-            </div>
+            </div> -->
             <div class="item">
               <div class="subtitle">
                 <span class="star">*</span>是否开通D0秒到服务
@@ -2522,6 +2522,7 @@ export default {
         this.$set(this.detail, "mfMccCodeClass", item[0].id);
         this.$set(this.detail, "mfMccCode", item[1].id);
         this.$set(this.detail, "mfMccName", item[1].name);
+        this.$set(this.detail, "businessScope", item[1].name);
       }
     },
 
@@ -2839,9 +2840,8 @@ export default {
       if(detailData.ysIsService===0 || detailData.ysIsService){
         this.yiSSettlementCycleTypeText = this.yiSSettlementCycleTypeList[detailData.ysIsService].name;
       }
-      if(detailData.kdbSex){
-        this.kdbSexText = this.kdbsexList[Number(detailData.kdbSex)-1].name;
-      }
+      this.kdbSexText = this.kdbsexList[Number(detailData.sex)-1].name
+      console.log('...............',this.kdbSexText)
       if(detailData.kdbAccountType){
         this.kdbAccountTypeText = this.kdbAccountTypeList[Number(detailData.kdbAccountType)-1].name;
       }
@@ -2923,34 +2923,13 @@ export default {
       return clientInfoApi.getMchInfo({ id }).then(res => {
         console.log('getMchInfo=============================',res.obj)
         this.detail = Object.assign({}, this.detail, res.obj)
-
+        // 拉卡拉赋值
+        this.detail.lklMerRegAddr = this.detail.address
         // 敏付赋值
         this.detail.mfUsrOprNm = this.detail.representativeName
         this.detail.mfUsrOprMbl = this.detail.legalPersonPhone
         this.detail.mfUsrOprEmail = this.detail.email
         this.detail.businessScope = this.detail.mfMccName
-
-
-
-
-/*
-        // 拉卡拉赋值
-         this.detail.code = this.detail.lklMerRegProvCode
-
-        this.detail.lklMerRegAddr = this.detail.lklMerRegAddr
-
-        this.detail.leFirstMccCode = this.detail.lklMerRegAddr
-
-        this.detail.leSecondMccCode  = this.detail.lklMerRegCityCode
-
-        this.detail.leMccCode.code   =  this.detail.lklMerRegDistCode
-
-        this.detail.lklPosType.code   =  this.detail.lklPosType
-
-        this.detail.lklSettlementCycle.code   =  this.detail.lklSettlePeriod
-
-        this.detail.verRate   =  this.detail.lklTradeRate
-*/
 
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--开始
         this.detail.kdbJjkTradeRate = '0.55';  //
@@ -2962,6 +2941,7 @@ export default {
         //获取详情后重新给这些值赋默认值；目前不需要，但是接口为必填--结束
         //设置开店宝默认费率
         this.detail.kdbWxTradeRate = this.detail.kdbWxTradeRate || '0.38'
+        this.detail.kdbSex = this.detail.sex
         //设置手机pos默认费率 'posTradeRate', 'posDrawFee','quickTradeRate', 'quickDrawFee'
         this.detail.posTradeRate = this.detail.posTradeRate || '0.55'
         this.detail.posDrawFee = this.detail.posDrawFee || '3'
@@ -3649,6 +3629,8 @@ export default {
       this.detail.ysJjkRateType = '1'
       this.detail.ysDjkRateMin = '0';
       //易生写死字段--结束
+      this.detail.ysAliInterestRate = this.detail.ysWxInterestRate
+      this.detail.leAliRate = this.detail.leWxRate
       //重置已勾选的进件项，下方重新判断添加
       this.detail.importNums = []
       // 随行付通道必填字段
@@ -3698,7 +3680,7 @@ export default {
 
       if (this.detail.businessLicensePhotoId&&this.detail.businessType==1) {
         //营业执照
-        kdbRequireData.push('kdbCompanyType', 'kdbRegistryId', 'kdbAgreementId', 'kdbRentalId')
+        kdbRequireData.push('kdbCompanyType', 'kdbRegistryId', 'kdbAgreementId')
       }
       if (!this.detail.businessLicensePhotoId) {
         //营业执照
@@ -3834,6 +3816,10 @@ export default {
 
       if (this.checkboxObj.kdb && this.PROCESS.KDB) {
         this.detail.importNums.push('19')
+        if (!this.detail.license &&this.detail.kdbProvinceId == 6 && !this.detail.kdbRentalId) {
+          this.$toast.error('小微商户租赁协议照片必填')
+          return
+        }
         //开店宝
         if (!kdbRequireData.every(attr => this.detail[attr] !== '' && this.detail[attr] !== null)) {
           this.$toast.error('有内容未填入')

@@ -308,8 +308,8 @@ export default {
       clientInfoApi.getMchInfo({ id }).then(res => {
         this.cascaderArr = [res.obj.regProvCd, res.obj.regCityCd, res.obj.regDistCd]
         this.detail = Object.assign({}, this.detail, res.obj);
-        /*this.detail.address = this.detail.address || this.detail.registerAddress;
-        this.detail.contact = this.detail.contact || this.detail.representativeName;
+        this.detail.address = this.detail.address || this.detail.registerAddress;
+        /*this.detail.contact = this.detail.contact || this.detail.representativeName;
         this.detail.phone = this.detail.phone || this.detail.legalPersonPhone;
         this.detail.cusServiceTel = this.detail.cusServiceTel || this.detail.legalPersonPhone;
         this.detail.shortName = this.detail.shortName || this.detail.merchantName;*/

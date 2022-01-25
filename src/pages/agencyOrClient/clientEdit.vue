@@ -49,7 +49,7 @@
                            prefix="手机"
                            placeholder="请输入手机号"></mu-text-field>
           </mu-form-item>
-          <mu-form-item label=""
+          <!-- <mu-form-item label=""
                         prop="emailemailRules">
             <mu-text-field v-model.trim="params.email"
                            autocomplete="off"
@@ -57,8 +57,8 @@
                            underline-color="#F0F0F0"
                            prefix="电子邮箱"
                            placeholder="请输入邮箱"></mu-text-field>
-          </mu-form-item>
-          <mu-form-item label=""
+          </mu-form-item> -->
+          <!-- <mu-form-item label=""
                         prop="province"
                         :rules="provinceRules">
             <VmaCascaderTree v-model="cascaderArr"
@@ -70,8 +70,8 @@
                              @change="changeCity"></VmaCascaderTree>
             <mu-text-field v-model="params.province"
                            style="display: none"></mu-text-field>
-          </mu-form-item>
-          <mu-form-item label=""
+          </mu-form-item> -->
+          <!-- <mu-form-item label=""
                         prop="address"
                         :rules="addressRules">
             <mu-text-field v-model.trim="params.address"
@@ -80,8 +80,8 @@
                            underline-color="#F0F0F0"
                            prefix="详细地址"
                            placeholder="请填写地址"></mu-text-field>
-          </mu-form-item>
-          <mu-form-item label=""
+          </mu-form-item> -->
+          <!-- <mu-form-item label=""
                         prop="businessLevOne"
                         :rules="businessLevOneRules">
             <VmaCascaderTree v-model="cooperationLevArr"
@@ -92,7 +92,7 @@
                              :required="true"></VmaCascaderTree>
             <mu-text-field v-model="params.businessLevOne"
                            style="display: none"></mu-text-field>
-          </mu-form-item>
+          </mu-form-item> -->
 
           <div class="vm-list-ul vm-bg-white vmalis-fontweight-400">
             <div class="vm-list-li">
@@ -200,7 +200,13 @@ export default {
         isOpen:false,
         companyId: afterLoginInfoLocal.getJSON().companyId,
         managerId: afterLoginInfoLocal.getJSON().userId,
-        status: '1' // 正常状态
+        status: '1', // 正常状态
+        businessLevOne: '',
+        businessLevTwo: '',
+        businessLevThree: '',
+        province: '',
+        city: '',
+        address: '',
       },
       nameRules: [
         { validate: (val) => !!val, message: '' }
@@ -413,18 +419,8 @@ export default {
      */
     submitView(status) {
       let msg = ''
-      //  else if (!this.params.payProrata) {
-      //   if (!this.isEdit) {
-      //     msg = '请填写手续费率'
-      //   }
-      // }
-      // this.addInfo()
-      // this.sendData('发送')
-      /*if(this.params.isOpen){
-        this.params.isOpen = 1
-      }else{
-        this.params.isOpen = -1
-      }*/
+      //邮箱默认给一个
+      this.params.email = 'Hb' + this.params.phone + '@163.com'
       if (!this.params.name) {
         msg = '商户名不能为空'
       } else if (!this.params.contact) {
@@ -433,16 +429,6 @@ export default {
         msg = '请填写手机号'
       } else if (!(/^1\d{10}$/.test(this.params.phone))) {
         msg = '请填写正确手机号'
-      } else if (!this.params.businessLevOne) {
-        msg = '请选择经营类目'
-      } else if (!this.params.province) {
-        msg = '请选择省市'
-      } else if (!this.params.email) {
-        msg = '请填写邮箱'
-      } else if (!(/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(this.params.email))) {
-        msg = '请填写正确邮箱'
-      } else if (!this.params.address) {
-        msg = '请填写地址'
       }
       if (msg) {
         this.$toast.message(msg)

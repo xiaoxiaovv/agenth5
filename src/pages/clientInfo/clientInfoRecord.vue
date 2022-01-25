@@ -936,7 +936,7 @@ export default {
     // 下一步
     onNext() {
       if (this.accountType == 1) {
-        this.detail.businessType = null
+        this.detail.businessType = '1'
       }
       if (this.detail.businessLicensePhotoId) {
         this.requiredData = [

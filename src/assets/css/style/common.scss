@@ -92,14 +92,16 @@
 
 .vm-list {
   .vm-item {
-    height: 1.9rem;
-    padding: 0 .4rem;
+    padding: 0.35rem .4rem;
     border-bottom: .01rem solid #f3efef;
     background: #ffffff;
     font-size: .43rem;
     text-align: left;
 
     .item-left {
+		flex: 1;
+		padding-right: .4rem;
+		line-height: 0.55rem;
       .item-left-2 {
         color: #666666;
       }

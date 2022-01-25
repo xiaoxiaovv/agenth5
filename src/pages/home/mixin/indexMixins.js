@@ -99,8 +99,11 @@ export default {
         title.push(obj)
         dataList.push(obj)
       })
-      var chart = this.$echarts.init(document.getElementById('payPercent'))
+      var chart = this.$echarts.init(document.getElementById('payPercent'), null, {
+        height: 700
+      })
       this.adaptWindowResize(chart)
+      const _this= this
       let options = {
         tooltip: {
           trigger: 'item',
@@ -108,6 +111,7 @@ export default {
         },
         color: ['#5FB870', '#56A2FD', '#FFAF2C', '#F04134', '#57636F'],
         legend: {
+          top:480,
           bottom: 0,
           itemWidth: 10,
           itemHeight: 10,
@@ -128,7 +132,12 @@ export default {
             if (total !== 0 && target !== 0) {
               percent = ((target / total) * 100).toFixed(2) + '%'
             }
-            let str = '{a|' + name + '：' + '}' + '{b|' + percent + ' | ' + target + '}'
+            let str
+            if(_this.isActive == 1) {
+              str = '{a|' + name + '：' + '}' + '{b|' + percent + ' | ' + '¥' + target.toFixed(2) + '}'
+            } else {
+              str = '{a|' + name + '：' + '}' + '{b|' + percent + ' | ' + target + '笔' + '}'
+            }
             return str
           },
           textStyle: {
@@ -157,10 +166,10 @@ export default {
           }
         ]
       }
-      if (type === 1) {
+      if (_this.isActive === 1) {
         options.series[0].label.formatter = '{b}: ￥{c}'
       } else {
-        options.series[0].label.formatter = '{b}: {c}'
+        options.series[0].label.formatter = '{b}: {c}笔'
       }
       if (this.userType === 2 || this.userType === 3) {
         options.tooltip.formatter = '{b}: {c} ({d}%)'

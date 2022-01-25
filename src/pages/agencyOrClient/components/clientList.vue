@@ -11,12 +11,8 @@
             <p class="item-left-2" v-if="userType && userType==1">{{item.phone}}</p>
           </div>
           <div class="item-right center-flex">
-            <p>
+            <p :style="{'color': showSignColor(item.signStatus)}">
               {{showSignStatus(item.signStatus)}}
-              <!--
-              <template v-if="item.status===1">已签约</template>
-              <template v-else-if="item.status===2">未签约</template>
-              -->
             </p>
             <img src="@/assets/images/icons/icon_enter.png"
                  alt="">
@@ -73,6 +69,27 @@ export default {
       }
       return stauts
     },
+	showSignColor(val) {
+	  let stauts = ''
+	  switch (val) {
+	    case 1:
+	      stauts = '#999'
+	      break
+	    case 2:
+	      stauts = '#FFAE3D'
+	      break
+	    case 3:
+	      stauts = '#2fb93d'
+	      break
+	    case 4:
+	      stauts = '#CD5555'
+	      break
+	    case 5:
+	      stauts = '#4BA8FF'
+	      break
+	  }
+	  return stauts
+	},
     detailClick(data) {
       this.$router.push({ name: types.CLIENT_DETAIL, query: {id: data.id} })
     },

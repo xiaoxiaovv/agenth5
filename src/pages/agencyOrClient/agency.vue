@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       // addBtnName:'新增代理',
-      agencyAddBtnDisable: 0,
+      agencyAddBtnDisable: 1,
       active: '一级代理',
       tabList: [
         { name: '全部', value: '' },
@@ -177,7 +177,7 @@ export default {
       }
       vm.setBtnList()
       vm.refresh()
-      vm.agencyAddBtnDisable = 0
+      vm.agencyAddBtnDisable = 1
       // vm.setBtnList()
     })
   },
@@ -405,8 +405,8 @@ export default {
     left: 0rem;
   }
   .agency-add-btn-disable {
-   background-color: #A2A2A2;
-    color:#000000;
+   background-color: #c8c9cc;
+   color:#fff;
   }
   .client-add-btn {
     position: relative;

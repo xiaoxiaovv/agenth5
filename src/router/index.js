@@ -49,7 +49,7 @@ router.beforeEach((to, from, next) => {
     console.log('进入进件')
     return next()
   }
-  if (to.path !== '/login' && to.path !== '/register') {
+  if (to.path !== '/login' && to.path !== '/register' && to.path !== '/location') {
     // 判断是否存在token
     if (!sessionStorage.token && to.path !== '/fogot') {
       next({ path: '/login' })

@@ -71,6 +71,22 @@ export default {
     })
   },
   /**
+   * 奖励提现申请提交
+   *
+   */
+  
+  khcommissionApplyCommit (agentId, applyAmount) {
+    return requestAxios({
+      url: '/pay/code_card/cash_item',
+      method: 'post',
+      data: {
+        agentId,
+        applyAmount
+      },
+      jsonHeader: true
+    })
+  },
+  /**
    * 绑定佣金提现卡
    */
 
@@ -101,8 +117,32 @@ export default {
       method: 'get'
       // params: params
     })
-  }
+  },
+  /**
+   * 开户奖励总额查询
+   */
+
+   getCollect () {
+    return requestAxios({
+      url: 'pay/code_card/cash_collect/collect',
+      method: 'get',
+      params: {
+
+      }
+    })
+  },
+  /**
+   * 佣金提现申请列表
+   */
+
+  detailApplyAllList (pageNumber,pageSize) {
+    return requestAxios({
+      url: 'pay/code_card/cash_item/detail',
+      method: 'get',
+      params:{
+        pageNumber,
+        pageSize
+      }
+    })
+  },
 }
-
-
-

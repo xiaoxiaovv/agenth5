@@ -13,6 +13,10 @@
           </div>
         </div>
       </div>
+      <!-- 消息提示 -->
+      <!-- <div class="tip-box">
+        <img src="../../assets/images/common/tip.png" />
+      </div> -->
     </div>
     <div class="mime-info-second">
       <ul>
@@ -24,48 +28,12 @@
           <p class="fl">加入时间</p>
           <p class="fr">{{info.createTime}}</p>
         </li>
-        <!--<template v-if="userType===2 || userType===3 || userType===4 ">
-          <li class="clearfix" v-if="channelList.indexOf('官方') > -1">
-            <p class="fl">微信分润</p>
-            <p class="fr">{{info.wxPayProrata | toPercent}}</p>
-          </li>
-          <li class="clearfix" v-if="channelList.indexOf('官方') > -1">
-            <p class="fl">支付宝分润</p>
-            <p class="fr">{{info.zfbPayProrata | toPercent}}</p>
-          </li>
-          <li class="clearfix" v-if="channelList.indexOf('随行付') > -1">
-            <p class="fl">随行付分润</p>
-            <p class="fr">{{info.sxfPayProrata | toPercent}}</p>
-          </li>
-          <li class="clearfix" v-if="channelList.indexOf('富友') > -1">
-            <p class="fl">富友分润</p>
-            <p class="fr">{{info.fyPayProrata | toPercent}}</p>
-          </li>
-          <li class="clearfix" v-if="channelList.indexOf('威富通') > -1">
-            <p class="fl">威富通分润</p>
-            <p class="fr">{{info.ysPayProrata | toPercent}}</p>
-          </li>
-          <li class="clearfix" v-if="channelList.indexOf('乐刷') > -1">
-            <p class="fl">乐刷分润</p>
-            <p class="fr">{{info.lsPayProrata | toPercent}}</p>
-          </li>
-          <li class="clearfix" v-if="channelList.indexOf('传化') > -1">
-            <p class="fl">传化分润</p>
-            <p class="fr">{{info.chPayProrata | toPercent}}</p>
-          </li>
-          <li class="clearfix" v-if="channelList.indexOf('天阙随行付') > -1">
-            <p class="fl">天阙随行付分润</p>
-            <p class="fr">{{info.tqSxfPayProrata | toPercent}}</p>
-          </li>
-        </template>-->
-        <!-- <li v-for="(item,i) in secondInfoList"
-            :key="`mine_${i}`"
-            class="clearfix">
-          <p class="fl">{{item.name}}</p>
-          <p class="fr">{{item.value}}</p>
-        </li> -->
         <li class="clearfix"  @click="toCommission">
           <p class="fl">分润提现管理</p>
+          <p class="fr"></p>
+        </li>
+        <li class="clearfix"  @click="tokhCommission">
+          <p class="fl">奖励提现管理</p>
           <p class="fr"></p>
         </li>
         <li class="clearfix"  @click="toPrivacy">
@@ -168,6 +136,9 @@ export default {
     },
     toCommission(){
       this.$router.push({name: types.COMMISSION})
+    },
+    tokhCommission(){
+      this.$router.push({name: types.KHCOMMISSION})
     }
   }
 }
